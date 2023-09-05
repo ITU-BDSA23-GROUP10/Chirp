@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using System.Formats.Asn1;
+using Microsoft.VisualBasic.FileIO;
 
 if (args.Length == 0)
 {
@@ -7,6 +8,7 @@ if (args.Length == 0)
                         "\tTo right a cheep type 'dotnet run -- cheep <message>'");
     return;
 }
+
 
 if (args[0] == "read")
 {
@@ -46,5 +48,16 @@ if (args[0] == "read")
 else if (args[0] == "cheep")
 {
     var Message = args[1];
-    
+
+    // Opens CSV data file in 'Append mode'
+    // code taken from https://learn.microsoft.com/en-us/dotnet/api/system.io.file.appendtext?view=net-7.0
+    using (StreamWriter Writer = new StreamWriter(@"data/chirp_cli_db.csv", append: true))
+    {
+        // Get system name
+        // Stackoverflow answer: https://stackoverflow.com/a/1240379
+        var Name = (System.Security.Principal.WindowsIdentity.GetCurrent().Name).Split("\\");
+        // Stackoverflow answer: https://stackoverflow.com/a/35425123
+        var Time = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
+        Writer.WriteLine($"{Name[1]}, \"{Message}\", {Time}");
+    }
 }
