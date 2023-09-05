@@ -1,5 +1,4 @@
-﻿using System.Formats.Asn1;
-using Microsoft.VisualBasic.FileIO;
+﻿using Microsoft.VisualBasic.FileIO;
 
 if (args.Length == 0)
 {
@@ -54,10 +53,9 @@ else if (args[0] == "cheep")
     using (StreamWriter Writer = new StreamWriter(@"data/chirp_cli_db.csv", append: true))
     {
         // Get system name
-        // Stackoverflow answer: https://stackoverflow.com/a/1240379
-        var Name = (System.Security.Principal.WindowsIdentity.GetCurrent().Name).Split("\\");
+        var Name = Environment.UserName;
         // Stackoverflow answer: https://stackoverflow.com/a/35425123
         var Time = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
-        Writer.WriteLine($"{Name[1]}, \"{Message}\", {Time}");
+        Writer.WriteLine($"{Name}, \"{Message}\", {Time}");
     }
 }
