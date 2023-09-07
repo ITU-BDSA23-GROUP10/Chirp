@@ -27,14 +27,17 @@ if (args[0] == "read")
         {
             // Read current line fields, pointer moves to the next line.
             string[] fields = csvParser.ReadFields();
-            string Name = fields[0];
-            string Message = fields[1];
-            // Convert from unix timestamp to DateTime for local time
-            // Code adapted from Stackoverflow answer: https://stackoverflow.com/a/250400
-            DateTime Cheeptime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            Cheeptime = Cheeptime.AddSeconds(int.Parse(fields[2])).ToLocalTime();
-            
-            Cheeps.Add((Name, Message, Cheeptime));
+            if (fields != null)
+            {
+                string Name = fields[0];
+                string Message = fields[1];
+                // Convert from unix timestamp to DateTime for local time
+                // Code adapted from Stackoverflow answer: https://stackoverflow.com/a/250400
+                DateTime Cheeptime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                Cheeptime = Cheeptime.AddSeconds(int.Parse(fields[2])).ToLocalTime();
+                
+                Cheeps.Add((Name, Message, Cheeptime));
+            }
         }
     }
 
