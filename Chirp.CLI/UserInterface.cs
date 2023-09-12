@@ -1,8 +1,8 @@
 using SimpleDB;
 
 public class UserInterface
-{
-    void PrintCheeps(IEnumerable<Cheep> cheeps)
+{    
+    public void PrintCheeps(IEnumerable<Cheep> cheeps)
     {
         foreach (var cheep in cheeps)
         {
