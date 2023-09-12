@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
+using CsvHelper;
+using System.Globalization;
+using CsvHelper.Expressions;
 
 if (args.Length == 0)
 {
@@ -11,6 +14,19 @@ if (args.Length == 0)
 
 if (args[0] == "read")
 {
+    // New code with CsvHelper
+    using (var reader = new StreamReader(@"data/chirp_cli_db.csv"))
+    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+    {
+        var records = csv.GetRecords<Cheep>();
+        foreach (var record in records)
+        {
+            Console.WriteLine(record.Message);
+        }
+    }
+
+
+    /*
     // Reading chirp csv file to store them in a list. 
     // Adapted form Stackoverflow answer: https://stackoverflow.com/a/33796861
     var Cheeps = new List<(string, string, DateTime)>();
@@ -46,6 +62,7 @@ if (args[0] == "read")
     {
         Console.Write($"{Cheep.Item1} @ {Cheep.Item3}: {Cheep.Item2}\n");
     }
+    */
 }
 else if (args[0] == "cheep")
 {
@@ -61,4 +78,10 @@ else if (args[0] == "cheep")
         var Time = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
         Writer.WriteLine($"{Name}, \"{Message}\", {Time}");
     }
+}
+public class Cheep
+{
+    public string Author { get; set; }
+    public string Message { get; set; }
+    public int Timestamp { get; set; }
 }
