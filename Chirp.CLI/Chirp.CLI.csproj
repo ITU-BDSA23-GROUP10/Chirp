@@ -9,6 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="SimpleDB" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
   </ItemGroup>
 
 </Project>
