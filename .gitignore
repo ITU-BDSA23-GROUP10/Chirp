@@ -6,6 +6,7 @@
 ##CUSTOM IGNORES
 Chirp.CLI/data/
 Chirp.CLI/.vscode/
+Chirp.CLI/.idea/
 
 # User-specific files
 *.rsuser
