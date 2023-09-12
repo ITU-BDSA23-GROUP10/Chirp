@@ -5,7 +5,8 @@ using DocoptNet;
     IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();  
 
     UserInterface ui = new UserInterface();
-// This 
+// This is taken from this website
+// https://docopt.github.io/docopt.net/dev/#api
     const string help = @"Chirp
 
 Usage:
@@ -28,14 +29,19 @@ static int Run(IDictionary<string, ArgValue> arguments)
 
 static int OnError(string usage) { Console.Error.WriteLine(usage); return 1; }
 static int ShowHelp(string help) { Console.WriteLine(help); return 0; }
+// var parser = Docopt.CreateParser(help)
+//              //.WithVersion("")
+//              .Parse(args)
+//              .Match(Run,
+//                     result => ShowHelp(result.Help),
+//                     result => OnError(result.Usage));
+var parser = Docopt.CreateParser(help);
+//This is the correct way to do it but apparently args is not the right type...
+var result = parser.Parse(args);
 
-return Docopt.CreateParser(help)
-             //.WithVersion("")
-             .Parse(args)
-             .Match(Run,
-                    result => ShowHelp(result.Help),
-                    result => OnError(result.Usage),
-                    result => readCheeps(db, ui));
+IDictionary<string, ArgValue> dictionary = result;
+return 0;
+
 
 
 
@@ -56,7 +62,7 @@ static int readCheeps(IDatabaseRepository<Cheep> db, UserInterface ui)
 
 static int postCheep(IDatabaseRepository<Cheep> db, string Message) 
 {
-    New write with CsvHelper
+    //New write with CsvHelper
     var newCheep = new Cheep
     {
         Message = Message,
