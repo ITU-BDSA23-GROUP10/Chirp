@@ -14,14 +14,16 @@ if (args.Length == 0)
 
 if (args[0] == "read")
 {
-    // New code with CsvHelper
+    // Read datafile with CsvHelper
+    IEnumerable<Cheep> records;
     using (var reader = new StreamReader(@"data/chirp_cli_db.csv"))
     using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     {
-        var records = csv.GetRecords<Cheep>();
-        foreach (var record in records)
+        records = csv.GetRecords<Cheep>();
+            // Show cheeps in console
+        foreach (var Cheep in records)
         {
-            Console.WriteLine(record.Message);
+            Console.Write($"{Cheep.Author} @ {Cheep.Message}: {Cheep.Timestamp}\n");
         }
     }
 
@@ -55,12 +57,6 @@ if (args[0] == "read")
                 Cheeps.Add((Name, Message, Cheeptime));
             }
         }
-    }
-
-    // Show cheeps in console
-    foreach (var Cheep in Cheeps)
-    {
-        Console.Write($"{Cheep.Item1} @ {Cheep.Item3}: {Cheep.Item2}\n");
     }
     */
 }
