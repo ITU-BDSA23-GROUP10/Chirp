@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 class Program
 {
+    //documentation from https://docopt.github.io/docopt.net/dev/
     private const string Help =
             @"Chirp
 
@@ -18,8 +19,10 @@ class Program
             --read            Print all the cheeps.
             --cheep <message> Post a cheep.
 
-            To get this help screen: 
-            dotnet run -- -h
+            (with dotnet run)
+            dotnet run -- -h (help)
+            dotnet run -- --read
+            dotnet run -- --cheep <message>
             ";
 
     private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
