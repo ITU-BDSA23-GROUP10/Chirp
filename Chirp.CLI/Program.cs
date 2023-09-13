@@ -1,8 +1,5 @@
 ﻿using DocoptNet;
 using SimpleDB;
-using System;
-using System.Collections.Generic;
-
 
 class Program
 {
