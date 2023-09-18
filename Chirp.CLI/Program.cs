@@ -35,9 +35,9 @@ class Program
         {
             ReadCheeps();
         }
-        else if (arguments["--cheep"].IsTrue)
+        else if (!arguments["--cheep"].IsNullOrEmpty)
         {
-            PostCheep(arguments["<message>"].Value.ToString());
+            PostCheep(arguments["--cheep"].Value.ToString());
         }
     }
 
