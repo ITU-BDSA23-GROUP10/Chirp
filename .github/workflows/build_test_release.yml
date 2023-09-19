@@ -28,7 +28,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: publish project
-    shell: bash
     run: |
         #Building the entire world over here and zipping it up in tar and zip
         dotnet publish src/ --framework netcoreapp3.1 --runtime "linux-x64" -c Release -o "linux-x64"
