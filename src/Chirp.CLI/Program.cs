@@ -1,7 +1,7 @@
 ﻿using DocoptNet;
 using SimpleDB;
 
-class Program
+public class Program
 {
     //documentation from https://docopt.github.io/docopt.net/dev/
     private const string Help =
@@ -25,7 +25,7 @@ class Program
     private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
     private static UserInterface ui = new UserInterface();
 
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         // Docopt code documentation reworked from https://csharp.hotexamples.com/site/file?hash=0xff1fe91471d0685c57d186e7951993e3fbf382bccde2e3daaaa6c22982498b4b
         // and https://docopt.github.io/docopt.net/dev/#api
@@ -41,13 +41,13 @@ class Program
         }
     }
 
-    static void ReadCheeps() 
+    public static void ReadCheeps()
     {
         var cheeps = db.Read();
-        ui.PrintCheeps(cheeps); 
+        ui.PrintCheeps(cheeps);
     }
 
-    static void PostCheep(string message) 
+    public static void PostCheep(string message)
     {
         var newCheep = new Cheep
         {
@@ -55,7 +55,7 @@ class Program
             Author = Environment.UserName,
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        var records = new List<Cheep> {newCheep};
+        var records = new List<Cheep> { newCheep };
         db.Store(records);
     }
 }
