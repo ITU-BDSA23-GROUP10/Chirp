@@ -13,6 +13,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +29,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: publish project
-    run: |
+      run: |
         #Building the entire world over here and zipping it up in tar and zip
         dotnet publish src/ --framework netcoreapp3.1 --runtime "linux-x64" -c Release -o "linux-x64"
         tar -czvf "linux-x64".tar.gz "./linux-x64/*"
