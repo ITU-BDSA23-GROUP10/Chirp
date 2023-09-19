@@ -5,10 +5,8 @@ name: .NET
 
 on:
   push:
-    branch:
-      - main
     tags:
-      - 'v*' #maybe its on one-line only, probably not (???).
+      - 'v*'
     
 jobs:
   release:
@@ -43,7 +41,6 @@ jobs:
             win-x64.zip
             osx-x64.tar.gz
           # was previously files: "src*"
-          with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #repo-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
