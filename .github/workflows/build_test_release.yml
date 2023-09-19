@@ -12,8 +12,7 @@ on:
     
 
 jobs:
-  release:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
