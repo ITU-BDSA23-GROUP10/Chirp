@@ -23,11 +23,14 @@ class Program
             dotnet run -- --cheep <message>
             ";
 
-    private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
     private static UserInterface ui = new UserInterface();
+
+    static CSVDbSingleton csvDbSingleT = CSVDbSingleton.Instance;
+    static IDatabaseRepository<Cheep> db = csvDbSingleT.Database;
 
     static void Main(string[] args)
     {
+
         // Docopt code documentation reworked from https://csharp.hotexamples.com/site/file?hash=0xff1fe91471d0685c57d186e7951993e3fbf382bccde2e3daaaa6c22982498b4b
         // and https://docopt.github.io/docopt.net/dev/#api
         var arguments = new Docopt().Apply(Help, args, exit: true);
