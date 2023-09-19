@@ -9,7 +9,6 @@ public class Program
 
     static async Task Main(string[] args)
     {
-        //Test test test
         // Create the posible commands for the program
         // https://learn.microsoft.com/en-us/dotnet/standard/commandline/define-commands
         var rootCommand = new RootCommand();
