@@ -1,6 +1,6 @@
-namespace SimpleDB.test;
+namespace Chirp.CLI.test;
 
-public class SimpleDB.test
+public class UnitTest1
 {
     [Fact]
     public void Test1()
