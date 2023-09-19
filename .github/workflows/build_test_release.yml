@@ -5,8 +5,10 @@ name: .NET
 
 on:
   push:
-    tags:
-     - 'v*'
+    branch:
+      - main
+    #tags:
+    # - 'v*'
     
 
 jobs:
@@ -26,7 +28,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: publish_project
+    - name: publish project
     shell: bash
       run:
         #Building the entire world over here and zipping it up in tar and zip
