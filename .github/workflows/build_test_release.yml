@@ -41,7 +41,6 @@ jobs:
             win-x64.zip
             osx-x64.tar.gz
           # was previously files: "src*"
-          with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      repo-token: ${{ secrets.GITHUB_TOKEN }}
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
