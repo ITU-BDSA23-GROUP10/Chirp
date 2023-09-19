@@ -51,8 +51,10 @@ public class endToEndTest
 
         Program pro = new Program();
         pro.Main(ar);
+        //pro.write(Alex,"plz plz come on man",1790981487);
 
         var csv = new CSVDatabase<Cheep>();
+
 
         var list = new List<Cheep>();
         list.Add(new Cheep { Author = "ropf", Message = "Hello, BDSA students!", Timestamp = 1690891760 });
