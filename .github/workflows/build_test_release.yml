@@ -36,7 +36,7 @@ jobs:
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "osx-x64"
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
     - name: Release
-        uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v1
         with:
         files: |
             linux-x64.tar.gz
