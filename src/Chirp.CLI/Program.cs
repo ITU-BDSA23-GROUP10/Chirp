@@ -3,7 +3,6 @@ using SimpleDB;
 
 class Program
 {
-    //this comment is to test yml releases
     //documentation from https://docopt.github.io/docopt.net/dev/
     private const string Help =
             @"Chirp
