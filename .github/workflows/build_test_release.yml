@@ -26,9 +26,8 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    
-    - name: Publish
-      shell: bash
+    - name: publish_project
+    shell: bash
       run:
         #Building the entire world over here and zipping it up in tar and zip
         dotnet publish src/ --framework netcoreapp3.1 --runtime "linux-x64" -c Release -o "linux-x64"
@@ -37,8 +36,7 @@ jobs:
         7z a -tzip "win-x64".zip "./win-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "osx-x64"
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
-
-        
+    - name: release
         uses: softprops/action-gh-release@v1
         with:
           files: "src*"
