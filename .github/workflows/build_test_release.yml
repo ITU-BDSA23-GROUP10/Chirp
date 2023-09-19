@@ -37,7 +37,7 @@ jobs:
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
     - name: Release
       uses: softprops/action-gh-release@v1
-        with:
+      with:
         files: |
             linux-x64.tar.gz
             win-x64.zip
