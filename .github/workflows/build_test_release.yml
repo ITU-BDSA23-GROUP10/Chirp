@@ -11,7 +11,7 @@ on:
       - 'v*' #maybe its on one-line only, probably not (???).
     
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout #give it a name
@@ -35,8 +35,7 @@ jobs:
         7z a -tzip "win-x64".zip "./win-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "osx-x64"
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
-    release:
-    - name: Release
+    - name: release project
       uses: softprops/action-gh-release@v1
       with: # needed to be indented
         files: |
