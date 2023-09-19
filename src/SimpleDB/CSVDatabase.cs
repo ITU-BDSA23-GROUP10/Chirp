@@ -20,7 +20,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         
     }
     
-    public void Store(List<T> records)
+    public void Store(T record)
     {
         // Write to new cheep to csv file using CsvHelper
         // https://joshclose.github.io/CsvHelper/examples/writing/appending-to-an-existing-file/
@@ -34,7 +34,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, config))
         {
-            csv.WriteRecords(records);
+            csv.WriteRecord(record);
         }
     }
 

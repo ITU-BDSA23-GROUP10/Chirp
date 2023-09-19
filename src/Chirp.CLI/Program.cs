@@ -56,7 +56,6 @@ class Program
             Author = Environment.UserName,
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        var records = new List<Cheep> {newCheep};
-        db.Store(records);
+        db.Store(newCheep);
     }
 }
