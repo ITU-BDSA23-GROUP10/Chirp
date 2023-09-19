@@ -5,10 +5,8 @@ name: .NET
 
 on:
   push:
-    branch:
-      - main
     tags:
-      - 'v*' #maybe its on one-line only, probably not (???).
+      - 'v*'
     
 jobs:
   release:
