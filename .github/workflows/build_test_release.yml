@@ -7,31 +7,25 @@ on:
   push:
     branch:
       - main
-    tags:  - 'v*' #maybe its on one-line only, probably not (???).
+    tags:
+      - 'v*' #maybe its on one-line only, probably not (???).
     
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout #give it a name
       uses: actions/checkout@v3
-
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1 #perhaps v1 (???)
+      uses: actions/setup-dotnet@v3 #perhaps v1 (???)
       with:
         dotnet-version: 7.0.x
-    
     - name: Restore dependencies
       run: dotnet restore
-    
     - name: Build
       run: dotnet build --no-restore
-    
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    
     - name: publish project
       run: |
         #Building the entire world over here and zipping it up in tar and zip
@@ -41,10 +35,9 @@ jobs:
         7z a -tzip "win-x64".zip "./win-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "osx-x64"
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
-    
-    - name: Release #capitalized name
-        uses: softprops/action-gh-release@v1
-        with:
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with: # needed to be indented
         files: |
             linux-x64.tar.gz
             win-x64.zip
