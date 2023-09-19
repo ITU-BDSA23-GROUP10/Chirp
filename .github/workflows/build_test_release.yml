@@ -1,5 +1,6 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# This is mostly taken and adapted from this blog post https://patriksvensson.se/posts/2020/03/creating-release-artifacts-with-github-actions
 
 name: .NET
 
