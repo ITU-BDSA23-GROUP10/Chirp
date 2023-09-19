@@ -35,12 +35,12 @@ jobs:
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
     - name: release project
       uses: softprops/action-gh-release@v1
-      with: # needed to be indented
-        files: |
-            linux-x64.tar.gz
-            win-x64.zip
-            osx-x64.tar.gz
-          # was previously files: "src*"
+        with: # needed to be indented
+          files: |
+              linux-x64.tar.gz
+              win-x64.zip
+              osx-x64.tar.gz
+            # was previously files: "src*"
       repo-token: ${{ secrets.GITHUB_TOKEN }}
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
