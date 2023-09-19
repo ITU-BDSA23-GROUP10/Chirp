@@ -2,7 +2,7 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
 
-class Program
+public class Program
 {
     private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
     private static UserInterface ui = new UserInterface();
