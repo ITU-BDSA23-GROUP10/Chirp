@@ -35,6 +35,7 @@ jobs:
         7z a -tzip "win-x64".zip "./win-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "osx-x64"
         tar -czvf "osx-x64".tar.gz "./osx-x64/*"
+    release:
     - name: Release
       uses: softprops/action-gh-release@v1
       with: # needed to be indented
