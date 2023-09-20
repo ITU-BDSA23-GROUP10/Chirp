@@ -33,7 +33,7 @@ public class UnitTest1
     }
 
     /*
-    TODO: currently fixing (jonas).. currently value is null probably on CheepsToPrint
+    TODO: currently fixing (jonas).. currently value is null - probably on CheepsToPrint
 
     [Fact]
     public void TestReadCheeps()
@@ -43,9 +43,9 @@ public class UnitTest1
         var testUi = new TestUserInterface();
         var testCheep = new Cheep
         {
-            Message = "Cheeping cheeps on Chirp :)",
-            Author = "ropf",
-            //Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            Message = "placeholder",
+            Author = "placeholder",
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         testDb.Cheeps.Add(testCheep);
         Program.db = testDb;
