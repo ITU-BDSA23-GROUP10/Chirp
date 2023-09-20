@@ -4,8 +4,8 @@ using System.CommandLine.Parsing;
 
 public class Program
 {
-    private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
-    private static UserInterface ui = new UserInterface();
+    public static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
+    public static UserInterface ui = new UserInterface();
 
     static async Task Main(string[] args)
     {
@@ -37,13 +37,13 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-    static void ReadCheeps() 
+    public static void ReadCheeps() 
     {
         var cheeps = db.Read();
         ui.PrintCheeps(cheeps); 
     }
 
-    static void PostCheep(string message) 
+    public static void PostCheep(string message) 
     {
         var newCheep = new Cheep
         {

@@ -1,22 +1,25 @@
-using Xunit;
 using SimpleDB;
-using System.Collections.Generic;
 
 namespace Chirp.CLI.test;
 public class UnitTest1
-{/*
+{
+    //took info on how to do testing from
+    //https://learn.microsoft.com/en-us/visualstudio/test/using-stubs-to-isolate-parts-of-your-application-from-each-other-for-unit-testing?view=vs-2022&tabs=csharp
+    //https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test
+
     private class StubDatabaseRepository : IDatabaseRepository<Cheep>
     {
         public List<Cheep> Cheeps = new List<Cheep>();
 
-        public List<Cheep> Read(int? id)
+        //from IDatabaseRepository.cs
+        public IEnumerable<Cheep> Read(int? id = null)
         {
             return Cheeps;
         }
 
-        public void Store(List<Cheep> records)
+        public void Store(Cheep record)
         {
-            Cheeps.AddRange(records);
+            Cheeps.Add(record);
         }
     }
 
@@ -30,6 +33,10 @@ public class UnitTest1
         }
     }
 
+    /*
+    TODO: currently fixing (jonas).. currently value is null probably on CheepsToPrint
+
+
     [Fact]
     public void TestReadCheeps()
     {
@@ -38,9 +45,9 @@ public class UnitTest1
         var stubUi = new StubUserInterface();
         var testCheep = new Cheep
         {
-            Message = "test message",
-            Author = "jonas",
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            Message = "Cheeping cheeps on Chirp :)",
+            Author = "ropf",
+            //Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         stubDb.Cheeps.Add(testCheep);
         Program.db = stubDb;
@@ -51,7 +58,7 @@ public class UnitTest1
 
         // Assert
         Assert.Contains(testCheep, stubUi.CheepsToPrint);
-    }
+    }*/
 
     [Fact]
     public void TestPostCheep()
@@ -66,5 +73,5 @@ public class UnitTest1
         // Assert
         Assert.Single(stubDb.Cheeps);
         Assert.Equal("test message", stubDb.Cheeps[0].Message);
-    }*/
+    }
 }
