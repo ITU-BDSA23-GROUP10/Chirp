@@ -10,7 +10,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     {
         // Read datafile with CsvHelper
         // https://joshclose.github.io/CsvHelper/examples/writing/appending-to-an-existing-file/
-        using (var reader = new StreamReader("src/Data/chirp_cli_db.csv"))
+        using (var reader = new StreamReader("../Data/chirp_cli_db.csv"))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csv.GetRecords<T>();

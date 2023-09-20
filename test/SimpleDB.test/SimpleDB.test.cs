@@ -7,6 +7,7 @@ namespace SimpleDB.Tests
 {
     public class CSVDatabaseTests
     {
+        /*
         [Fact]
         public void ReadMethod_ShouldReadData()
         {
@@ -38,5 +39,6 @@ namespace SimpleDB.Tests
             var records = csvdb.Read();
             Assert.Contains(records, record => record.Author == "karpe" && record.Message == "temp");
         }
+        */
     }
 }

@@ -20,30 +20,16 @@ public class endToEndTest
         //runs the read command, deletes whitespaces and splits on each line
         fstCheep = check().Replace("\r", "").Split("\n");
 
-
-        /*// Arrange
-        var list = new List<Cheep>();
-        list.Add(new Cheep { Author = "ropf", Message = "Hello, BDSA students!", Timestamp = 1690891760 });
-        list.Add(new Cheep { Author = "rnie", Message = "Welcome to the course!", Timestamp = 1690978778 });
-        list.Add(new Cheep { Author = "rnie", Message = "I hope you had a good summer.", Timestamp = 1690979858 });
-        list.Add(new Cheep { Author = "ropf", Message = "Cheeping cheeps on Chirp :)", Timestamp = 1690981487 });
-
-        // Act
-        check();*/
-
-
         // Assert
-        //Assert.Equal(list, records);
-        Assert.Equal("ropf,\"Hello, BDSA students!\",1690891760", fstCheep[0]);
-        Assert.Equal("rnie,\"Welcome to the course!\",1690978778", fstCheep[1]);
-        Assert.Equal("rnie,\"I hope you had a good summer.\",1690979858", fstCheep[2]);
-        Assert.Equal("ropf,\"Cheeping cheeps on Chirp :)\",1690981487", fstCheep[3]);
+        Assert.Equal("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!", fstCheep[0]);
+        Assert.Equal("rnie @ 02/08/2023 14.19.38: Welcome to the course!", fstCheep[1]);
+        Assert.Equal("rnie @ 02/08/2023 14.37.38: I hope you had a good summer.", fstCheep[2]);
+        Assert.Equal("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)", fstCheep[3]);
         /*
-            Author,Message,Timestamp
-            ropf,"Hello, BDSA students!",1690891760
-            rnie,"Welcome to the course!",1690978778
-            rnie,"I hope you had a good summer.",1690979858
-            ropf,"Cheeping cheeps on Chirp :)",1690981487
+            ropf @ 01/08/2023 14.09.20: Hello, BDSA students!
+            rnie @ 02/08/2023 14.19.38: Welcome to the course!
+            rnie @ 02/08/2023 14.37.38: I hope you had a good summer.
+            ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)
         */
     }
 
@@ -85,37 +71,41 @@ public class endToEndTest
 
 
     private string check()
-    {/*
+    {
         // Act
-        string output = "";
+        /*string output = "";
         
         using (var process = new Process())
         {
-            process.StartInfo.FileName = "dotnet";
-            process.StartInfo.Arguments = "./src/Chirp.CLI/bin/Debug/net7.0/chirp.dll read";
+            process.StartInfo.FileName = "dotnet"; //"/usr/bin/dotnet";
+            process.StartInfo.Arguments = "run --project src/Chirp.CLI/Chirp.CLI.csproj --read";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.WorkingDirectory = "../../../../../";
             process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
             process.Start();
 
             // Synchronously read the standard output of the spawned process.
-
             StreamReader reader = process.StandardOutput;
             output = reader.ReadToEnd();
+            //standardError = process.StandardError.ReadToEnd();
             process.WaitForExit();
         }
+
+        return output;*/
         
         
         //Console.WriteLine("This pure: " + output);
-        string fstCheep = output.Split("\n")[0];
+        //string fstCheep = output.Split("\n")[0];
         //Console.WriteLine("This is not: " + fstCheep);
         
-        return fstCheep;*/
+        //return fstCheep;*/
         string output;
         using (Process process = new Process())
         {
-            process.StartInfo.FileName = "dotnet";
-            process.StartInfo.Arguments = "./src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll --read";
+            process.StartInfo.FileName = @"C:\Users\Alexa\FunWithNet\Project\Chirp\Here\Chirp.CLI.exe";
+            //process.StartInfo.FileName = @"C:\Program Files\dotnet\dotnet.exe";
+            process.StartInfo.Arguments = "--read";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = false;
