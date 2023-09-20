@@ -4,10 +4,9 @@ namespace Chirp.CLI.test;
 public class UnitTest1
 {
     //took info on how to do testing from
-    //https://learn.microsoft.com/en-us/visualstudio/test/using-stubs-to-isolate-parts-of-your-application-from-each-other-for-unit-testing?view=vs-2022&tabs=csharp
     //https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test
 
-    private class StubDatabaseRepository : IDatabaseRepository<Cheep>
+    private class TestDatabaseRepository : IDatabaseRepository<Cheep>
     {
         public List<Cheep> Cheeps = new List<Cheep>();
 
@@ -23,7 +22,7 @@ public class UnitTest1
         }
     }
 
-    private class StubUserInterface : UserInterface
+    private class TestUserInterface : UserInterface
     {
         public List<Cheep> CheepsToPrint;
 
@@ -36,42 +35,41 @@ public class UnitTest1
     /*
     TODO: currently fixing (jonas).. currently value is null probably on CheepsToPrint
 
-
     [Fact]
     public void TestReadCheeps()
     {
         // Arrange
-        var stubDb = new StubDatabaseRepository();
-        var stubUi = new StubUserInterface();
+        var testDb = new TestDatabaseRepository();
+        var testUi = new TestUserInterface();
         var testCheep = new Cheep
         {
             Message = "Cheeping cheeps on Chirp :)",
             Author = "ropf",
             //Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        stubDb.Cheeps.Add(testCheep);
-        Program.db = stubDb;
-        Program.ui = stubUi;
+        testDb.Cheeps.Add(testCheep);
+        Program.db = testDb;
+        Program.ui = testUi;
 
         // Act
         Program.ReadCheeps();
 
         // Assert
-        Assert.Contains(testCheep, stubUi.CheepsToPrint);
+        Assert.Contains(testCheep, testUi.CheepsToPrint);
     }*/
 
     [Fact]
     public void TestPostCheep()
     {
         // Arrange
-        var stubDb = new StubDatabaseRepository();
-        Program.db = stubDb;
+        var testDb = new TestDatabaseRepository();
+        Program.db = testDb;
 
         // Act
         Program.PostCheep("test message");
 
         // Assert
-        Assert.Single(stubDb.Cheeps);
-        Assert.Equal("test message", stubDb.Cheeps[0].Message);
+        Assert.Single(testDb.Cheeps);
+        Assert.Equal("test message", testDb.Cheeps[0].Message);
     }
 }
