@@ -118,7 +118,7 @@ public class endToEndTest
             process.StartInfo.Arguments = "./src/Chirp.CLI/bin/Debug/net7.0/Chirp.CLI.dll --read";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.CreateNoWindow = false;
             process.StartInfo.WorkingDirectory = "../../../../../";
 
             process.Start();
