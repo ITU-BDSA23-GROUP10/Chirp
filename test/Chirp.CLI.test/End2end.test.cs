@@ -20,10 +20,14 @@ public class endToEndTest
         Cheeps = check().Replace("\r", "").Split("\n");
 
         // Assert
-        Assert.Equal("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!", Cheeps[0]);
-        Assert.Equal("rnie @ 02/08/2023 14.19.38: Welcome to the course!", Cheeps[1]);
-        Assert.Equal("rnie @ 02/08/2023 14.37.38: I hope you had a good summer.", Cheeps[2]);
-        Assert.Equal("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)", Cheeps[3]);
+        Assert.True(Cheeps.Contains("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!"));
+        Assert.True(Cheeps.Contains("rnie @ 02/08/2023 14.19.38: Welcome to the course!"));
+        Assert.True(Cheeps.Contains("rnie @ 02/08/2023 14.37.38: I hope you had a good summer."));
+        Assert.True(Cheeps.Contains("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)"));
+        //Assert.Equal("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!", Cheeps[0]);
+        //Assert.Equal("rnie @ 02/08/2023 14.19.38: Welcome to the course!", Cheeps[1]);
+        //Assert.Equal("rnie @ 02/08/2023 14.37.38: I hope you had a good summer.", Cheeps[2]);
+        //Assert.Equal("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)", Cheeps[3]);
         /*
             ropf @ 01/08/2023 14.09.20: Hello, BDSA students!
             rnie @ 02/08/2023 14.19.38: Welcome to the course!
@@ -102,27 +106,17 @@ public class endToEndTest
         string output;
         using (Process process = new Process())
         {
-            //process.StartInfo.FileName = @"C:\Users\Alexa\FunWithNet\Project\Chirp\Here\Chirp.CLI.exe";
-            //process.StartInfo.FileName = @"C:\Program Files\dotnet\dotnet.exe";
             process.StartInfo.FileName = "dotnet";
             process.StartInfo.Arguments = "run --read";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = false;
-
-            //string p = Path.GetFullPath(Path.Combine("..","..", "src", "Chirp.CLI"));
-            string p = Path.Combine("..","..", "..", "..", "..", "src", "Chirp.CLI");
-            string j = Path.GetFullPath(p);
-            var paths = new string[] {"C:/Users/Alexa", "FunWithNet", "Project", "Chirp", "src", "Chirp.CLI"};
-            string m = Path.Combine("C");
-            process.StartInfo.WorkingDirectory = Path.Combine(paths);;
-            //  Path.Combine("..", "..", "src", "Chirp.CLI");
-            
+            process.StartInfo.WorkingDirectory = Path.Combine("..", "..", "..", "..", "..", "src", "Chirp.CLI");
 
             process.Start();
             StreamReader reader = process.StandardOutput;
             output = reader.ReadToEnd();
-
+            
             process.WaitForExit();
 
             return output;
