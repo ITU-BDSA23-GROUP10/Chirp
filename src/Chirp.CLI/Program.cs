@@ -1,7 +1,6 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-//teteteatetaeata
 public class Program
 {
     static readonly CSVDbSingleton dbSingleton = CSVDbSingleton.Instance;
@@ -10,12 +9,16 @@ public class Program
 
     static async Task Main(string[] args)
     {
-        // tetasastsatsatsats
         // Create the posible commands for the program
         // https://learn.microsoft.com/en-us/dotnet/standard/commandline/define-commands
         var rootCommand = new RootCommand();
         var readCommand = new Command("read", "Read all the cheeps");
         rootCommand.Add(readCommand);
+        var readLimit = new Argument<int?>
+            (name: "limit",
+            description: "A limit on the amount cheeps read",
+            getDefaultValue: () => null);
+        readCommand.Add(readLimit);
         var cheepCommand = new Command("cheep", "Write a new cheep");
         rootCommand.Add(cheepCommand);
         var messageArgument = new Argument<string>
@@ -24,10 +27,11 @@ public class Program
             getDefaultValue: () => "");
         cheepCommand.Add(messageArgument);
 
-        readCommand.SetHandler(() =>
+        readCommand.SetHandler((readLimitValue) =>
             {
-                ReadCheeps();
-            });
+                ReadCheeps(readLimitValue);
+            },
+            readLimit);
         
         cheepCommand.SetHandler((messageArgumentValue) =>
             {
@@ -38,9 +42,9 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-    static void ReadCheeps() 
+    static void ReadCheeps(int? limit = null) 
     {
-        var cheeps = db.Read();
+        var cheeps = db.Read(limit);
         ui.PrintCheeps(cheeps); 
     }
 
