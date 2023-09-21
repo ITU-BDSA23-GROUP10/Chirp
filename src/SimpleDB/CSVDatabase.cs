@@ -35,7 +35,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         using (var csv = new CsvWriter(writer, config))
         {
             csv.WriteRecord(record);
-            csv.NextRecord();
         }
     }
 
