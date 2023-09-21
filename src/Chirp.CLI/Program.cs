@@ -13,11 +13,11 @@ public class Program
         var rootCommand = new RootCommand();
         var readCommand = new Command("read", "Read all the cheeps");
         rootCommand.Add(readCommand);
-        var readLimitOption = new Argument<int?>
+        var readLimit = new Argument<int?>
             (name: "limit",
             description: "A limit on the amount cheeps read",
             getDefaultValue: () => null);
-        readCommand.Add(readLimitOption);
+        readCommand.Add(readLimit);
         var cheepCommand = new Command("cheep", "Write a new cheep");
         rootCommand.Add(cheepCommand);
         var messageArgument = new Argument<string>
@@ -26,10 +26,11 @@ public class Program
             getDefaultValue: () => "");
         cheepCommand.Add(messageArgument);
 
-        readCommand.SetHandler(() =>
+        readCommand.SetHandler((readLimitValue) =>
             {
-                ReadCheeps();
-            });
+                ReadCheeps(readLimitValue);
+            },
+            readLimit);
         
         cheepCommand.SetHandler((messageArgumentValue) =>
             {
@@ -40,9 +41,9 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-    static void ReadCheeps() 
+    static void ReadCheeps(int? limit = null) 
     {
-        var cheeps = db.Read();
+        var cheeps = db.Read(limit);
         ui.PrintCheeps(cheeps); 
     }
 
