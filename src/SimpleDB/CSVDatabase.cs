@@ -14,7 +14,11 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csv.GetRecords<T>();
-            return records.ToList();
+            var recordsList = records.ToList();
+            if (limit == null)
+                return recordsList;
+            else
+                return recordsList.GetRange(recordsList.Count() - (int)limit - 1, (int)limit);
         }
         
         
