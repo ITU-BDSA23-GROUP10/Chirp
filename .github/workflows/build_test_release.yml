@@ -30,18 +30,18 @@ jobs:
         #Building the entire world over here and zipping it up in tar and zip
         #--framework netcoreapp3.1
         dotnet publish src/ --framework netcoreapp3.1 --runtime "linux-x64" -c Release -o "Chirp.CLI-linux-x64"
-        7z a -tzip "Chirp.CLI-linux-x64".zip "./Chirp.CLI-linux-x64/*"
+        7z a -tzip "Chirp.CLI-linux-x64.zip" "./Chirp.CLI-linux-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "win-x64" -c Release -o "Chirp.CLI-win-x64"
-        7z a -tzip "Chirp.CLI-win-x64".zip "./Chirp.CLI-win-x64/*"
+        7z a -tzip "Chirp.CLI-win-x64.zip" "./Chirp.CLI-win-x64/*"
         dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "Chirp.CLI-osx-x64"
-        7z a -tzip "Chirp.CLI-osx-x64".zip "./Chirp.CLI-osx-x64/*"
+        7z a -tzip "Chirp.CLI-osx-x64.zip" "./Chirp.CLI-osx-x64/*"
     - name: release project
       uses: softprops/action-gh-release@v1
       with: # needed to be indented
         files: |
-            linux-x64.tar.gz
-            win-x64.zip
-            osx-x64.tar.gz
+            Chirp.CLI-linux-x64.zip
+            Chirp.CLI-win-x64.zip
+            Chirp.CLI-osx-x64.zip
           # was previously files: "src*"
       #repo-token: ${{ secrets.GITHUB_TOKEN }}
       env:
