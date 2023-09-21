@@ -4,9 +4,9 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 ##CUSTOM IGNORES
-Chirp.CLI/data/
-Chirp.CLI/.vscode/
-Chirp.CLI/.idea/
+src/Chirp.CLI/data/
+.vscode/
+.idea/
 
 # User-specific files
 *.rsuser
@@ -14,7 +14,6 @@ Chirp.CLI/.idea/
 *.user
 *.userosscache
 *.sln.docstates
-*.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
