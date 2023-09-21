@@ -3,7 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Parsing;
 public class Program
 {
-    static readonly CSVDbSingleton dbSingleton = CSVDbSingleton.Instance;
+    static readonly SingletonDB dbSingleton = SingletonDB.Instance;
     static readonly IDatabaseRepository<Cheep> db = dbSingleton.Database;
     private static UserInterface ui = new UserInterface();
 

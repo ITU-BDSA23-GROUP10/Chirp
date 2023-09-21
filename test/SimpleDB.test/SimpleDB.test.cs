@@ -40,11 +40,11 @@ namespace SimpleDB.Tests
         }
 
         [Fact]
-        public void CSVDbSingleton_ShouldOnlyCreateOne()
+        public void SingletonDB_ShouldOnlyCreateOne()
         {
             // Arrange
-            CSVDbSingleton dbSingleton1 = CSVDbSingleton.Instance;
-            CSVDbSingleton dbSingleton2 = CSVDbSingleton.Instance;
+            SingletonDB dbSingleton1 = SingletonDB.Instance;
+            SingletonDB dbSingleton2 = SingletonDB.Instance;
             IDatabaseRepository<Cheep> db1 = dbSingleton1.Database;
             IDatabaseRepository<Cheep> db2 = dbSingleton2.Database;
             Cheep newCheep = new Cheep
