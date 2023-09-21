@@ -3,6 +3,7 @@
 using CsvHelper;
 using System.Globalization;
 using CsvHelper.Configuration;
+using System.Text;
 
 public class CSVDatabase<T> : IDatabaseRepository<T>
 {
@@ -10,7 +11,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     {
         // Read datafile with CsvHelper
         // https://joshclose.github.io/CsvHelper/examples/writing/appending-to-an-existing-file/
-        using (var reader = new StreamReader("Data/chirp_cli_db.csv"))
+        using (var reader = new StreamReader("Data/chirp_cli_db.csv", Encoding.UTF8))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csv.GetRecords<T>();
@@ -20,8 +21,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
             else
                 return recordsList.GetRange(recordsList.Count() - (int)limit - 1, (int)limit);
         }
-        
-        
     }
     
     public void Store(T record)
@@ -32,10 +31,13 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         {
             // Don't write the header again.
             HasHeaderRecord = false,
+            // Ensures quotation-encapsulation, from StackOverflow:
+            // https://stackoverflow.com/a/69581108
+            ShouldQuote = args => true,
         };
 
         using (var stream = File.Open("Data/chirp_cli_db.csv", FileMode.Append))
-        using (var writer = new StreamWriter(stream))
+        using (var writer = new StreamWriter(stream, Encoding.UTF8))
         using (var csv = new CsvWriter(writer, config))
         {
             csv.WriteRecord(record);
