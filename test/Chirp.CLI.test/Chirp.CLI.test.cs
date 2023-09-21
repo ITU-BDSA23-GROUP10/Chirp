@@ -1,6 +1,6 @@
 namespace test;
 
-public class UnitTest1
+public class Chirp.CLI.test
 {
     /*
     [Fact]
