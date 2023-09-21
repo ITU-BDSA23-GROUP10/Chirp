@@ -45,10 +45,8 @@ namespace SimpleDB.Tests
             // Arrange
             CSVDbSingleton dbSingleton1 = CSVDbSingleton.Instance;
             CSVDbSingleton dbSingleton2 = CSVDbSingleton.Instance;
-
             IDatabaseRepository<Cheep> db1 = dbSingleton1.Database;
             IDatabaseRepository<Cheep> db2 = dbSingleton2.Database;
-
             Cheep newCheep = new Cheep
             {
                 Message = "Testing Singleton",
