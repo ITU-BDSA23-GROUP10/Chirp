@@ -1,7 +1,6 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-//teteteatetaeata
 public class Program
 {
     private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
@@ -9,12 +8,16 @@ public class Program
 
     static async Task Main(string[] args)
     {
-        // tetasastsatsatsats
         // Create the posible commands for the program
         // https://learn.microsoft.com/en-us/dotnet/standard/commandline/define-commands
         var rootCommand = new RootCommand();
         var readCommand = new Command("read", "Read all the cheeps");
         rootCommand.Add(readCommand);
+        var readLimitOption = new Argument<int?>
+            (name: "limit",
+            description: "A limit on the amount cheeps read",
+            getDefaultValue: () => null);
+        readCommand.Add(readLimitOption);
         var cheepCommand = new Command("cheep", "Write a new cheep");
         rootCommand.Add(cheepCommand);
         var messageArgument = new Argument<string>
