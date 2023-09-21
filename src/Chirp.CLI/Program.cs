@@ -1,49 +1,61 @@
+<<<<<<< HEAD
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-
+//teteteatetaeata
 public class Program
+=======
+﻿using DocoptNet;
+using SimpleDB;
+
+class Program
+>>>>>>> parent of 7b59987 (Merge to pull from main)
 {
-    public static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
-    public static UserInterface ui = new UserInterface();
+    //documentation from https://docopt.github.io/docopt.net/dev/
+    private const string Help =
+            @"Chirp
 
-    static async Task Main(string[] args)
+            Usage:
+            Chirp (--read | --cheep <message>)
+            Chirp -h | --help
+
+            Options:
+            -h --help         Show this screen.
+            --read            Print all the cheeps.
+            --cheep <message> Post a cheep.
+
+            (with dotnet run)
+            dotnet run -- -h (help)
+            dotnet run -- --read
+            dotnet run -- --cheep <message>
+            ";
+
+    private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
+    private static UserInterface ui = new UserInterface();
+
+    static void Main(string[] args)
     {
-        // tetasastsatsatsats
-        // Create the posible commands for the program
-        // https://learn.microsoft.com/en-us/dotnet/standard/commandline/define-commands
-        var rootCommand = new RootCommand();
-        var readCommand = new Command("read", "Read all the cheeps");
-        rootCommand.Add(readCommand);
-        var cheepCommand = new Command("cheep", "Write a new cheep");
-        rootCommand.Add(cheepCommand);
-        var messageArgument = new Argument<string>
-            (name: "message",
-            description: "The message in the cheep",
-            getDefaultValue: () => "");
-        cheepCommand.Add(messageArgument);
+        // Docopt code documentation reworked from https://csharp.hotexamples.com/site/file?hash=0xff1fe91471d0685c57d186e7951993e3fbf382bccde2e3daaaa6c22982498b4b
+        // and https://docopt.github.io/docopt.net/dev/#api
+        var arguments = new Docopt().Apply(Help, args, exit: true);
 
-        readCommand.SetHandler(() =>
-            {
-                ReadCheeps();
-            });
-        
-        cheepCommand.SetHandler((messageArgumentValue) =>
-            {
-                PostCheep(messageArgumentValue + "");
-            },
-            messageArgument);
-
-        await rootCommand.InvokeAsync(args);
+        if (arguments["--read"].IsTrue)
+        {
+            ReadCheeps();
+        }
+        else if (!arguments["--cheep"].IsNullOrEmpty)
+        {
+            PostCheep(arguments["--cheep"].Value.ToString());
+        }
     }
 
-    public static void ReadCheeps() 
+    static void ReadCheeps() 
     {
         var cheeps = db.Read();
         ui.PrintCheeps(cheeps); 
     }
 
-    public static void PostCheep(string message) 
+    static void PostCheep(string message) 
     {
         var newCheep = new Cheep
         {
