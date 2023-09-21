@@ -4,7 +4,8 @@ using System.CommandLine.Parsing;
 //asjnsjndsknabdsajsibsj
 public class Program
 {
-    private static IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
+    static readonly CSVDbSingleton dbSingleton = CSVDbSingleton.Instance;
+    static readonly IDatabaseRepository<Cheep> db = dbSingleton.Database;
     private static UserInterface ui = new UserInterface();
 
     static async Task Main(string[] args)
