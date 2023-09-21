@@ -1,48 +1,48 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-# This is mostly taken and adapted from this blog post https://patriksvensson.se/posts/2020/03/creating-release-artifacts-with-github-actions
 
 name: .NET
 
 on:
   push:
     tags:
-      - 'v*'
+     - '*'
+      branches:
+        - main
     
+
 jobs:
   release:
+
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout #give it a name
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3 #perhaps v1 (???)
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: publish project
-      run: |
+    
+    - name: Publish
+      shell: bash
+      run:
         #Building the entire world over here and zipping it up in tar and zip
-        #--framework netcoreapp3.1
-        dotnet publish --runtime "linux-x64" -c Release -o "linux-x64"
-        tar czvf  "linux-x64".tar.gz "./linux-x64"
-        dotnet publish --runtime "win-x64" -c Release -o "win-x64"
-        7z a -tzip "win-x64".zip "./win-x64/*"
-        dotnet publish --runtime "osx-x64" -c Release -o "osx-x64"
-        tar czvf  "osx-x64".tar.gz "./osx-x64"
-    - name: release project
-      uses: softprops/action-gh-release@v1
-      with: # needed to be indented
-        files: |
-            linux-x64.tar.gz
-            win-x64.zip
-            osx-x64.tar.gz
-          # was previously files: "src*"
-      #repo-token: ${{ secrets.GITHUB_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        dotnet publish src/ --framework netcoreapp3.1 --runtime "linux-x64" -c Release -o "Chirp.CLI-linux-x64"
+        7z a -tzip "Chirp.CLI-linux-x64".zip "./Chirp.CLI-linux-x64/*"
+        dotnet publish src/ --framework netcoreapp3.1 --runtime "win-x64" -c Release -o "Chirp.CLI-win-x64"
+        7z a -tzip "Chirp.CLI-win-x64".zip "./Chirp.CLI-win-x64/*"
+        dotnet publish src/ --framework netcoreapp3.1 --runtime "osx-x64" -c Release -o "Chirp.CLI-osx-x64"
+        7z a -tzip "Chirp.CLI-osx-x64".zip "./Chirp.CLI-osx-x64/*"
+
+        
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "src*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
