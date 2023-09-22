@@ -34,11 +34,14 @@ public class endToEndTest
         string cmd = "cheep \"This Is Test From Alex the one and only, I'm so good at this shit\"";
 
         //Act
+        check(cmd);
+        cmd = "read";
         Cheeps = check(cmd).Replace("\r", "").Split("\n");
+        
 
         //Assert
-        Assert.True(Cheeps.Contains("\"This Is Test From Alex the one and only, I'm so good at this shit\""));
-
+        Assert.True(Cheeps.Any(x => x.Contains("This Is Test From Alex the one and only, I'm so good at this shit")));
+        //Alexa @ 22/09/2023 11.10.46: This Is Test From Alex the one and only, I'm so good at this shit
     }
 
 
