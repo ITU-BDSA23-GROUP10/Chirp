@@ -1,6 +1,7 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
+namespace Chirp;
 public class Program
 {
     static readonly SingletonDB dbSingleton = SingletonDB.Instance;
@@ -42,13 +43,13 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-    static void ReadCheeps(int? limit = null) 
+    public static void ReadCheeps(int? limit = null) 
     {
         var cheeps = db.Read(limit);
         ui.PrintCheeps(cheeps); 
     }
 
-    static void PostCheep(string message) 
+    public static void PostCheep(string message) 
     {
         var newCheep = new Cheep
         {
