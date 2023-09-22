@@ -13,7 +13,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout #give it a name
+    - name: Checkout
       uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -26,31 +26,25 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: publish project
-      #run: |
+      run: |
         #Building the entire world over here and zipping it up in tar and zip
         #--framework netcoreapp3.1
-      #  dotnet publish --runtime "linux-x64" -c Release -o "Chirp.CLI-linux-x64"
-      #  7z a -tzip "Chirp.CLI-linux-x64.zip" "./Chirp.CLI-linux-x64/*"
-      #  dotnet publish --runtime "win-x64" -c Release -o "Chirp.CLI-win-x64"
-      #  7z a -tzip "Chirp.CLI-win-x64.zip" "./Chirp.CLI-win-x64/*"
-      #  dotnet publish --runtime "osx-x64" -c Release -o "Chirp.CLI-osx-x64"
-      #  7z a -tzip "Chirp.CLI-osx-x64.zip" "./Chirp.CLI-osx-x64/*"
-      run: |
+
         tag=$(git describe --tags --abbrev=0)
-    
-    # Build for Windows
+
+        # Build for Windows
         windows_release_name="Chirp-$tag-win-x64"
         dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "win-x64" --self-contained false -c Release -o "${windows_release_name}"
         7z a -tzip "${windows_release_name}.zip" "./${windows_release_name}/*"
         rm -r "$windows_release_name" # Delete output directory
 
-    # Build for Linux
+        # Build for Linux
         linux_release_name="Chirp-$tag-linux-x64"
         dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "linux-x64" --self-contained false -c Release -o "${linux_release_name}"
         7z a -tzip "${linux_release_name}.zip" "./${linux_release_name}/*"
         rm -r "$linux_release_name" # Delete output directory
 
-    # Build for MacOS
+        # Build for MacOS
         mac_release_name="Chirp-$tag-osx-x64"
         dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "osx-x64" --self-contained false -c Release -o "${mac_release_name}"
         7z a -tzip "${mac_release_name}.zip" "./${mac_release_name}/*"
@@ -58,10 +52,6 @@ jobs:
     - name: release project
       uses: softprops/action-gh-release@v1
       with: 
-        #files: |
-        #    Chirp.CLI-linux-x64.zip
-        #    Chirp.CLI-win-x64.zip
-        #    Chirp.CLI-osx-x64.zip
         files: "Chirp*"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
