@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\SimpleDB\SimpleDB.csproj" />
+    <ProjectReference Include="..\src\Chirp.CLI\Chirp.CLI.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
