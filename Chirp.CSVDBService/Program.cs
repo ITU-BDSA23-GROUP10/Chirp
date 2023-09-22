@@ -1,5 +1,5 @@
 using SimpleDB;
-using Chirp.CLI;
+using Chirp;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
@@ -7,7 +7,7 @@ var app = builder.Build();
 
 app.MapPost("/cheep", () => new Cheep("me", "Hej!", 1684229348));
 //ReadCheeps
-app.MapGet("/cheeps", () => Program.ReadCheeps());
+app.MapGet("/cheeps", () => Chirp.Program.ReadCheeps());
 
 app.Run();
 
