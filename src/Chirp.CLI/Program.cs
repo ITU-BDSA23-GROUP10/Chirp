@@ -35,7 +35,7 @@ public class Program
         
         cheepCommand.SetHandler((messageArgumentValue) =>
             {
-                PostCheep(messageArgumentValue + "");
+                PostCheep(messageArgumentValue ?? "");
             },
             messageArgument);
 
@@ -50,6 +50,8 @@ public class Program
 
     static void PostCheep(string message) 
     {
+        if (IsMSGEmptyOrStartsWithAt(message)) return;
+
         var newCheep = new Cheep
         {
             Message = message,
@@ -57,5 +59,15 @@ public class Program
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         db.Store(newCheep);
+    }
+
+    static bool IsMSGEmptyOrStartsWithAt(string message)
+    {
+        if (string.IsNullOrEmpty(message) || message.StartsWith("@"))
+        {
+            Console.WriteLine("Chirp! Cheeps cannot be empty or start with @.\nPlease try again :)");
+            return true;
+        }
+        return false;
     }
 }
