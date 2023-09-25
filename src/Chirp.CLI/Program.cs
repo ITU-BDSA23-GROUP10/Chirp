@@ -1,11 +1,10 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-
-
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Chirp;
 public class Program
@@ -36,61 +35,114 @@ public class Program
             getDefaultValue: () => "");
         cheepCommand.Add(messageArgument);
 
-        readCommand.SetHandler((readLimitValue) =>
+        /*readCommand.SetHandler((readLimitValue) =>
             {
                 ReadCheeps(readLimitValue);
             },
-            readLimit);
+            readLimit);*/
+
+          readCommand.SetHandler(async (readLimitValue) =>
+            {
+                await ReadCheeps(readLimitValue);
+            },
+            readLimit);  
         
-        cheepCommand.SetHandler((messageArgumentValue) =>
+        /*cheepCommand.SetHandler((messageArgumentValue) =>
             {
                 PostCheep(messageArgumentValue + "");
             },
-            messageArgument);
+            messageArgument);*/
 
         await rootCommand.InvokeAsync(args);
     }
 
-public record chiptest(string Author, string Message, long Timestamp);
 
-    public async static void ReadCheeps(int? limit = null) 
+    public static async Task ReadCheeps(int? limit = null) 
+    {
+        using HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri("http://localhost:5076");
+
+        try
+        {
+            Console.WriteLine("Trying to fetch cheeps from the server...");
+
+            // Send the request and get the response
+            var response = await client.GetAsync("cheeps");
+            Console.WriteLine($"Response status code: {response.StatusCode}");
+            Console.WriteLine("Response headers:");
+            foreach (var header in response.Headers)
+            {
+                Console.WriteLine($"{header.Key}: {string.Join(", ", header.Value)}");
+            }
+
+            // Throw an exception if the response indicates an unsuccessful status code
+            response.EnsureSuccessStatusCode();
+
+            // Read the response as a string motherfucker you better work now
+            var json = await response.Content.ReadAsStringAsync();
+
+            // Log the JSON to the console
+            Console.WriteLine($"JSON from server: {json}");
+
+            // Attempt to deserialize the JSON
+            var cheeps = JsonSerializer.Deserialize<List<Cheep>>(json, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            Console.WriteLine("Fetched cheeps from the server.");
+
+            if (cheeps == null || cheeps.Count == 0)
+            {
+                Console.WriteLine("No Cheeps found.");
+                return;
+            }
+
+            if(limit.HasValue && cheeps.Count > limit.Value)
+            {
+                cheeps = cheeps.Take(limit.Value).ToList();
+            }
+            ui.PrintCheeps(cheeps);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    /*public static async Task PostCheep(string message) 
+    {
+
+        var newCheep = new Cheep
+        {
+            Message = message,
+            Author = Environment.UserName,
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+        };
+
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri("http://localhost:5076");
+
+        try
+        {
+            var response = await client.PostAsJsonAsync("cheep", newCheep);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response from server: {result}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+    /*public async static void ReadCheeps(int? limit = null) 
     {
         
-        // Create an HTTP client object
-        var baseURL = "http://localhost:5076";
-        using HttpClient client = new();
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        client.BaseAddress = new Uri(baseURL);
-
-        // Send an asynchronous HTTP GET request and automatically construct a Cheep object from the
-        // JSON object in the body of the response
-        var cheep = await client.GetFromJsonAsync<Cheep>("cheeps");
-        
-        Console.WriteLine("test");
-        //ui.PrintCheeps(cheep);
-        Console.WriteLine(cheep.Author);
-
-    /*
-    private readonly HttpClient client;
-        
-        [Fact]
-        public async Task GetCheeps_ShouldReturn200()
-        {
-            // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, "/cheeps");
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-    
-    
-    */
-        //var cheeps = db.Read(limit);
-        //ui.PrintCheeps(cheeps); 
+        var cheeps = db.Read(limit);
+        ui.PrintCheeps(cheeps); 
     }
 
     public static void PostCheep(string message) 
@@ -102,5 +154,6 @@ public record chiptest(string Author, string Message, long Timestamp);
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         db.Store(newCheep);
-    }
+    }*/
+    
 }
