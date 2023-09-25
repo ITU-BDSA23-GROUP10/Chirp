@@ -57,52 +57,31 @@ public class Program
     }
 
 
+    //mostly from session 4 slide (class BDSA)
+    //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
-        using HttpClient client = new HttpClient();
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-        client.BaseAddress = new Uri("http://localhost:5076");
+        using HttpClient client = new HttpClient
+        {
+            BaseAddress = new Uri("http://localhost:5076")
+        };
+
+        //Our requests for data should expect JSON
+        //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         try
         {
-            Console.WriteLine("Trying to fetch cheeps from the server...");
-
-            // Send the request and get the response
+            //sends an asynchronous GET request to the endpoint "cheeps"
             var response = await client.GetAsync("cheeps");
-            Console.WriteLine($"Response status code: {response.StatusCode}");
-            Console.WriteLine("Response headers:");
-            foreach (var header in response.Headers)
-            {
-                Console.WriteLine($"{header.Key}: {string.Join(", ", header.Value)}");
-            }
-
-            // Throw an exception if the response indicates an unsuccessful status code
-            response.EnsureSuccessStatusCode();
-
-            // Read the response as a string motherfucker you better work now
+            //reads the content of the response as a string asynchronously in JSON format
             var json = await response.Content.ReadAsStringAsync();
 
-            // Log the JSON to the console
-            Console.WriteLine($"JSON from server: {json}");
-
-            // Attempt to deserialize the JSON
-            var cheeps = JsonSerializer.Deserialize<List<Cheep>>(json, 
+            //deserializes the JSON string stored in the "json" variable into a list of Cheep objects
+            var cheeps = JsonSerializer.Deserialize<List<Cheep>>(json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            Console.WriteLine("Fetched cheeps from the server.");
-
-            if (cheeps == null || cheeps.Count == 0)
-            {
-                Console.WriteLine("No Cheeps found.");
-                return;
-            }
-
-            if(limit.HasValue && cheeps.Count > limit.Value)
-            {
-                cheeps = cheeps.Take(limit.Value).ToList();
-            }
+            //print it
             ui.PrintCheeps(cheeps);
         }
         catch (Exception ex)
