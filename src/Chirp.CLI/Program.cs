@@ -87,10 +87,8 @@ public class Program
         }
     }
 
-    //need to clean up the postcheep method code at some point (jonas)
     public static async Task PostCheep(string message) 
     {
-
         var newCheep = new Cheep
         {
             Message = message,
@@ -98,17 +96,12 @@ public class Program
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
 
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-        client.BaseAddress = new Uri("http://localhost:5076");
-
         try
         {
             var response = await client.PostAsJsonAsync("cheep", newCheep);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
-            //Write if it did it
+            //Write the server response to posting new data
             Console.WriteLine($"Response from server: {result}");
         }
         catch (Exception ex)
