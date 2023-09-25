@@ -35,36 +35,32 @@ public class Program
             getDefaultValue: () => "");
         cheepCommand.Add(messageArgument);
 
-        /*readCommand.SetHandler((readLimitValue) =>
-            {
-                ReadCheeps(readLimitValue);
-            },
-            readLimit);*/
-
-          readCommand.SetHandler(async (readLimitValue) =>
-            {
-                await ReadCheeps(readLimitValue);
-            },
-            readLimit);  
+        readCommand.SetHandler(async (readLimitValue) =>
+        {
+            await ReadCheeps(readLimitValue);
+        },
+        readLimit);  
         
-        /*cheepCommand.SetHandler((messageArgumentValue) =>
-            {
-                PostCheep(messageArgumentValue + "");
-            },
-            messageArgument);*/
+        cheepCommand.SetHandler(async (messageArgumentValue) =>
+        {
+            await PostCheep(messageArgumentValue + "");
+        },
+        messageArgument);
 
         await rootCommand.InvokeAsync(args);
     }
 
 
+    private static readonly HttpClient client = new HttpClient
+    {
+        BaseAddress = new Uri("http://localhost:5076")
+    };
+
     //mostly from session 4 slide (class BDSA)
     //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
-        using HttpClient client = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5076")
-        };
+        
 
         //Our requests for data should expect JSON
         //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
@@ -74,6 +70,7 @@ public class Program
         {
             //sends an asynchronous GET request to the endpoint "cheeps"
             var response = await client.GetAsync("cheeps");
+            response.EnsureSuccessStatusCode();
             //reads the content of the response as a string asynchronously in JSON format
             var json = await response.Content.ReadAsStringAsync();
 
@@ -90,7 +87,8 @@ public class Program
         }
     }
 
-    /*public static async Task PostCheep(string message) 
+    //need to clean up the postcheep method code at some point (jonas)
+    public static async Task PostCheep(string message) 
     {
 
         var newCheep = new Cheep
@@ -110,6 +108,7 @@ public class Program
             var response = await client.PostAsJsonAsync("cheep", newCheep);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
+            //Write if it did it
             Console.WriteLine($"Response from server: {result}");
         }
         catch (Exception ex)
@@ -117,22 +116,5 @@ public class Program
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
-    /*public async static void ReadCheeps(int? limit = null) 
-    {
-        
-        var cheeps = db.Read(limit);
-        ui.PrintCheeps(cheeps); 
-    }
-
-    public static void PostCheep(string message) 
-    {
-        var newCheep = new Cheep
-        {
-            Message = message,
-            Author = Environment.UserName,
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-        };
-        db.Store(newCheep);
-    }*/
     
 }
