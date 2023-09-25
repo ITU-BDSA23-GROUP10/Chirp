@@ -1,5 +1,6 @@
 using SimpleDB;
 
+// these tests should be refactored to fit http request standards
 namespace Chirp.CLI.test;
 public class UnitTest1
 {
