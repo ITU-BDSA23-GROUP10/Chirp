@@ -13,7 +13,10 @@ public class Program
     static readonly SingletonDB dbSingleton = SingletonDB.Instance;
     static readonly IDatabaseRepository<Cheep> db = dbSingleton.Database;
     private static UserInterface ui = new UserInterface();
-
+    private static readonly HttpClient client = new HttpClient
+    {
+        BaseAddress = new Uri("http://localhost:5076")
+    };
 
     static async Task Main(string[] args)
     {
@@ -50,19 +53,11 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-
-    private static readonly HttpClient client = new HttpClient
-    {
-        BaseAddress = new Uri("http://localhost:5076")
-    };
-
     //mostly from session 4 slide (class BDSA)
     //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
-        
-
-        //Our requests for data should expect JSON
+        //Our requests for data should expect JSON (the method works without, but its another layer of specificity)
         //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -95,6 +90,9 @@ public class Program
             Author = Environment.UserName,
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
+
+        //Our requests for data should expect JSON
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         try
         {
