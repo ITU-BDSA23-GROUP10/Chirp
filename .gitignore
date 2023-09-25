@@ -7,6 +7,7 @@
 src/Chirp.CLI/data/
 .vscode/
 .idea/
+Publish/
 
 # User-specific files
 *.rsuser

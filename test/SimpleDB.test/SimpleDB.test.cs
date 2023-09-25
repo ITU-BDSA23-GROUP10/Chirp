@@ -60,5 +60,6 @@ namespace SimpleDB.Tests
             // Assert
             Assert.Equal(db1, db2);
         }
+        */
     }
 }

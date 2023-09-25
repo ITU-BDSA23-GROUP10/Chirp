@@ -1,4 +1,4 @@
-﻿using SimpleDB;
+using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
 public class Program
@@ -48,7 +48,7 @@ public class Program
         ui.PrintCheeps(cheeps); 
     }
 
-    static void PostCheep(string message) 
+    public static void PostCheep(string message)
     {
         if (IsMSGEmptyOrStartsWithAt(message)) return;
 
