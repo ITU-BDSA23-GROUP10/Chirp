@@ -1,12 +1,20 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
+
+
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
 namespace Chirp;
 public class Program
 {
+
     static readonly SingletonDB dbSingleton = SingletonDB.Instance;
     static readonly IDatabaseRepository<Cheep> db = dbSingleton.Database;
     private static UserInterface ui = new UserInterface();
+
 
     static async Task Main(string[] args)
     {
@@ -43,10 +51,46 @@ public class Program
         await rootCommand.InvokeAsync(args);
     }
 
-    public static void ReadCheeps(int? limit = null) 
+public record chiptest(string Author, string Message, long Timestamp);
+
+    public async static void ReadCheeps(int? limit = null) 
     {
-        var cheeps = db.Read(limit);
-        ui.PrintCheeps(cheeps); 
+        
+        // Create an HTTP client object
+        var baseURL = "http://localhost:5076";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);
+
+        // Send an asynchronous HTTP GET request and automatically construct a Cheep object from the
+        // JSON object in the body of the response
+        var cheep = await client.GetFromJsonAsync<Cheep>("cheeps");
+        
+        Console.WriteLine("test");
+        //ui.PrintCheeps(cheep);
+        Console.WriteLine(cheep.Author);
+
+    /*
+    private readonly HttpClient client;
+        
+        [Fact]
+        public async Task GetCheeps_ShouldReturn200()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "/cheeps");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+    
+    
+    */
+        //var cheeps = db.Read(limit);
+        //ui.PrintCheeps(cheeps); 
     }
 
     public static void PostCheep(string message) 
