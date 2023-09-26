@@ -3,6 +3,9 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
     <ProjectReference Include="..\Chirp.CLI\Chirp.CLI.csproj" />
+      <Content Include="..\src\Chirp.CSVDBService\Data\chirp_cli_db.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <PropertyGroup>
