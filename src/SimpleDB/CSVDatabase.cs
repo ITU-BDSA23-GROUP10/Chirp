@@ -16,7 +16,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         {
             var records = csv.GetRecords<T>();
             var recordsList = records.ToList();
-            if (limit == null || limit > recordsList.Count)
+            if (limit == null || limit >= recordsList.Count)
                 return recordsList;
             else
                 return recordsList.GetRange(recordsList.Count() - (int)limit - 1, (int)limit);
