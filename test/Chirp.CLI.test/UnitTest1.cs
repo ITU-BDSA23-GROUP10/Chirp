@@ -6,23 +6,6 @@ public class UnitTest1
 {
     //took info on how to do testing from
     //https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test
-
-    private class TestDatabaseRepository : IDatabaseRepository<Cheep>
-    {
-        public List<Cheep> Cheeps = new List<Cheep>();
-
-        //from IDatabaseRepository.cs
-        public IEnumerable<Cheep> Read(int? id = null)
-        {
-            return Cheeps;
-        }
-
-        public void Store(Cheep record)
-        {
-            Cheeps.Add(record);
-        }
-    }
-
     private class TestUserInterface : UserInterface
     {
         public List<Cheep> CheepsToPrint;
@@ -37,11 +20,11 @@ public class UnitTest1
     public void TestPostCheep()
     {
         // Arrange
-        var testDb = new TestDatabaseRepository();
-        Program.db = testDb;
+        IDatabaseRepository<Cheep> testDb = new CSVDatabase<Cheep>();
 
         // Act
         Program.PostCheep("test message");
+        List li = testDb.Read.toList();
 
         // Assert
         Assert.Single(testDb.Cheeps);

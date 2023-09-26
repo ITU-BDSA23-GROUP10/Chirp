@@ -2,9 +2,9 @@ namespace test;
 
 public class ChirpCLItest
 {
-    [Fact]
+    /*[Fact]
     public void Test1()
     {
 
-    }
+    }*/
 }
