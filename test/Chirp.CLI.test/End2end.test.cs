@@ -51,7 +51,7 @@ public class endToEndTest
         using (Process process = new Process())
         {
             process.StartInfo.FileName = "dotnet";
-            process.StartInfo.Arguments = "run --" + cmd;
+            process.StartInfo.Arguments = "run " + cmd;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = false;
