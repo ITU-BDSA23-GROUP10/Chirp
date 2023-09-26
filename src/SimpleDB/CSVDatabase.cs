@@ -45,13 +45,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         }
     }
 
-    public Cheep getLastFromDB() {
-        List<Cheep> li = Read.toList();
-        int count  = li.count();
-
-        return li.get(count - 1);
-    }
-
 }
 
 
