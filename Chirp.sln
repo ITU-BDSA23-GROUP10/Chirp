@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00D5C37F-6AE9-4D7D-B88E-043459FC0606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CLI", "src\Chirp.CLI\Chirp.CLI.csproj", "{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDB", "src\SimpleDB\SimpleDB.csproj", "{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CSVDBService", "src\Chirp.CSVDBService\Chirp.CSVDBService.csproj", "{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{79867564-9EC4-4425-840B-61842A618D8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDB.test", "test\SimpleDB.test\SimpleDB.test.csproj", "{A7885FB2-B767-4746-9989-5F1031D73116}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CLI.test", "test\Chirp.CLI.test\Chirp.CLI.test.csproj", "{2B998E27-A278-4827-B95A-CF33D9EE9353}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7885FB2-B767-4746-9989-5F1031D73116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7885FB2-B767-4746-9989-5F1031D73116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7885FB2-B767-4746-9989-5F1031D73116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7885FB2-B767-4746-9989-5F1031D73116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B998E27-A278-4827-B95A-CF33D9EE9353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B998E27-A278-4827-B95A-CF33D9EE9353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B998E27-A278-4827-B95A-CF33D9EE9353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B998E27-A278-4827-B95A-CF33D9EE9353}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8ABAC7F1-B68F-435A-B71A-A3E11CB3DCEC} = {00D5C37F-6AE9-4D7D-B88E-043459FC0606}
+		{7DCCEE66-CB17-41FB-BDE1-D12DD78AC72D} = {00D5C37F-6AE9-4D7D-B88E-043459FC0606}
+		{74C2D0E6-A639-4B36-9DC1-F2FFA4EA6422} = {00D5C37F-6AE9-4D7D-B88E-043459FC0606}
+		{A7885FB2-B767-4746-9989-5F1031D73116} = {79867564-9EC4-4425-840B-61842A618D8E}
+		{2B998E27-A278-4827-B95A-CF33D9EE9353} = {79867564-9EC4-4425-840B-61842A618D8E}
+	EndGlobalSection
+EndGlobal

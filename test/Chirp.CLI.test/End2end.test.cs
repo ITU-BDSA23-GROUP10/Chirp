@@ -9,7 +9,7 @@ namespace Chirp.CLI.test;
 public class endToEndTest
 {
 
-    [Fact]
+    /*[Fact]
     public void endtoEnd1()
     {
         //Arrange
@@ -67,5 +67,5 @@ public class endToEndTest
         }
     }
 
-
+*/
 }

@@ -27,8 +27,7 @@ public class UnitTest1
         cheeps = Read();
 
         // Assert
-        Assert.True()
-        //Assert.Single(testDb.Read);
-        //Assert.Equal("test message", testDb.Cheeps[0].Message);
+        Assert.Single(testDb.Cheeps);
+        Assert.Equal("test message", testDb.Cheeps[0].Message);
     }*/
-}   
+}

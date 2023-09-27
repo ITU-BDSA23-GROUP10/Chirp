@@ -45,11 +45,6 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
         }
     }
 
-    public Cheep getLastFromDB() {
-        IEnumerable<Cheep> cheeps = (IEnumerable<Cheep>) Read(); 
-        return cheeps.Last();
-    }
-
 }
 
 
