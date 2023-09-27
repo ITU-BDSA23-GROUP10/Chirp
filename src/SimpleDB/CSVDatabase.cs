@@ -11,7 +11,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     {
         // Read datafile with CsvHelper
         // https://joshclose.github.io/CsvHelper/examples/writing/appending-to-an-existing-file/
-        using (var reader = new StreamReader("chirp_cli_db.csv", Encoding.UTF8))
+        using (var reader = new StreamReader("Data/chirp_cli_db.csv", Encoding.UTF8))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             var records = csv.GetRecords<T>();
@@ -36,7 +36,7 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
             ShouldQuote = args => true,
         };
 
-        using (var stream = File.Open("chirp_cli_db.csv", FileMode.Append))
+        using (var stream = File.Open("Data/chirp_cli_db.csv", FileMode.Append))
         using (var writer = new StreamWriter(stream, Encoding.UTF8))
         using (var csv = new CsvWriter(writer, config))
         {
