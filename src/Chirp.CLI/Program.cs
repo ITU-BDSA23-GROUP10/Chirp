@@ -16,7 +16,7 @@ public class Program
     private static UserInterface ui = new UserInterface();
     private static readonly HttpClient client = new HttpClient
     {
-        BaseAddress = new Uri("http://localhost:5076")
+        BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net")
     };
 
     static async Task Main(string[] args)
