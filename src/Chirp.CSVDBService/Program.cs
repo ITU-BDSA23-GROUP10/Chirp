@@ -30,4 +30,4 @@ to see the post through curl (make sure your csv data file has the actual data i
 */
 
 
-public record Cheep(string Author, string Message, long Timestamp);
+//public record Cheep(string Author, string Message, long Timestamp);
