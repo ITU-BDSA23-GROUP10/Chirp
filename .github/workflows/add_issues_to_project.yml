@@ -10,7 +10,10 @@ jobs:
   move-assigned-card:
     runs-on: ubuntu-latest
     steps:
-      with:
-        project: ITU-BDSA23-GROUP10 Chirp
-        column: Not started
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/add-to-project@RELEASE_VERSION
+        with:
+          project: ITU-BDSA23-GROUP10 Chirp
+          column: Not started
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          labeled: bug
+          label-operator: NOT
