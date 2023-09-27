@@ -14,6 +14,6 @@ jobs:
         with:
           project-url: https://github.com/orgs/ITU-BDSA23-GROUP10/projects/2
           column: Not started
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           labeled: bug
           label-operator: NOT
