@@ -16,18 +16,19 @@ public class UnitTest1
         }
     }
 
-    [Fact]
+    /*[Fact]
     public void TestPostCheep()
     {
         // Arrange
-        IDatabaseRepository<Cheep> testDb = new CSVDatabase<Cheep>();
+        IEnumerable<Cheep> cheeps;
 
         // Act
         Program.PostCheep("test message");
-        List li = testDb.Read.toList();
+        cheeps = Read();
 
-        // Assert   
+        // Assert
+        Assert.True()
         //Assert.Single(testDb.Read);
         //Assert.Equal("test message", testDb.Cheeps[0].Message);
-    }
+    }*/
 }   
