@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project: ITU-BDSA23-GROUP10 Chirp
+          project-url: https://github.com/orgs/ITU-BDSA23-GROUP10/projects/2
           column: Not started
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           labeled: bug
