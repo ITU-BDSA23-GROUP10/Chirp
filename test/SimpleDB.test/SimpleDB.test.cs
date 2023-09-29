@@ -8,7 +8,7 @@ namespace CSVDatabaseWebService.Tests
     public class CSVDatabaseTests
     {
         private readonly HttpClient client;
-        
+
         public CSVDatabaseTests()
         {
             client = new HttpClient
@@ -17,7 +17,6 @@ namespace CSVDatabaseWebService.Tests
             };
         }
 
-        // Integration tests
         [Fact]
         public async Task GetCheeps_ShouldReturn200()
         {
@@ -35,7 +34,7 @@ namespace CSVDatabaseWebService.Tests
         public async Task PostCheep_ShouldReturn200()
         {
             // Arrange
-            var cheep = new Cheep { Author = "hejehj", Message = "test", Timestamp = 1695386940 };
+            var cheep = new Cheep { Author = "Test Author", Message = "test from simpleDB test", Timestamp = 1695386940 };
             var content = new StringContent(JsonConvert.SerializeObject(cheep), Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage(HttpMethod.Post, "/cheep")
             {
@@ -49,7 +48,7 @@ namespace CSVDatabaseWebService.Tests
             //Post sends a 201 success
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
-        
+
         [Fact]
         public void SingletonDB_ShouldOnlyCreateOne()
         {
@@ -61,7 +60,7 @@ namespace CSVDatabaseWebService.Tests
             Cheep newCheep = new Cheep
             {
                 Message = "Testing Singleton",
-                Author = Environment.UserName,
+                Author = "Test Author",
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
 
@@ -71,6 +70,6 @@ namespace CSVDatabaseWebService.Tests
             // Assert
             Assert.Equal(db1, db2);
         }
-        
+
     }
 }

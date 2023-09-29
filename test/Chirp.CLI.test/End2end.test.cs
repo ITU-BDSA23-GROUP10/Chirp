@@ -5,12 +5,14 @@ using Chirp.CLI;
 using Xunit;
 using System.Diagnostics;
 using System.Net;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Chirp.CLI.test;
 
 public class endToEndTest
 {
-
     [Fact]
     public void readCheeps_EndtoEnd_Test()
     {
@@ -97,6 +99,34 @@ public class endToEndTest
 
     }
 
+    [Fact]
+    public async void http_postCheep_And_Read_After_EndtoEnd_Test()
+    {
+
+        // Arrange
+        var newCheep = new Cheep();
+        newCheep.Author = "END2END";
+        newCheep.Message = "END2END is testing the server";
+
+        var requestPost = new HttpRequestMessage(HttpMethod.Post, "cheep");
+        var content = new StringContent(JsonConvert.SerializeObject(newCheep), Encoding.UTF8, "application/json");
+        requestPost.Content = content;
+
+        // Act
+        var responsePost = await client.SendAsync(requestPost);
+        var responseString = await HttpGetBodyAsync();
 
 
+        //Assert.True(true);
+        Assert.True(responseString.Contains("{\"author\":\"END2END\",\"message\":\"END2END is testing the server\","));
+    }
+
+    private async Task<string> HttpGetBodyAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "cheeps");
+        var response = await client.SendAsync(request);
+
+        return await response.Content.ReadAsStringAsync();
+
+    }
 }
