@@ -1,7 +1,6 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -58,8 +57,7 @@ public class Program
     //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
-        //Our requests for data should expect JSON (the method works without, but its another layer of specificity)
-        //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
+        //Our requests for data should expect JSON
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         try
