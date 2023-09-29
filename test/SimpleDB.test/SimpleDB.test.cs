@@ -8,7 +8,7 @@ namespace CSVDatabaseWebService.Tests
     public class CSVDatabaseTests
     {
         private readonly HttpClient client;
-        
+
         public CSVDatabaseTests()
         {
             client = new HttpClient
@@ -48,7 +48,7 @@ namespace CSVDatabaseWebService.Tests
             //Post sends a 201 success
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
-        
+
         [Fact]
         public void SingletonDB_ShouldOnlyCreateOne()
         {
@@ -70,6 +70,6 @@ namespace CSVDatabaseWebService.Tests
             // Assert
             Assert.Equal(db1, db2);
         }
-        
+
     }
 }
