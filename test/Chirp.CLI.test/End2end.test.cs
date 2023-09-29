@@ -1,23 +1,25 @@
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using System.Web;
 using SimpleDB;
 using Chirp.CLI;
 using Xunit;
 using System.Diagnostics;
+using System.Net;
 
 namespace Chirp.CLI.test;
 
 public class endToEndTest
 {
 
-    /*[Fact]
-    public void endtoEnd1()
+    [Fact]
+    public void readCheeps_EndtoEnd_Test()
     {
         //Arrange
         string[] Cheeps;
         string cmd = "read";
 
         //Act
-        Cheeps = check(cmd).Replace("\r", "").Split("\n");
+        Cheeps = start_Process_For_Client_CLI(cmd).Replace("\r", "").Split("\n");
 
         // Assert
         Assert.True(Cheeps.Contains("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!"));
@@ -27,25 +29,24 @@ public class endToEndTest
     }
 
     [Fact]
-    public void endtoEnd2()
+    public void postCheep_And_Read_After_EndtoEnd_Test()
     {
         //Arrange
         string[] Cheeps;
-        string cmd = "cheep \"This Is Test From Alex the one and only, I'm so good at this shit\"";
+        string cmd = "cheep \"This Is Test From The Endtoend Test\"";
 
         //Act
-        check(cmd);
+        start_Process_For_Client_CLI(cmd);
         cmd = "read";
-        Cheeps = check(cmd).Replace("\r", "").Split("\n");
-        
+        Cheeps = start_Process_For_Client_CLI(cmd).Replace("\r", "").Split("\n");
+
 
         //Assert
-        Assert.True(Cheeps.Any(x => x.Contains("This Is Test From Alex the one and only, I'm so good at this shit")));
-        //Alexa @ 22/09/2023 11.10.46: This Is Test From Alex the one and only, I'm so good at this shit
+        Assert.True(Cheeps.Any(x => x.Contains("This Is Test From The Endtoend Test")));
     }
 
 
-    private string check(string cmd)
+    private string start_Process_For_Client_CLI(string cmd)
     {
         string output;
         using (Process process = new Process())
@@ -67,5 +68,35 @@ public class endToEndTest
         }
     }
 
-*/
+    private readonly HttpClient client;
+
+    public endToEndTest()
+    {
+        client = new HttpClient
+        {
+            BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net/")
+        };
+    }
+
+    //https://stackoverflow.com/questions/37432999/get-content-result-from-httprequestmessage
+    [Fact]
+    public async void http_readCheeps_EndtoEnd_Test()
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, "cheeps");
+
+        // Act
+        var response = await client.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.True(content.Contains("{\"author\":\"ropf\",\"message\":\"Hello, BDSA students!\",\"timestamp\":1690891760}"));
+        Assert.True(content.Contains("{\"author\":\"rnie\",\"message\":\"Welcome to the course!\",\"timestamp\":1690978778}"));
+        Assert.True(content.Contains("{\"author\":\"rnie\",\"message\":\"I hope you had a good summer.\",\"timestamp\":1690979858}"));
+        Assert.True(content.Contains("{\"author\":\"ropf\",\"message\":\"Cheeping cheeps on Chirp :)\",\"timestamp\":1690981487}"));
+
+    }
+
+
+
 }
