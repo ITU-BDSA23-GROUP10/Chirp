@@ -1,11 +1,5 @@
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System.Web;
 using SimpleDB;
-using Chirp.CLI;
-using Xunit;
 using System.Diagnostics;
-using System.Net;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -14,7 +8,7 @@ namespace Chirp.CLI.test;
 public class endToEndTest
 {
 
-    /*[Fact]
+    [Fact]
     public void readCheeps_EndtoEnd_Test()
     {
         //Arrange
@@ -69,7 +63,7 @@ public class endToEndTest
 
             return output;
         }
-    }*/
+    }
 
     private readonly HttpClient client;
 
