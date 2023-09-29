@@ -10,11 +10,13 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="SimpleDB" />
+    <PackageReference Include="ClientToServer" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
+    <ProjectReference Include="..\ClientToServer\ClientToServer.csproj" />
   </ItemGroup>
 
 </Project>
