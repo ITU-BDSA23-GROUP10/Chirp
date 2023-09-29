@@ -1,8 +1,11 @@
-namespace ClientToSercer;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
+namespace ClientToServer;
 
 public class ClientServerInteraction<T> : IServerInteraction<T>
 {
-    private static readonly HttpClient client;
+    private readonly HttpClient client;
 
     public ClientServerInteraction(string baseAddress)
     {
@@ -12,7 +15,7 @@ public class ClientServerInteraction<T> : IServerInteraction<T>
         };
     }
 
-    public string? GetToEndpointWithJsonResponce(string endpoint)
+    public async Task<string?> GetToEndpointWithJsonResponceAsync(string endpoint)
     {
         //Our requests for data should expect JSON (the method works without, but its another layer of specificity)
         //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
@@ -27,8 +30,13 @@ public class ClientServerInteraction<T> : IServerInteraction<T>
         return json;
     }
 
-    public string? PostToEndpointWithJsonResponce(string endpoint, T postData)
+    public async Task<string?> PostToEndpointWithJsonResponceAsync(string endpoint, T postData)
     {
-
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        var response = await client.PostAsJsonAsync("cheep", postData);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadAsStringAsync();
+        
+        return result;
     }
 }
