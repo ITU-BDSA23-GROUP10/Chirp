@@ -17,7 +17,6 @@ namespace CSVDatabaseWebService.Tests
             };
         }
 
-        // Integration tests
         [Fact]
         public async Task GetCheeps_ShouldReturn200()
         {
@@ -61,7 +60,7 @@ namespace CSVDatabaseWebService.Tests
             Cheep newCheep = new Cheep
             {
                 Message = "Testing Singleton",
-                Author = Environment.UserName,
+                Author = "Test Author",
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
 
