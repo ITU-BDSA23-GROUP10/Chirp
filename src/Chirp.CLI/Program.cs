@@ -1,8 +1,9 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Text.Json;
-using ClientToServer;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
 
 namespace Chirp;
 
@@ -51,6 +52,8 @@ public class Program
     //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
+        //Our requests for data should expect JSON
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         try
         {
             var json = await client.GetToEndpointWithJsonResponceAsync("cheeps");
