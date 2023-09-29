@@ -1,23 +1,16 @@
 ﻿using SimpleDB;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
+using ClientToServer;
 
 namespace Chirp;
 
 public class Program
 {
 
-    static readonly SingletonDB dbSingleton = SingletonDB.Instance;
-    static readonly IDatabaseRepository<Cheep> db = dbSingleton.Database;
     private static UserInterface ui = new UserInterface();
-    private static readonly HttpClient client = new HttpClient
-    {
-        BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net")
-    };
+    private static IServerInteraction<Cheep> client = new ClientServerInteraction<Cheep>("https://bdsagroup10chirpremotedb.azurewebsites.net");
 
     public static async Task Main(string[] args)
     {
@@ -58,18 +51,9 @@ public class Program
     //remember to always call the method asyncronously in the readCommand.SetHandler (else it fails)
     public static async Task ReadCheeps(int? limit = null) 
     {
-        //Our requests for data should expect JSON (the method works without, but its another layer of specificity)
-        //https://learn.microsoft.com/en-us/uwp/api/windows.web.http.httpclient.defaultrequestheaders?view=winrt-22621
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
         try
         {
-            // TODO: Make run on ClientServerInteraction
-            //sends an asynchronous GET request to the endpoint "cheeps"
-            var response = await client.GetAsync("cheeps");
-            response.EnsureSuccessStatusCode();
-            //reads the content of the response as a string asynchronously in JSON format
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await client.GetToEndpointWithJsonResponceAsync("cheeps");
 
             //deserializes the JSON string stored in the "json" variable into a list of Cheep objects
             var cheeps = JsonSerializer.Deserialize<List<Cheep>>(json,
@@ -85,7 +69,8 @@ public class Program
     }
 
     public static async Task PostCheep(string message) 
-    {
+    {   
+        // Check if valid message
         if (IsMSGEmptyOrStartsWithAt(message)) return;
 
         var newCheep = new Cheep
@@ -95,14 +80,9 @@ public class Program
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
 
-        //Our requests for data should expect JSON
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
         try
         {
-            var response = await client.PostAsJsonAsync("cheep", newCheep);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            var result = await client.PostToEndpointWithJsonResponceAsync("cheep", newCheep);
             //Write the server response to posting new data
             Console.WriteLine($"Response from server: {result}");
         }

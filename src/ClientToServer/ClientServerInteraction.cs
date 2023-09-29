@@ -22,7 +22,7 @@ public class ClientServerInteraction<T> : IServerInteraction<T>
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         
         //sends an asynchronous GET request to the endpoint "cheeps"
-        var response = await client.GetAsync("cheeps");
+        var response = await client.GetAsync(endpoint);
         response.EnsureSuccessStatusCode();
         //reads the content of the response as a string asynchronously in JSON format
         var json = await response.Content.ReadAsStringAsync();
@@ -32,8 +32,11 @@ public class ClientServerInteraction<T> : IServerInteraction<T>
 
     public async Task<string?> PostToEndpointWithJsonResponceAsync(string endpoint, T postData)
     {
+        // Set up header to expect JSON
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var response = await client.PostAsJsonAsync("cheep", postData);
+        
+        // Send POST request and wait for responce
+        var response = await client.PostAsJsonAsync(endpoint, postData);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadAsStringAsync();
         
