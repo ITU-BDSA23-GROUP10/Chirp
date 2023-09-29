@@ -1,33 +1,28 @@
-using SimpleDB;
 
-// these tests should be refactored to fit http request standards
 namespace Chirp.CLI.test;
-public class UnitTest1
+public class ChirpCliHttpClient_UnitTests
 {
-    //took info on how to do testing from
-    //https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-dotnet-test
-    private class TestUserInterface : UserInterface
+    private readonly HttpClient client;
+        
+    public ChirpCliHttpClient_UnitTests()
     {
-        public List<Cheep> CheepsToPrint;
-
-        public void PrintCheeps(List<Cheep> cheeps)
+        client = new HttpClient
         {
-            CheepsToPrint = cheeps;
-        }
+            BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net/")
+        };
     }
 
-    /*[Fact]
-    public void TestPostCheep()
+    // does the base url work and the same as the actual azure server url?
+    [Fact]
+    public async Task HttpClient_IsCorrectlyConfigured()
     {
-        // Arrange
-        IEnumerable<Cheep> cheeps;
-
-        // Act
-        Program.PostCheep("test message");
-        cheeps = Read();
-
-        // Assert
-        Assert.Single(testDb.Cheeps);
-        Assert.Equal("test message", testDb.Cheeps[0].Message);
-    }*/
+        //arrange
+        var expectedBaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net");
+        
+        //act
+        var actualBaseAdress = client.BaseAddress;
+        
+        //assert
+        Assert.Equal(expectedBaseAddress, actualBaseAdress);
+    }
 }
