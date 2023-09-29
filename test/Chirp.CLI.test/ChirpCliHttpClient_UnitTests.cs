@@ -1,4 +1,3 @@
-
 using System.Net;
 using System.Net.Http.Json;
 using SimpleDB;
@@ -69,7 +68,7 @@ public class ChirpCliHttpClient_UnitTests
         var cheep = new Cheep
         {
             Message = "test cheep from HttpClient_IsItCorrectEndpoint_OnPostCheep method in chirpclihttpclient_unittests",
-            Author = Environment.UserName,
+            Author = "Test Author",
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
         //act
