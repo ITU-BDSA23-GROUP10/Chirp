@@ -1,18 +1,20 @@
 # This workflow will add issues to the project board on github
+# Code taken from add-to-project github docs: https://github.com/actions/add-to-project
 
 
-name: Move assigned card
+name: Add issue to project that is not a bug
 on:
   issues:
     types:
       - opened
 jobs:
-  move-assigned-card:
+  add-to-project:
+    name: Add issue to project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/orgs/ITU-BDSA23-GROUP10/projects/2/views/1
+          project-url: https://github.com/orgs/ITU-BDSA23-GROUP10/projects/2
           github-token: ${{ secrets.GITHUB_TOKEN }}
           labeled: bug
           label-operator: NOT
