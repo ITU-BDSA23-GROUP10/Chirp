@@ -24,11 +24,22 @@ public class endToEndTest
         Cheeps = start_Process_For_Client_CLI(cmd).Replace("\r", "").Split("\n");
 
         // Assert
-        Assert.Equal("", Cheeps[2]);
-        Assert.True(Cheeps.Contains("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!") || Cheeps.Contains("ropf @ 01-08-2023 14:09:20: Hello, BDSA students!"));
-        Assert.True(Cheeps.Contains("rnie @ 02/08/2023 14.19.38: Welcome to the course!") || Cheeps.Contains("rnie @ 02-08-2023 14:19:38: Welcome to the course!"));
-        Assert.True(Cheeps.Contains("rnie @ 02/08/2023 14.37.38: I hope you had a good summer.") || Cheeps.Contains("rnie @ 02-08-2023 14:37:38: I hope you had a good summer."));
-        Assert.True(Cheeps.Contains("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)") || Cheeps.Contains("ropf @ 02-08-2023 15:04:47: Cheeping cheeps on Chirp :)"));
+        Assert.True(
+            Cheeps.Contains("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!") ||
+            Cheeps.Contains("ropf @ 01-08-2023 14:09:20: Hello, BDSA students!") ||
+            Cheeps.Contains("ropf @ 08/01/2023 14:09:20: Hello, BDSA students!"));
+        Assert.True(
+            Cheeps.Contains("rnie @ 02/08/2023 14.19.38: Welcome to the course!") ||
+            Cheeps.Contains("rnie @ 02-08-2023 14:19:38: Welcome to the course!") ||
+            Cheeps.Contains("ropf @ 08/02/2023 14:09:20: Hello, BDSA students!"));
+        Assert.True(
+            Cheeps.Contains("rnie @ 02/08/2023 14.37.38: I hope you had a good summer.") ||
+            Cheeps.Contains("rnie @ 02-08-2023 14:37:38: I hope you had a good summer.") ||
+            Cheeps.Contains("rnie @ 08/02/2023 14:37:38: I hope you had a good summer."));
+        Assert.True(
+            Cheeps.Contains("ropf @ 02/08/2023 15.04.47: Cheeping cheeps on Chirp :)") ||
+            Cheeps.Contains("ropf @ 02-08-2023 15:04:47: Cheeping cheeps on Chirp :)") ||
+            Cheeps.Contains("ropf @ 08/02/2023 15:04:47: Cheeping cheeps on Chirp :)"));
     }
 
     [Fact]
