@@ -19,7 +19,7 @@ public class Program
         BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net")
     };
 
-    static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
         // Create the posible commands for the program
         // https://learn.microsoft.com/en-us/dotnet/standard/commandline/define-commands
