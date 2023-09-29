@@ -24,6 +24,8 @@ public class endToEndTest
         Cheeps = start_Process_For_Client_CLI(cmd).Replace("\r", "").Split("\n");
 
         // Assert
+        // Timestamp is formatted differently depending on OS system and timezones.
+        // i.e. GitHub's timezone is GMT-1, while ours is GMT+1.
         Assert.True(
             Cheeps.Contains("ropf @ 01/08/2023 14.09.20: Hello, BDSA students!") ||
             Cheeps.Contains("ropf @ 01-08-2023 14:09:20: Hello, BDSA students!") ||
