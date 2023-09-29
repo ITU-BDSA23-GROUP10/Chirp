@@ -64,6 +64,7 @@ public class Program
 
         try
         {
+            // TODO: Make run on ClientServerInteraction
             //sends an asynchronous GET request to the endpoint "cheeps"
             var response = await client.GetAsync("cheeps");
             response.EnsureSuccessStatusCode();
