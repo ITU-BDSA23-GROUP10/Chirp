@@ -34,7 +34,7 @@ namespace CSVDatabaseWebService.Tests
         public async Task PostCheep_ShouldReturn200()
         {
             // Arrange
-            var cheep = new Cheep { Author = "hejehj", Message = "test", Timestamp = 1695386940 };
+            var cheep = new Cheep { Author = "Test Author", Message = "test from simpleDB test", Timestamp = 1695386940 };
             var content = new StringContent(JsonConvert.SerializeObject(cheep), Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage(HttpMethod.Post, "/cheep")
             {
