@@ -49,7 +49,7 @@ public class CheepService : ICheepService
             (
                 cheep.Author,
                 cheep.Message,
-                cheep.Timestamp.ToString()
+                UnixTimeStampToDateTimeString(cheep.Timestamp)
             ));
         } 
 
