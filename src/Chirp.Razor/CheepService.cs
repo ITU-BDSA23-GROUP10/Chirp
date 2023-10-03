@@ -24,7 +24,7 @@ public class CheepService : ICheepService
     public List<CheepViewModel> GetCheeps(int page)
     {
         //pagination start
-        int limit = 10;
+        int limit = 32;
         int offset = (page -1) * limit;
         //pagination end
 
@@ -47,7 +47,7 @@ public class CheepService : ICheepService
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
         //pagination start
-        int limit = 10;
+        int limit = 32;
         int offset = (page - 1) * limit;
         //pagination end
 
