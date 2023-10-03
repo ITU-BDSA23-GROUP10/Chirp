@@ -9,7 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.11" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.11" />
-    
+    <Content Include="data/*"> 
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+  </Content> 
   </ItemGroup>
 
   <ItemGroup>
