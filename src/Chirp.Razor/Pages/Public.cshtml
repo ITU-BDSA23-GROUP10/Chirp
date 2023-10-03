@@ -39,14 +39,14 @@
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                @for (int i = 1; i <= i+10; i++)
+                @for (int i = currentPage; i <= currentPage+10; i++)
                 {
                     <li>
                         <a href="/?page=@i">@i</a>
                     </li>
                 }
                 <li>
-                    <a href="/page=@nextPage" aria-label="Next">
+                    <a href="/?page=@nextPage" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
