@@ -40,9 +40,10 @@ public class DBFacade
     }
 
 
-    public List<Cheep> GetCheeps() 
+    public List<Cheep> GetCheeps(int offset, int limit) 
     {
-        sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc";
+        //limit and offset are for pagination
+        sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc LIMIT @limit OFFSET @offset";
         List<Cheep> cheeps; 
 
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
@@ -51,6 +52,11 @@ public class DBFacade
 
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
+    
+            //for pagination
+            command.Parameters.AddWithValue("@limit", limit);
+            command.Parameters.AddWithValue("@offset", offset);
+            //end pagination
 
             using var reader = command.ExecuteReader();
             cheeps = new List<Cheep>();
@@ -76,11 +82,8 @@ public class DBFacade
         command.Prepare();
     }
 
-    public List<Cheep> GetCheepsAuthorSQL(string author)
+    public List<Cheep> GetCheepsAuthorSQL(string author, int offset, int limit)
     {
-        
-
-
         List<Cheep> cheeps; 
 
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
@@ -88,7 +91,15 @@ public class DBFacade
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author ORDER by M.pub_date desc";
+            
+            //limit and offset are for pagination
+            command.CommandText = "SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author ORDER by M.pub_date desc LIMIT @limit OFFSET @offset";
+            
+            //for pagination
+            command.Parameters.AddWithValue("@limit", limit);
+            command.Parameters.AddWithValue("@offset", offset);
+            //end pagination
+            
             (string, string) values = ("@author", author);
             SQLPrepareStatement(command, values);
 

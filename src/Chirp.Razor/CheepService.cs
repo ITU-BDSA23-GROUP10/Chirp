@@ -5,8 +5,9 @@ public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps();
-    public List<CheepViewModel> GetCheepsFromAuthor(string author);
+    //page is for pagination
+    public List<CheepViewModel> GetCheeps(int page);
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
 }
 
 
@@ -21,9 +22,14 @@ public class CheepService : ICheepService
             new CheepViewModel("Rasmus", "Hej, velkommen til kurset.", UnixTimeStampToDateTimeString(1690895308)),
         };
 
-    public List<CheepViewModel> GetCheeps()
+    public List<CheepViewModel> GetCheeps(int page)
     {
-        List<Cheep> cheeps = facadeDB.GetCheeps();
+        //pagination start
+        int limit = 32;
+        int offset = (page -1) * limit;
+        //pagination end
+
+        List<Cheep> cheeps = facadeDB.GetCheeps(offset, limit);
         List<CheepViewModel> cheepVM = new List<CheepViewModel>();
 
         foreach(Cheep cheep in cheeps) 
@@ -39,9 +45,14 @@ public class CheepService : ICheepService
         return cheepVM;
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
-        List<Cheep> cheeps = facadeDB.GetCheepsAuthorSQL(author);
+        //pagination start
+        int limit = 32;
+        int offset = (page - 1) * limit;
+        //pagination end
+
+        List<Cheep> cheeps = facadeDB.GetCheepsAuthorSQL(author, offset, limit);
         List<CheepViewModel> cheepVM = new List<CheepViewModel>();
 
        foreach(Cheep cheep in cheeps) 
