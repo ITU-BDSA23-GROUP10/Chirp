@@ -1,4 +1,5 @@
-
+using System;
+using System.IO;
 using SimpleDB;
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
@@ -11,7 +12,7 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    DBFacade facadeDB = new DBFacade("./data/chirp.db");
+    DBFacade facadeDB = new DBFacade();
 
     // These would normally be loaded from a database for example
     private static readonly List<CheepViewModel> _cheeps = new()

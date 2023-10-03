@@ -10,13 +10,13 @@ public class DBFacade
 
     private string sqlQuery;
 
-    public DBFacade(string dbPath) {
+    public DBFacade() {
       
         // This shit don't work:
         // // Change the directory to %WINDIR%
         // Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
         // DirectoryInfo info = new DirectoryInfo(".");
-
+        var dbPath = Environment.CurrentDirectory + "/chirp.db";
         if (!File.Exists(dbPath))
         {
             dbPath = Path.GetTempPath() + "/chirp.db";

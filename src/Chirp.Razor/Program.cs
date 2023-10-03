@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<ICheepService, CheepService>();
 
+// Set the directory to be the one with chirp.db in it from the env variable
+// https://learn.microsoft.com/en-us/dotnet/api/system.environment.getenvironmentvariable?view=net-7.0
+Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
 
 var app = builder.Build();
 
