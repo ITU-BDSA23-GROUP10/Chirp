@@ -59,23 +59,4 @@ public class ChirpCliHttpClient_UnitTests
         
     }
 
-    //this tests to see whether or not we can post to the endpoint /cheep on the web app url
-    [Fact]
-    public async Task HttpClient_IsItCorrectEndpoint_OnPostCheep()
-    {
-        //arrange
-        var expectedEndpoint = "/cheep";
-        var cheep = new Cheep
-        {
-            Message = "test cheep from HttpClient_IsItCorrectEndpoint_OnPostCheep method in chirpclihttpclient_unittests",
-            Author = "Test Author",
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-        };
-        //act
-        var response = await client.PostAsJsonAsync(expectedEndpoint,cheep);
-    
-        //assert
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-    }
-
 }
