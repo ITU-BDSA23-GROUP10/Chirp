@@ -5,13 +5,26 @@ namespace SimpleDB;
 
 public class DBFacade 
 {
-    private string sqlDBFilePath = Path.GetTempPath() + "/chirp.db";
+    //private string sqlDBFilePath = Path.GetTempPath() + "/chirp.db";
+    private string sqlDBFilePath = "/tmp/chirp.db";
 
     private string sqlQuery;
+
+    public DBFacade() {
+       if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+      {
+         // Change the directory to %WINDIR%
+         Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+         DirectoryInfo info = new DirectoryInfo(".");
+      }
+
+
+    }
 
 
     public List<Cheep> GetCheeps() 
     {
+        
         sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc";
         List<Cheep> cheeps; 
 
@@ -37,16 +50,16 @@ public class DBFacade
         }
     }
 
-    private static void SQLPrepareStatement(params (string, string)[] values, SQLiteCommand command)
+    private static void SQLPrepareStatement(SqliteCommand command, params (string, string)[] values)
     {
-        foreach(string value in values) 
+        foreach((string, string) value in values) 
         {
-           sqlQuery.Parameters.AddWithValue(value.Item1, value.Item2); 
+           command.Parameters.AddWithValue(value.Item1, value.Item2); 
         }
-        sqlQuery.Prepare();
+        command.Prepare();
     }
 
-    GetCheepsAuthorSQL(string author)
+    public List<Cheep> GetCheepsAuthorSQL(string author)
     {
         
 
@@ -57,9 +70,10 @@ public class DBFacade
         {
             connection.Open();
 
-            using var command = new SQLiteCommand(con);
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author ORDER by M.pub_date desc";
-            
+            (string, string) values = ("@author", author);
+            SQLPrepareStatement(command, values);
 
             using var reader = command.ExecuteReader();
             cheeps = new List<Cheep>();
