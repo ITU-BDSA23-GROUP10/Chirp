@@ -11,7 +11,7 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    DBFacade facadeDB = new DBFacade();
+    DBFacade facadeDB = new DBFacade("/tmp/chirp.db");
 
     // These would normally be loaded from a database for example
     private static readonly List<CheepViewModel> _cheeps = new()

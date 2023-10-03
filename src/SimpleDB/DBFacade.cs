@@ -6,25 +6,42 @@ namespace SimpleDB;
 public class DBFacade 
 {
     //private string sqlDBFilePath = Path.GetTempPath() + "/chirp.db";
-    private string sqlDBFilePath = "/tmp/chirp.db";
+    private string sqlDBFilePath;
 
     private string sqlQuery;
 
-    public DBFacade() {
-       if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-      {
-         // Change the directory to %WINDIR%
-         Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-         DirectoryInfo info = new DirectoryInfo(".");
-      }
+    public DBFacade(string dbPath) {
+      
+        // This shit don't work:
+        // // Change the directory to %WINDIR%
+        // Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        // DirectoryInfo info = new DirectoryInfo(".");
 
+        if (!File.Exists(dbPath))
+        {
+            dbPath = Path.GetTempPath() + "/chirp.db";
+            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
+            {
+                connection.Open();
 
+                // Code from: https://stackoverflow.com/a/1728859
+                string script = File.ReadAllText(@"../Chirp.Razor/data/schema.sql");
+                var command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+
+                script = File.ReadAllText(@"../Chirp.Razor/data/dump.sql");
+                command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+            }
+        }
+        sqlDBFilePath = dbPath;
     }
 
 
     public List<Cheep> GetCheeps() 
     {
-        
         sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc";
         List<Cheep> cheeps; 
 
