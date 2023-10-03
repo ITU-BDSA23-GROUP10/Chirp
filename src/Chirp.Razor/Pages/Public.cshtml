@@ -8,14 +8,7 @@
     Layout = "Shared/_Layout";
 
 
-    int currentPage;
-    if (int.TryParse(Request.Query["page"], out currentPage))
-    {
-    }
-    else
-    {
-        currentPage = 1; // Default value or handle the error accordingly
-    }
+    int currentPage = Model.CurrentPage;
     int prevPage = Math.Max(currentPage - 1, 1);
     int nextPage = Math.Min(currentPage + 1, 100);
 }
