@@ -31,7 +31,7 @@ public class CheepService : ICheepService
             (
                 cheep.Author,
                 cheep.Message,
-                cheep.Timestamp.ToString()
+                UnixTimeStampToDateTimeString(cheep.Timestamp)
             ));
         }
 
@@ -49,7 +49,7 @@ public class CheepService : ICheepService
         // Unix timestamp is seconds past epoch
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds(unixTimeStamp);
-        return dateTime.ToString("MM/dd/yy H:mm:ss");
+        return dateTime.ToString("dd/MM/yy H:mm:ss");
     }
 
 }
