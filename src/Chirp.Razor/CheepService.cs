@@ -40,10 +40,21 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author)
     {
-        facadeDB.GetCheepsAuthorSQL();
+        List<Cheep> cheeps = facadeDB.GetCheepsAuthorSQL(author);
+        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+
+       foreach(Cheep cheep in cheeps) 
+        {
+            cheepVM.Add(new CheepViewModel 
+            (
+                cheep.Author,
+                cheep.Message,
+                cheep.Timestamp.ToString()
+            ));
+        } 
 
         // filter by the provided author name
-        return _cheeps.Where(x => x.Author == author).ToList();
+        return cheepVM;
     }
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
