@@ -40,6 +40,8 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author)
     {
+        facadeDB.GetCheepsAuthorSQL();
+
         // filter by the provided author name
         return _cheeps.Where(x => x.Author == author).ToList();
     }
