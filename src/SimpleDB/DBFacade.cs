@@ -5,7 +5,7 @@ namespace SimpleDB;
 
 public class DBFacade 
 {
-    private string sqlDBFilePath = "/tmp/chirp.db";
+    private string sqlDBFilePath = Path.GetTempPath() + "/chirp.db";
 
     private string sqlQuery;
 
