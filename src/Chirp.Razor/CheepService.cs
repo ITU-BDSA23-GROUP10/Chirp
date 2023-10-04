@@ -36,7 +36,7 @@ public class CheepService : ICheepService
     {
         //pagination start
         //int limit = 32;
-        int offset = (page -1) * limit;
+        int offset = (page) * limit;
         //pagination end
 
         List<Cheep> cheeps = facadeDB.GetCheeps(offset, limit);
@@ -59,7 +59,7 @@ public class CheepService : ICheepService
     {
         //pagination start
         //int limit = 32;
-        int offset = (page - 1) * limit;
+        int offset = (page) * limit;
         //pagination end
 
         List<Cheep> cheeps = facadeDB.GetCheepsAuthorSQL(author, offset, limit);
