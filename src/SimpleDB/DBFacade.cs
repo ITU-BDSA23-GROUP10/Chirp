@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.Data.Sqlite;
 
 namespace SimpleDB;
@@ -40,6 +41,52 @@ public class DBFacade
         sqlDBFilePath = dbPath;
     }
 
+    public async Task<int> CountCheeps()
+    {
+        sqlQuery = @"SELECT COUNT(text) FROM message";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            //Code from: https://stackoverflow.com/a/75859283
+            var result = await command.ExecuteScalarAsync();
+            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
+
+    public async Task<int> CountCheeps(string author)
+    {
+        sqlQuery = @"SELECT COUNT(M.text) FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            (string, string) values = ("@author", author);
+            SQLPrepareStatement(command, values);
+
+            //Code from: https://stackoverflow.com/a/75859283
+            var result = await command.ExecuteScalarAsync();
+            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
 
     public List<Cheep> GetCheeps(int offset, int limit) 
     {

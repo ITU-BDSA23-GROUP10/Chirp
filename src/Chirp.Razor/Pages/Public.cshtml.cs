@@ -7,6 +7,9 @@ public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
     public List<CheepViewModel> Cheeps { get; set; }
+    public int CurrentPage { get; set; } = 1;
+    public int TotalPages { get; set; } = 1;
+    public bool LastPage { get; set; } = false;
 
     public PublicModel(ICheepService service)
     {
@@ -14,9 +17,22 @@ public class PublicModel : PageModel
     }
 
     /* get method with pagination*/
-    public ActionResult OnGet([FromQuery(Name = "page")] int page = 1)
+    public async Task<ActionResult> OnGet([FromQuery(Name = "page")] int page = 1)
     {
+        /* Refactored OnGet to work with pagination-navigation,
+        from Mike Brind: https://www.mikesdotnetting.com/article/328/simple-paging-in-asp-net-core-razor-pages*/
+        var count = await _service.GetCount();
+        int _count = count > 0 ? count : 1;
+        TotalPages = (int)Math.Ceiling((double)_count / _service.GetLimit());
+        
         Cheeps = _service.GetCheeps(page);
+        CurrentPage = page;
+
+        if (CurrentPage == TotalPages)
+        {
+            LastPage = true;
+        }
+
         return Page();
     }
 }
