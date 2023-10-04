@@ -15,7 +15,7 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    DBFacade facadeDB = new DBFacade("./data/chirp.db");
+    DBFacade facadeDB = new DBFacade();
     public readonly int limit = 32;
 
     // These would normally be loaded from a database for example

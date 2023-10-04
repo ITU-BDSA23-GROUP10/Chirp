@@ -35,5 +35,4 @@ public class PublicModel : PageModel
 
         return Page();
     }
-
 }
