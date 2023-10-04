@@ -7,12 +7,16 @@ public interface ICheepService
     //page is for pagination
     public List<CheepViewModel> GetCheeps(int page);
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
+    Task<int> GetCount();
+    Task<int> GetCount(string author);
+    int GetLimit();
 }
 
 
 public class CheepService : ICheepService
 {
-    DBFacade facadeDB = new DBFacade();
+    DBFacade facadeDB = new DBFacade("./data/chirp.db");
+    public readonly int limit = 32;
 
     // These would normally be loaded from a database for example
     private static readonly List<CheepViewModel> _cheeps = new()
@@ -21,10 +25,25 @@ public class CheepService : ICheepService
             new CheepViewModel("Rasmus", "Hej, velkommen til kurset.", UnixTimeStampToDateTimeString(1690895308)),
         };
 
+    public async Task<int> GetCount()
+    {
+        return await facadeDB.CountCheeps();
+    }
+
+    public async Task<int> GetCount(string author)
+    {
+        return await facadeDB.CountCheeps(author);
+    }
+
+    public int GetLimit()
+    {
+        return limit;
+    }
+
     public List<CheepViewModel> GetCheeps(int page)
     {
         //pagination start
-        int limit = 32;
+        //int limit = 32;
         int offset = (page -1) * limit;
         //pagination end
 
@@ -47,7 +66,7 @@ public class CheepService : ICheepService
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
         //pagination start
-        int limit = 32;
+        //int limit = 32;
         int offset = (page - 1) * limit;
         //pagination end
 
