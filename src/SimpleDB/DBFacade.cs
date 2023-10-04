@@ -42,8 +42,6 @@ public class DBFacade
 
     public async Task<int> CountCheeps()
     {
-        //note: experiment with adding int param with potential args 0 and 1, if arg == 0, run current sqlQuery; if arg == 1, run sqlAuthorQuery (needs to be writen)
-        // if we ever refactor UserTimeline into a partial class or viewmodel or what do I know, we migt be able to move the pagination-nav code into _Layout.cshtml
         sqlQuery = @"SELECT COUNT(text) FROM message";
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
         {
@@ -51,6 +49,31 @@ public class DBFacade
 
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
+
+            //Code from: https://stackoverflow.com/a/75859283
+            var result = await command.ExecuteScalarAsync();
+            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
+
+    public async Task<int> CountCheeps(string author)
+    {
+        sqlQuery = @"SELECT COUNT(M.text) FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            (string, string) values = ("@author", author);
+            SQLPrepareStatement(command, values);
 
             //Code from: https://stackoverflow.com/a/75859283
             var result = await command.ExecuteScalarAsync();
