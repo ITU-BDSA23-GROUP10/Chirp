@@ -26,12 +26,12 @@ public class DBFacade
                 connection.Open();
 
                 // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"../Chirp.Razor/data/schema.sql");
+                string script = File.ReadAllText(@"data/schema.sql");
                 var command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
 
-                script = File.ReadAllText(@"../Chirp.Razor/data/dump.sql");
+                script = File.ReadAllText(@"data/dump.sql");
                 command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
