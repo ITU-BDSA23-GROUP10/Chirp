@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.Data.Sqlite;
 
 namespace SimpleDB;
@@ -39,6 +40,26 @@ public class DBFacade
         sqlDBFilePath = dbPath;
     }
 
+    public async Task<int> CountCheeps()
+    {
+        sqlQuery = @"SELECT COUNT(text) FROM message";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            //CG
+            var result = await command.ExecuteScalarAsync();
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
 
     public List<Cheep> GetCheeps(int offset, int limit) 
     {
