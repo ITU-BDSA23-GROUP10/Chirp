@@ -19,6 +19,8 @@ public class UserTimelineModel : PageModel
     //get method with pagination
     public async Task<ActionResult> OnGet(string author, [FromQuery(Name = "page")] int page = 1)
     {
+        /* Refactored OnGet to work with pagination-navigation,
+        from Mike Brind: https://www.mikesdotnetting.com/article/328/simple-paging-in-asp-net-core-razor-pages*/
         var count = await _service.GetCount();
         int _count = count > 0 ? count : 1;
         TotalPages = (int)Math.Ceiling((double)_count / _service.GetLimit());
