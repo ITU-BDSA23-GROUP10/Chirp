@@ -10,14 +10,35 @@ public class DBFacade
 
     private string sqlQuery;
 
-    public DBFacade(string dbPath) {
+    public DBFacade() {
       
         // This shit don't work:
         // // Change the directory to %WINDIR%
-        // Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-        // DirectoryInfo info = new DirectoryInfo(".");
+        //Environment.SetEnvironmentVariable("CHIRPDBPATH", "");
+        //Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+        string dbPath = "";
+        string test = Environment.CurrentDirectory;
+        if(Environment.GetEnvironmentVariable("CHIRPDBPATH") != null) 
+        {
+          dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
+          //string orignalWorkDir = Environment.CurrentDirectory;
+          using (var connection = new SqliteConnection($"Data Source={dbPath}"))
+            { 
+                
+                connection.Open();
 
-        if (!File.Exists(dbPath))
+                // Code from: https://stackoverflow.com/a/1728859
+                string script = File.ReadAllText(@"../Chirp.Razor/data/schema.sql");
+                var command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+
+                script = File.ReadAllText(@"../Chirp.Razor/data/dump.sql");
+                command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+            }
+        } else 
         {
             dbPath = Path.GetTempPath() + "/chirp.db";
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
@@ -34,8 +55,11 @@ public class DBFacade
                 command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
-            }
         }
+
+        }
+        // DirectoryInfo info = new DirectoryInfo(".");
+
         sqlDBFilePath = dbPath;
     }
 
