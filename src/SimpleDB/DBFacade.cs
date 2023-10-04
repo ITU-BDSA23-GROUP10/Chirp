@@ -12,18 +12,15 @@ public class DBFacade
     private string sqlQuery;
 
     public DBFacade() {
-      
-        // This shit don't work:
-        // // Change the directory to %WINDIR%
-        //Environment.SetEnvironmentVariable("CHIRPDBPATH", "");
-        //Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
-        string dbPath = "";
-        string test = Environment.CurrentDirectory;
+        string dbPath;
         if(Environment.GetEnvironmentVariable("CHIRPDBPATH") != null) 
+            dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
+        else 
+            dbPath = Path.GetTempPath() + "/chirp.db";
+
+        if (!File.Exists(dbPath))
         {
-          dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
-          //string orignalWorkDir = Environment.CurrentDirectory;
-          using (var connection = new SqliteConnection($"Data Source={dbPath}"))
+            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             { 
                 
                 connection.Open();
@@ -39,27 +36,7 @@ public class DBFacade
                 command.CommandText = script;
                 command.ExecuteNonQuery();
             }
-        } else 
-        {
-            dbPath = Path.GetTempPath() + "/chirp.db";
-            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
-            {
-                connection.Open();
-
-                // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"../Chirp.Razor/data/schema.sql");
-                var command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-
-                script = File.ReadAllText(@"../Chirp.Razor/data/dump.sql");
-                command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
         }
-
-        }
-        // DirectoryInfo info = new DirectoryInfo(".");
 
         sqlDBFilePath = dbPath;
     }
@@ -133,12 +110,12 @@ public class DBFacade
             cheeps = new List<Cheep>();
             while (reader.Read())
             { 
-              cheeps.Add(new Cheep() 
-              {
-                Author = reader.GetString(0), 
-                Message = reader.GetString(1), 
-                Timestamp = reader.GetInt64(2)
-              });  
+                cheeps.Add(new Cheep() 
+                {
+                    Author = reader.GetString(0), 
+                    Message = reader.GetString(1), 
+                    Timestamp = reader.GetInt64(2)
+                });  
             }
             return cheeps;
         }
@@ -178,12 +155,12 @@ public class DBFacade
             cheeps = new List<Cheep>();
             while (reader.Read())
             { 
-              cheeps.Add(new Cheep() 
-              {
-                Author = reader.GetString(0), 
-                Message = reader.GetString(1), 
-                Timestamp = reader.GetInt64(2)
-              });  
+                cheeps.Add(new Cheep() 
+                {
+                    Author = reader.GetString(0), 
+                    Message = reader.GetString(1), 
+                    Timestamp = reader.GetInt64(2)
+                });  
             }
             return cheeps;
         } 
