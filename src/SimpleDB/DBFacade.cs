@@ -22,7 +22,6 @@ public class DBFacade
         {
             using (var connection = new SqliteConnection($"Data Source={dbPath}"))
             { 
-                
                 connection.Open();
 
                 // Code from: https://stackoverflow.com/a/1728859
@@ -35,13 +34,6 @@ public class DBFacade
                 command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
-
-                // Add 150 new cheeps to the database
-                script = File.ReadAllText(@"data/bigdump.sql");
-                command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-
             }
         }
 
