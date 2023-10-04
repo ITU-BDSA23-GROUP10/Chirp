@@ -35,6 +35,13 @@ public class DBFacade
                 command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
+
+                // Add 150 new cheeps to the database
+                script = File.ReadAllText(@"data/bigdump.sql");
+                command = connection.CreateCommand();
+                command.CommandText = script;
+                command.ExecuteNonQuery();
+
             }
         }
 
