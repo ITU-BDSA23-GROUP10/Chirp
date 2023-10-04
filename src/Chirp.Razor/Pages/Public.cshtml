@@ -69,11 +69,25 @@
                 {
                     if (i == currentPage)
                     {
-                        <a href="/?page=@i">[@i]</a>
+                        if (i == 0)
+                        {
+                            <a href="/">[@i]</a>
+                        }
+                        else
+                        {
+                            <a href="/?page=@i">[@i]</a>
+                        }
                     }
                     else
                     {
+                        if (i == 0)
+                        {
+                            <a href="/">@i</a>
+                        }
+                        else
+                        {
                         <a href="/?page=@i">@i</a>
+                        }
                     }
                 }
             }
@@ -98,7 +112,7 @@
                 {
                     if (i == currentPage)
                     {
-                        <a href="/?page=@i">[@i]</a>
+                      <a href="/?page=@i">[@i]</a>
                     }
                     else
                     {
@@ -106,7 +120,7 @@
                     }
                 }
             }
-
+              
             @if (!Model.LastPage)
             {
                 <a href="/?page=@nextPage" aria-label="Next">
