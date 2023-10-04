@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.Data.Sqlite;
 
 namespace SimpleDB;
@@ -17,6 +18,7 @@ public class DBFacade
         // Environment.CurrentDirectory = Environment.GetEnvironmentVariable("CHIRPDBPATH");
         // DirectoryInfo info = new DirectoryInfo(".");
         var dbPath = Environment.CurrentDirectory + "/chirp.db";
+      
         if (!File.Exists(dbPath))
         {
             dbPath = Path.GetTempPath() + "/chirp.db";
@@ -25,20 +27,67 @@ public class DBFacade
                 connection.Open();
 
                 // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"../Chirp.Razor/data/schema.sql");
+                string script = File.ReadAllText(@"data/schema.sql");
                 var command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
 
-                script = File.ReadAllText(@"../Chirp.Razor/data/dump.sql");
+                script = File.ReadAllText(@"data/dump.sql");
                 command = connection.CreateCommand();
                 command.CommandText = script;
                 command.ExecuteNonQuery();
             }
         }
+
         sqlDBFilePath = dbPath;
     }
 
+    public async Task<int> CountCheeps()
+    {
+        sqlQuery = @"SELECT COUNT(text) FROM message";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            //Code from: https://stackoverflow.com/a/75859283
+            var result = await command.ExecuteScalarAsync();
+            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
+
+    public async Task<int> CountCheeps(string author)
+    {
+        sqlQuery = @"SELECT COUNT(M.text) FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author";
+        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
+        {
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            (string, string) values = ("@author", author);
+            SQLPrepareStatement(command, values);
+
+            //Code from: https://stackoverflow.com/a/75859283
+            var result = await command.ExecuteScalarAsync();
+            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
+            if (result != null && result != DBNull.Value)
+            {
+                return Convert.ToInt32(result);
+            }
+
+            return 1;
+        }
+    }
 
     public List<Cheep> GetCheeps(int offset, int limit) 
     {
@@ -62,12 +111,12 @@ public class DBFacade
             cheeps = new List<Cheep>();
             while (reader.Read())
             { 
-              cheeps.Add(new Cheep() 
-              {
-                Author = reader.GetString(0), 
-                Message = reader.GetString(1), 
-                Timestamp = reader.GetInt64(2)
-              });  
+                cheeps.Add(new Cheep() 
+                {
+                    Author = reader.GetString(0), 
+                    Message = reader.GetString(1), 
+                    Timestamp = reader.GetInt64(2)
+                });  
             }
             return cheeps;
         }
@@ -107,12 +156,12 @@ public class DBFacade
             cheeps = new List<Cheep>();
             while (reader.Read())
             { 
-              cheeps.Add(new Cheep() 
-              {
-                Author = reader.GetString(0), 
-                Message = reader.GetString(1), 
-                Timestamp = reader.GetInt64(2)
-              });  
+                cheeps.Add(new Cheep() 
+                {
+                    Author = reader.GetString(0), 
+                    Message = reader.GetString(1), 
+                    Timestamp = reader.GetInt64(2)
+                });  
             }
             return cheeps;
         } 
