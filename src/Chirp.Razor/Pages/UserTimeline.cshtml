@@ -3,15 +3,16 @@
 @using System
 @using SimpleDB
 @{
-    int currentPage = Model.CurrentPage;
-    int totalPages = Model.TotalPages;
-    int prevPage = Math.Max(currentPage - 1, 1);
-    int nextPage = Math.Min(currentPage + 1, totalPages);
-}
-@{
+
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
+    
+    int currentPage = Model.CurrentPage;
+    int totalPages = Model.TotalPages - 1;
+    int prevPage = Math.Max(currentPage - 1, 0);
+    int nextPage = Math.Min(currentPage + 1, totalPages);
+
 }
 
 <div>
@@ -42,35 +43,48 @@
         <ul class="pagination">
             <center>
 
-            @if (currentPage != 1)
+            @if (currentPage != 0)
             {
-                <a href="/@routeName?page=@prevPage" aria-label="Prev">
+                <a href="/@routeName" aria-label="FirstPage">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
+
+                if (prevPage == 0)
+                {
+                    <a href="/@routeName" aria-label="Prev">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+                }
+                else
+                {
+                <a href="/@routeName/?page=@prevPage" aria-label="Prev">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+                }
             }
 
             @if (totalPages <= 10)
             {
-                @for (int i = 1; i <= totalPages; i++)
+                @for (int i = 0; i <= totalPages; i++)
                 {
                     if (i == currentPage)
                     {
-                        <a href="/@routeName?page=@i">[@i]</a>
+                        <a href="/@routeName/?page=@i">[@i]</a>
                     }
                     else
                     {
-                        <a href="/@routeName?page=@i">@i</a>
+                        <a href="/@routeName/?page=@i">@i</a>
                     }
                 }
             }
             else
             {
-                int start = Math.Max(currentPage - 4, 1);
+                int start = Math.Max(currentPage - 4, 0);
                 int end = Math.Min(currentPage + 5, totalPages);
 
-                if (currentPage - 4 <= 1)
+                if (currentPage - 4 <= 0)
                 {
-                    start = 1;
+                    start = 0;
                     end = 10;
                 } 
 
@@ -84,19 +98,22 @@
                 {
                     if (i == currentPage)
                     {
-                        <a href="/@routeName?page=@i"><b>[@i]</b></a>
+                        <a href="/@routeName/?page=@i"><b>[@i]</b></a>
                     }
                     else
                     {
-                        <a href="/@routeName?page=@i">@i</a>
+                        <a href="/@routeName/?page=@i">@i</a>
                     }
                 }
             }
             
-
             @if (!Model.LastPage)
             {
-                <a href="/@routeName?page=@nextPage" aria-label="Next">
+                <a href="/@routeName/?page=@nextPage" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+
+                <a href="/@routeName/?page=@totalPages" aria-label="EndPage">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             }
