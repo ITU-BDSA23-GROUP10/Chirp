@@ -1,45 +1,16 @@
-﻿@page "/"
-@model Chirp.Razor.Pages.PublicModel
-@using System
-@using SimpleDB
+@model PagesData
 @{
-
-    ViewData["Title"] = "Chirp!";
-    Layout = "Shared/_Layout";
-
     int startPage = 1;
     int currentPage = Model.CurrentPage;
     int totalPages = Model.TotalPages;
     int prevPage = Math.Max(currentPage - 1, startPage);
     int nextPage = Math.Min(currentPage + 1, totalPages);
 
+    var authorName = ViewData["Author"] ?? HttpContext.GetRouteValue("author");
+    string setRouteName = (authorName != null) ? "/@authorName/?page=" : "/?page=";
 }
 
-<div>
-    <h2> Public Timeline </h2>
-
-    @if (Model.Cheeps.Any())
-    {
-        <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.Cheeps)
-            {
-                <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author">@cheep.Author</a>
-                        </strong>
-                        @cheep.Message
-                        <small>&mdash; @cheep.Timestamp</small>
-                    </p>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <em>There are no cheeps so far.</em>
-    }
-    <nav aria-label="Page navigation">
+<nav aria-label="Page navigation">
         <ul class="pagination">
             <center>
 
@@ -49,7 +20,7 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
 
-                <a href="/?page=@prevPage" aria-label="Prev">
+                <a href="@setRouteName@prevPage" aria-label="Prev">
                     <span aria-hidden="true">&lsaquo;</span>
                 </a>
 
@@ -70,22 +41,21 @@
                         pageNumber = "<b>[@i]</b>";
                     }
 
-                    <a href="/?page=@i">@pageNumber</a>
+                    <a href="@setRouteName@i">@pageNumber</a>
 
                 }
             }
               
             @if (!Model.LastPage)
             {
-                <a href="/?page=@nextPage" aria-label="Next">
+                <a href="@setRouteName@nextPage" aria-label="Next">
                     <span aria-hidden="true">&rsaquo;</span>
                 </a>
 
-                <a href="/?page=@totalPages" aria-label="EndPage">
+                <a href="@setRouteName@totalPages" aria-label="EndPage">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             }
             </center>
         </ul>
     </nav>
-</div>

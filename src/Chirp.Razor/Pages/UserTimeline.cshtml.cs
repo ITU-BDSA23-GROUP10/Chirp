@@ -10,6 +10,7 @@ public class UserTimelineModel : PageModel
     public int CurrentPage { get; set; } = 1;
     public int TotalPages { get; set; } = 1;
     public bool LastPage { get; set; } = false;
+    public bool CurrentAuthor { get; set; }
 
     public UserTimelineModel(ICheepService service)
     {
