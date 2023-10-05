@@ -7,12 +7,14 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
+    ViewData["RouteName"] = routeName;
+
     
-    int startPage = 1;
+    /*int startPage = 1;
     int currentPage = Model.CurrentPage;
     int totalPages = Model.TotalPages;
     int prevPage = Math.Max(currentPage - 1, startPage);
-    int nextPage = Math.Min(currentPage + 1, totalPages);
+    int nextPage = Math.Min(currentPage + 1, totalPages);*/
 
 }
 
@@ -40,7 +42,10 @@
     {
         <em>There are no cheeps so far.</em>
     }
-    <nav aria-label="Page navigation">
+
+    @await Component.InvokeAsync("Pagination", true);
+
+    @* <nav aria-label="Page navigation">
         <ul class="pagination">
             <center>
 
@@ -112,5 +117,5 @@
             }
             </center>
         </ul>
-    </nav>
+    </nav> *@
 </div>
