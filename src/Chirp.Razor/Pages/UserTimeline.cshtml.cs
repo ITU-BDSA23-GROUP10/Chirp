@@ -7,7 +7,7 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _service;
     public List<CheepViewModel> Cheeps { get; set; }
-    public int CurrentPage { get; set; } = 0;
+    public int CurrentPage { get; set; } = 1;
     public int TotalPages { get; set; } = 1;
     public bool LastPage { get; set; } = false;
 
@@ -17,7 +17,7 @@ public class UserTimelineModel : PageModel
     }
 
     //get method with pagination
-    public async Task<ActionResult> OnGet(string author, [FromQuery(Name = "page")] int page = 0)
+    public async Task<ActionResult> OnGet(string author, [FromQuery(Name = "page")] int page = 1)
     {
         /* Refactored OnGet to work with pagination-navigation,
         from Mike Brind: https://www.mikesdotnetting.com/article/328/simple-paging-in-asp-net-core-razor-pages*/
@@ -28,7 +28,7 @@ public class UserTimelineModel : PageModel
         Cheeps = _service.GetCheepsFromAuthor(author, page);
         CurrentPage = page;
 
-        if (CurrentPage == TotalPages - 1)
+        if (CurrentPage == TotalPages)
         {
             LastPage = true;
         }
