@@ -40,9 +40,13 @@ public class DBFacade
         sqlDBFilePath = dbPath;
     }
 
-    public async Task<int> CountCheeps()
+    public async Task<int> CountCheeps(string? author = null)
     {
-        sqlQuery = @"SELECT COUNT(text) FROM message";
+        string countWithAuthor = @"SELECT COUNT(M.text) FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author";
+        string countAll = @"SELECT COUNT(text) FROM message";
+
+        sqlQuery = (author != null) ? countWithAuthor : countAll;
+
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
         {
             await connection.OpenAsync();
@@ -50,30 +54,11 @@ public class DBFacade
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
 
-            //Code from: https://stackoverflow.com/a/75859283
-            var result = await command.ExecuteScalarAsync();
-            // Inspired by comment: https://stackoverflow.com/questions/4958379/what-is-the-difference-between-null-and-system-dbnull-value#comment20987621_4958408
-            if (result != null && result != DBNull.Value)
+            if (author != null)
             {
-                return Convert.ToInt32(result);
+                (string, string) values = ("@author", author);
+                SQLPrepareStatement(command, values);
             }
-
-            return 1;
-        }
-    }
-
-    public async Task<int> CountCheeps(string author)
-    {
-        sqlQuery = @"SELECT COUNT(M.text) FROM message M JOIN user U ON U.user_id = M.author_id WHERE U.username = @author";
-        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
-        {
-            await connection.OpenAsync();
-
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-
-            (string, string) values = ("@author", author);
-            SQLPrepareStatement(command, values);
 
             //Code from: https://stackoverflow.com/a/75859283
             var result = await command.ExecuteScalarAsync();

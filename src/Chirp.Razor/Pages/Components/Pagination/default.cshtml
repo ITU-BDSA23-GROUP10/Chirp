@@ -1,0 +1,64 @@
+@using Chirp.Razor.ViewComponents
+@model PagesData
+@{
+    int startPage = 1;
+    int currentPage = Model.CurrentPage;
+    int totalPages = Model.TotalPages;
+    int prevPage = Math.Max(currentPage - 1, startPage);
+    int nextPage = Math.Min(currentPage + 1, totalPages);
+
+    // Credit to Viktor Máni Mønster for introducing me to a?b:c
+    var setRouteName = (Model.HasAuthor && ViewData["RouteName"] != null) ?
+    $"/{ViewData["RouteName"]}/?page=" :
+    $"/?page=";
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <center>
+            @if (currentPage != startPage)
+            {
+                var FirstPage = (!Model.HasAuthor) ? $"/" : $"/{ViewData["RouteName"]}";
+                
+                <a href="@FirstPage" aria-label="FirstPage">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+
+                <a href="@setRouteName@prevPage" aria-label="Prev">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+
+            }
+
+            @{
+                int range = 9;
+                int start = Math.Max(startPage, Math.Min(currentPage - 4, totalPages - range + 1));
+                int end = Math.Min(totalPages, Math.Max(startPage + range - 1, currentPage + 4));
+
+                // Display pagenumbers from <start> to <end> :)
+                for (int i = start; i <= end; i++)
+                {
+                    string pageNumber = $"{i}";
+
+                    if (i == currentPage)
+                    {
+                        pageNumber = $"<b>[{i}]</b>";
+                    }
+                    // From StackOverflow: https://stackoverflow.com/a/27284827
+                    <a href="@(setRouteName + i)">@Html.Raw(pageNumber)</a>
+                }
+            }
+              
+            @if (!Model.LastPage)
+            {
+                <a href="@setRouteName@nextPage" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+
+                <a href="@setRouteName@totalPages" aria-label="EndPage">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            }
+        </center>
+    </ul>
+</nav>

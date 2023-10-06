@@ -7,8 +7,7 @@ public interface ICheepService
     //page is for pagination
     public List<CheepViewModel> GetCheeps(int page);
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
-    Task<int> GetCount();
-    Task<int> GetCount(string author);
+    Task<int> GetCount(string? author);
     int GetLimit();
 }
 
@@ -18,12 +17,7 @@ public class CheepService : ICheepService
     DBFacade facadeDB = new DBFacade();
     public readonly int limit = 32;
 
-    public async Task<int> GetCount()
-    {
-        return await facadeDB.CountCheeps();
-    }
-
-    public async Task<int> GetCount(string author)
+    public async Task<int> GetCount(string? author = null)
     {
         return await facadeDB.CountCheeps(author);
     }
@@ -32,6 +26,7 @@ public class CheepService : ICheepService
     {
         return limit;
     }
+
     public List<CheepViewModel> GetCheeps(int page)
     {
         //pagination start
