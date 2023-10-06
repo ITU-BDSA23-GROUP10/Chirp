@@ -8,8 +8,9 @@
     int nextPage = Math.Min(currentPage + 1, totalPages);
 
     // Credit to Viktor Máni Mønster for introducing me to a?b:c
-    var authorName = Model.HasAuthor ? ViewData["RouteName"] : null;
-    var setRouteName = (authorName != null) ? $"/{authorName}/?page=" : $"/?page=";
+    var setRouteName = (Model.HasAuthor && ViewData["RouteName"] != null) ?
+    $"/{ViewData["RouteName"]}/?page=" :
+    $"/?page=";
 }
 
 <nav aria-label="Page navigation">
@@ -17,7 +18,9 @@
         <center>
             @if (currentPage != startPage)
             {
-                <a href="/" aria-label="FirstPage">
+                var FirstPage = (!Model.HasAuthor) ? $"/" : $"/{ViewData["RouteName"]}";
+                
+                <a href="@FirstPage" aria-label="FirstPage">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
 

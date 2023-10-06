@@ -43,7 +43,7 @@
         <em>There are no cheeps so far.</em>
     }
 
-    @await Component.InvokeAsync("Pagination", true)
+    @await Component.InvokeAsync("Pagination", ViewData["Author"])
 
     @* <nav aria-label="Page navigation">
         <ul class="pagination">
