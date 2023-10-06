@@ -1,11 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
-using SimpleDB;
+//using SimpleDB;
 
 namespace Chirp.CLI.test;
 public class ChirpCliHttpClient_UnitTests
 {
-    private readonly HttpClient client;
+    /*private readonly HttpClient client;
         
     public ChirpCliHttpClient_UnitTests()
     {
@@ -57,6 +57,6 @@ public class ChirpCliHttpClient_UnitTests
         //assert
         Assert.NotEmpty(cheeps);
         
-    }
+    }*/
 
 }

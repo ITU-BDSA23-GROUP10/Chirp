@@ -26,3 +26,4 @@ app.UseRouting();
 app.MapRazorPages();
 
 app.Run();
+public partial class Program { }
