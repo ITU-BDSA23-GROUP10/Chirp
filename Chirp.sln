@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDB", "src\SimpleDB\Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor", "src\Chirp.Razor\Chirp.Razor.csproj", "{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7952822C-41F5-4FEE-B657-E2A4517CB463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.Tests", "test\Chirp.Razor.Tests\Chirp.Razor.Tests.csproj", "{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B8DB9B-F3FC-43B8-A6D2-0DBBCD4F7D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B8DB9B-F3FC-43B8-A6D2-0DBBCD4F7D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B8DB9B-F3FC-43B8-A6D2-0DBBCD4F7D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B8DB9B-F3FC-43B8-A6D2-0DBBCD4F7D08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D4877928-D7F2-4E37-8252-CA7371E4BCC1} = {14FCB953-09C8-4096-87BA-AC55A8E19A73}

@@ -11,7 +11,7 @@ public class ChirpCliHttpClient_UnitTests
     {
         client = new HttpClient
         {
-            BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net/")
+            BaseAddress = new Uri("https://bdsagroup10chirprazor.azurewebsites.net/")
         };
     }
 
@@ -20,7 +20,7 @@ public class ChirpCliHttpClient_UnitTests
     public async Task HttpClient_IsCorrectlyConfigured()
     {
         //arrange
-        var expectedBaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net");
+        var expectedBaseAddress = new Uri("https://bdsagroup10chirprazor.azurewebsites.net");
         
         //act
         var actualBaseAdress = client.BaseAddress;
@@ -58,5 +58,4 @@ public class ChirpCliHttpClient_UnitTests
         Assert.NotEmpty(cheeps);
         
     }
-
 }
