@@ -7,12 +7,6 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
 
-    /*int startPage = 1;
-    int currentPage = Model.CurrentPage;
-    int totalPages = Model.TotalPages;
-    int prevPage = Math.Max(currentPage - 1, startPage);
-    int nextPage = Math.Min(currentPage + 1, totalPages);*/
-
 }
 
 <div>
@@ -41,54 +35,5 @@
     }
 
     @await Component.InvokeAsync("Pagination")
-
-    @* <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <center>
-
-            @if (currentPage != startPage)
-            {
-                <a href="/" aria-label="FirstPage">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-
-                <a href="/?page=@prevPage" aria-label="Prev">
-                    <span aria-hidden="true">&lsaquo;</span>
-                </a>
-
-            }
-
-            @{
-                // Credit to Viktor Máni Mønster for introducing me to a?b:c
-                int start = (currentPage - 4 <= totalPages) ? (totalPages - 9) : startPage;
-                int end = (currentPage - 4 <= startPage) ? 10 : totalPages;
-
-                // Display pagenumbers from <start> to <end> :)
-                for (int i = start; i <= end; i++)
-                {
-                    string pageNumber = "@i";
-
-                    if (i == currentPage)
-                    {
-                        pageNumber = "<b>[@i]</b>";
-                    }
-
-                    <a href="/?page=@i">@pageNumber</a>
-
-                }
-            }
-              
-            @if (!Model.LastPage)
-            {
-                <a href="/?page=@nextPage" aria-label="Next">
-                    <span aria-hidden="true">&rsaquo;</span>
-                </a>
-
-                <a href="/?page=@totalPages" aria-label="EndPage">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            }
-            </center>
-        </ul>
-    </nav> *@
+    
 </div>
