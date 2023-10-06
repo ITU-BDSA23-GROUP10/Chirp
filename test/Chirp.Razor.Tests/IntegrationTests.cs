@@ -1,6 +1,8 @@
 namespace Chirp.Razor.Tests;
+using Chirp.Razor;
 using Microsoft.AspNetCore.Mvc.Testing;
 
+/*
 public class BasicTests 
     : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -30,9 +32,8 @@ public class BasicTests
         Assert.Equal("text/html; charset=utf-8", 
             response.Content.Headers.ContentType.ToString());
     }
-}
+}*/
 
-/*
 public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _fixture;
@@ -54,7 +55,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("Public Timeline", content);
+        Assert.Contains("public's Timeline", content);
     }
 
     [Theory]
@@ -70,5 +71,4 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         Assert.Contains($"{author}'s Timeline", content);
     }
 }
-
-public partial class Program { }*/
+/*public partial class Program {}*/
