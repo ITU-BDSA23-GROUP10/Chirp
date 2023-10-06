@@ -5,13 +5,6 @@ namespace Chirp.Razor.ViewComponents
 {
     // Overall ViewComponent code refactored from: https://www.learnrazorpages.com/razor-pages/view-components
 
-    public class PagesData {
-        public int CurrentPage { get; set; } = 1;
-        public int TotalPages  { get; set; } = 1;
-        public bool LastPage   { get; set; } = false;
-        public bool HasAuthor   { get; set; } = true;
-    }
-
     public class PaginationViewComponent : ViewComponent
     {
         private readonly ICheepService _service;
