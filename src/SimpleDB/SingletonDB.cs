@@ -1,8 +1,6 @@
-
+namespace SimpleDB;
 // Code taken and refactored from link, section Sixth version:
 // https://csharpindepth.com/Articles/Singleton
-
-using SimpleDB;
 
 public sealed class SingletonDB
 {
