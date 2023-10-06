@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor", "src\Chirp.Ra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7952822C-41F5-4FEE-B657-E2A4517CB463}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CLI.test", "test\Chirp.CLI.test\Chirp.CLI.test.csproj", "{A1B8DB9B-F3FC-43B8-A6D2-0DBBCD4F7D08}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.Tests", "test\Chirp.Razor.Tests\Chirp.Razor.Tests.csproj", "{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}"
 EndProject
 Global
