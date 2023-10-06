@@ -19,24 +19,6 @@ public class ChirpModel : DbContext
             dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
         else 
             dbPath = Path.GetTempPath() + "/chirp.db";
-
-        if (!File.Exists(dbPath))
-        {
-            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
-            { 
-                connection.Open();
-
-                // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"data/schema.sql");
-                var command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-
-                script = File.ReadAllText(@"data/dump.sql");
-                command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-            }
         }
 
         sqlDBFilePath = dbPath;

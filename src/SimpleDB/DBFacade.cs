@@ -10,34 +10,13 @@ public class DBFacade
     private string sqlDBFilePath;
 
     private string sqlQuery;
+    public ChirpModel context;
+
 
     public DBFacade() {
-        string dbPath;
-        if(Environment.GetEnvironmentVariable("CHIRPDBPATH") != null) 
-            dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
-        else 
-            dbPath = Path.GetTempPath() + "/chirp.db";
-
-        if (!File.Exists(dbPath))
-        {
-            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
-            { 
-                connection.Open();
-
-                // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"data/schema.sql");
-                var command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-
-                script = File.ReadAllText(@"data/dump.sql");
-                command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-            }
-        }
-
-        sqlDBFilePath = dbPath;
+        context = new ChirpModel();
+        DBInitializer(context);
+        
     }
 
     public async Task<int> CountCheeps(string? author = null)
@@ -74,15 +53,7 @@ public class DBFacade
 
     public List<Cheep> GetCheeps(int offset, int limit) 
     {
-        //limit and offset are for pagination
-        sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc LIMIT @limit OFFSET @offset";
-        List<Cheep> cheeps; 
-
-        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
-        {
-            
-            return cheeps;
-        }
+       
     }
 
     private static void SQLPrepareStatement(SqliteCommand command, params (string, string)[] values)
