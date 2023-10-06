@@ -1,4 +1,4 @@
-namespace SimpleDB;
+/*namespace SimpleDB;
 // Code taken and refactored from link, section Sixth version:
 // https://csharpindepth.com/Articles/Singleton
 
@@ -17,4 +17,4 @@ public sealed class SingletonDB
     {
         Database = new CSVDatabase<Cheep>();
     }
-}
+}*/

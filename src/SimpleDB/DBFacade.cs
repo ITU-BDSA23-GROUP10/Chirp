@@ -80,27 +80,7 @@ public class DBFacade
 
         using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
         {
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-    
-            //for pagination
-            command.Parameters.AddWithValue("@limit", limit);
-            command.Parameters.AddWithValue("@offset", offset);
-            //end pagination
-
-            using var reader = command.ExecuteReader();
-            cheeps = new List<Cheep>();
-            while (reader.Read())
-            { 
-                cheeps.Add(new Cheep() 
-                {
-                    Author = reader.GetString(0), 
-                    Message = reader.GetString(1), 
-                    Timestamp = reader.GetInt64(2)
-                });  
-            }
+            
             return cheeps;
         }
     }
@@ -152,4 +132,3 @@ public class DBFacade
    
 
 }
-
