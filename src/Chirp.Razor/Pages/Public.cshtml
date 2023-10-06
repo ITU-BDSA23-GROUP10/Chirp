@@ -7,10 +7,10 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
 
-
+    int startPage = 1;
     int currentPage = Model.CurrentPage;
-    int totalPages = Model.TotalPages - 1;
-    int prevPage = Math.Max(currentPage - 1, 0);
+    int totalPages = Model.TotalPages;
+    int prevPage = Math.Max(currentPage - 1, startPage);
     int nextPage = Math.Min(currentPage + 1, totalPages);
 
 }
@@ -43,68 +43,48 @@
         <ul class="pagination">
             <center>
 
-            @if (currentPage != 0)
+            @if (currentPage != startPage)
             {
                 <a href="/" aria-label="FirstPage">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
 
-                if (prevPage == 0)
-                {
-                    <a href="/" aria-label="Prev">
-                    <span aria-hidden="true">&lsaquo;</span>
-                </a>
-                }
-                else
-                {
+                
                 <a href="/?page=@prevPage" aria-label="Prev">
                     <span aria-hidden="true">&lsaquo;</span>
                 </a>
-                }
+
             }
 
             @if (totalPages <= 10)
             {
-                for (int i = 0; i <= totalPages; i++)
+                for (int i = startPage; i <= totalPages; i++)
                 {
+
                     if (i == currentPage)
                     {
-                        if (i == 0)
-                        {
-                            <a href="/">[@i]</a>
-                        }
-                        else
-                        {
-                            <a href="/?page=@i">[@i]</a>
-                        }
+                        <a href="/?page=@i">[@i]</a>
                     }
                     else
                     {
-                        if (i == 0)
-                        {
-                            <a href="/">@i</a>
-                        }
-                        else
-                        {
                         <a href="/?page=@i">@i</a>
-                        }
                     }
                 }
             }
             else
             {
-                int start = Math.Max(currentPage - 4, 0);
-                int end = Math.Min(currentPage + 5, totalPages);
- 
-                if (currentPage - 4 <= 0)
+                int start = Math.Max(currentPage - 5, startPage);
+                int end = Math.Min(currentPage + 4, totalPages);
+
+                if (currentPage - 4 <= startPage)
                 {
-                    start = 0;
+                    start = startPage;
                     end = 10;
                 } 
 
                 if (currentPage + 4 >= totalPages)
                 {
-                    start = totalPages-9;
+                    start = totalPages - 9;
                 }
 
 
@@ -112,7 +92,7 @@
                 {
                     if (i == currentPage)
                     {
-                      <a href="/?page=@i">[@i]</a>
+                        <a href="/?page=@i"><b>[@i]</b></a>
                     }
                     else
                     {
