@@ -42,7 +42,7 @@
 
                     if (i == currentPage)
                     {
-                        pageNumber = $"<b>{i}</b>";
+                        pageNumber = $"<b>[{i}]</b>";
                     }
                     // From StackOverflow: https://stackoverflow.com/a/27284827
                     <a href="@(setRouteName + i)">@Html.Raw(pageNumber)</a>
