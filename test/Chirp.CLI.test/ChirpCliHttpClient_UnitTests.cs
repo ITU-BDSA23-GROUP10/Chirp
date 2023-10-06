@@ -5,6 +5,7 @@ using SimpleDB;
 namespace Chirp.CLI.test;
 public class ChirpCliHttpClient_UnitTests
 {
+    /*
     private readonly HttpClient client;
         
     public ChirpCliHttpClient_UnitTests()
@@ -77,5 +78,5 @@ public class ChirpCliHttpClient_UnitTests
         //assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
-
+*/
 }

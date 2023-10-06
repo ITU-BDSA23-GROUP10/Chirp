@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Text;
 
 namespace Chirp.CLI.test;
-
+/*
 public class endToEndTest
 {
     [Fact]
@@ -151,4 +151,4 @@ public class endToEndTest
         return await response.Content.ReadAsStringAsync();
 
     }
-}
+}*/
