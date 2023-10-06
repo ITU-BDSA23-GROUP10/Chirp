@@ -22,7 +22,7 @@ public class UserTimelineModel : PageModel
     {
         ViewData["Author"] = author;
         ViewData["Page"] = page;
-        Cheeps = _service.GetCheeps(page);
+        Cheeps = _service.GetCheepsFromAuthor(author, page);
 
         return Page();
     }
