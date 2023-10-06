@@ -5,14 +5,13 @@ using SimpleDB;
 namespace Chirp.CLI.test;
 public class ChirpCliHttpClient_UnitTests
 {
-    /*
     private readonly HttpClient client;
         
     public ChirpCliHttpClient_UnitTests()
     {
         client = new HttpClient
         {
-            BaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net/")
+            BaseAddress = new Uri("https://bdsagroup10chirprazor.azurewebsites.net/")
         };
     }
 
@@ -21,7 +20,7 @@ public class ChirpCliHttpClient_UnitTests
     public async Task HttpClient_IsCorrectlyConfigured()
     {
         //arrange
-        var expectedBaseAddress = new Uri("https://bdsagroup10chirpremotedb.azurewebsites.net");
+        var expectedBaseAddress = new Uri("https://bdsagroup10chirprazor.azurewebsites.net");
         
         //act
         var actualBaseAdress = client.BaseAddress;
@@ -78,5 +77,4 @@ public class ChirpCliHttpClient_UnitTests
         //assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
-*/
 }
