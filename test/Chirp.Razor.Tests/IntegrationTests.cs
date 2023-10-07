@@ -14,6 +14,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
     }
 
+    // checks if the timeline has content
     [Fact]
     public async void CanSeePublicTimeline()
     {
@@ -25,6 +26,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         Assert.Contains("public's Timeline", content);
     }
 
+    // checks if authors (from dump.sql) have content
     [Theory]
     [InlineData("Helge")]
     [InlineData("Rasmus")]
@@ -41,12 +43,12 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         Assert.Contains($"{author}'s Timeline", content);
     }
 
+    // checks if unknown author has cheeps
     [Theory]
     [InlineData("Vobiscum")]
     [InlineData("Ad Astra")]
     public async void CheckIfAuthorHasNoCheeps(string author)
     {
-        // if cheep doesn't occur in potential auther name
         var response = await _client.GetAsync($"/{author}");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -69,6 +71,8 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(contentPage0, contentPage1);
     }
 
+    // checks if there are 32 cheeps per page (this test uses Anglesharp)
+    // stitched together from https://github.com/AngleSharp/AngleSharp/blob/devel/docs/general/01-Basics.md
     [Theory]
     [InlineData("?page=1")]
     [InlineData("?page=2")]
@@ -91,7 +95,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         var document = await context.OpenAsync(req => req.Content(content));
         var listItems = document.QuerySelectorAll("ul#messagelist li");
 
-        //note: if the dump.sql isnt set up it'll be equal to only 2 cheeps on the first page
+        //note: if the proper dump.sql data isnt integrated it'll only be equal to 2 cheeps on root page
         Assert.Equal(32, listItems.Length);
     }
 
