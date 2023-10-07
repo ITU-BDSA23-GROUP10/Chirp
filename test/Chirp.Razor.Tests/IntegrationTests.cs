@@ -1,9 +1,5 @@
 namespace Chirp.Razor.Tests;
-
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using AngleSharp;
-using AngleSharp.Html.Dom;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
@@ -46,8 +42,8 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Theory]
-    [InlineData("Nayla")]
-    [InlineData("Theis")]
+    [InlineData("Vobiscum")]
+    [InlineData("Ad Astra")]
     public async void CheckIfAuthorHasNoCheeps(string author)
     {
         // if cheep doesn't occur in potential auther name
@@ -56,12 +52,9 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("There are no cheeps so far.", content);
-
     }
 
-
     // is the root page the same as page 1?
-    // is there isn't anything on page 99999?
     [Fact]
     public async void CheckIfTheRootPageTheSameAsPageOne()
     {
@@ -76,7 +69,6 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(contentPage0, contentPage1);
     }
 
-    /* will look at this at a later date (6 okt)
     [Theory]
     [InlineData("?page=1")]
     [InlineData("?page=2")]
@@ -91,24 +83,16 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     [InlineData("?page=20")]
     public async void CheckIfThereThirtyTwoCheepsPerPage(string page)
     {
-        
         var response = await _client.GetAsync($"/{page}");
         response.EnsureSuccessStatusCode();
-        //var content = await response.Content.ReadAsStringAsync();
-        //IHtmlDocument sidj = new IHtmlDocument();
-        var content = await  IHtmlDocument.GetDocumentAsync(response);
-        //content = await HtmlHelpers.GetDocumentAsync(defaultPage);
+        var content = await response.Content.ReadAsStringAsync();
 
+        var context = BrowsingContext.New(Configuration.Default);
+        var document = await context.OpenAsync(req => req.Content(content));
+        var listItems = document.QuerySelectorAll("ul#messagelist li");
 
-        response = await _client.SendAsync(
-            (IHtmlFormElement)content.QuerySelector("ul[id='messagelist']"),
-
-       /* Regex regexNonWhitespace = new Regex(@"(\S+)|(\s+(?=\S))");
-
-        List<string> query = content.TakeWhile(s => s.Equals("<li>"));
-*/
-       /* 
-        Assert.Contains("");
-    }*/
+        //note: if the dump.sql isnt set up it'll be equal to only 2 cheeps on the first page
+        Assert.Equal(32, listItems.Length);
+    }
 
 }
