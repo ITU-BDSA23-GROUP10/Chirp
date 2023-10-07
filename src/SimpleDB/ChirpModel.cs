@@ -5,14 +5,14 @@ using System.Reflection.Metadata.Ecma335;
 using Microsoft.Data.Sqlite;
 
 namespace SimpleDB;
-public class ChirpModel : DbContext
+public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
 
     private string dbPath;
     private string sqlDBFilePath;
 
-    public ChirpModel()
+    public ChirpDBContext()
     {
         string dbPath;
         if(Environment.GetEnvironmentVariable("CHIRPDBPATH") != null) 

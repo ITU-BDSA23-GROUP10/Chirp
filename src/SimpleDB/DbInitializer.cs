@@ -1,5 +1,5 @@
 using System;
-
+namespace SimpleDB;
 public static class DbInitializer
 {
     public static void SeedDatabase(ChirpDBContext chirpContext)
