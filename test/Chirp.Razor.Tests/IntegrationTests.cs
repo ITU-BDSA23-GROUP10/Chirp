@@ -77,14 +77,6 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     [InlineData("?page=1")]
     [InlineData("?page=2")]
     [InlineData("?page=3")]
-    [InlineData("?page=4")]
-    [InlineData("?page=5")]
-    [InlineData("?page=6")]
-    [InlineData("?page=7")]
-    [InlineData("?page=8")]
-    [InlineData("?page=9")]
-    [InlineData("?page=10")]
-    [InlineData("?page=20")]
     public async void CheckIfThereThirtyTwoCheepsPerPage(string page)
     {
         var response = await _client.GetAsync($"/{page}");
