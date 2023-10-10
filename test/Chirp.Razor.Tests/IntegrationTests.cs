@@ -71,7 +71,7 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         var contentPage = await response.Content.ReadAsStringAsync();
 
         string firstCheepAuthor = "<a href=\"/Jacqualine Gilcoine\">Jacqualine Gilcoine</a>";
-        string firstCheepMessage = "Starbuck now is what we hear the worst.";
+        string firstCheepMessage = "hey were married in Chicago, with old Smith, and was expected aboard every day; meantime, the two went past me.";
 
         Assert.Contains("<h2> Public Timeline </h2>", contentPage);
         Assert.Contains(firstCheepAuthor, contentPage);
