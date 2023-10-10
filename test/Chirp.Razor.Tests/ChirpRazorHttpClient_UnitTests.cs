@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using SimpleDB;
+using Xunit;
 
 namespace Chirp.CLI.test;
 public class ChirpCliHttpClient_UnitTests

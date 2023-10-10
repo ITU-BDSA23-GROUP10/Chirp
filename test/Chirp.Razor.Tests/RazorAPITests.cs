@@ -1,4 +1,5 @@
 namespace Chirp.Razor.Tests;
+using Xunit;
 
 public class RazorAPITests
 {

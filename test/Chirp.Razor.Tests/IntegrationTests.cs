@@ -1,5 +1,6 @@
 namespace Chirp.Razor.Tests;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
 
 public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
