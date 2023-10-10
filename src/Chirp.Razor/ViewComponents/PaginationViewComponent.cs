@@ -13,13 +13,10 @@ namespace Chirp.Razor.ViewComponents
             _service = cheepService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string? author = null)
+        public IViewComponentResult Invoke(string? author = null)
         {
             int page = (int)ViewData["Page"];
-
-            // from Mike Brind: https://www.mikesdotnetting.com/article/328/simple-paging-in-asp-net-core-razor-pages
-            var count = await _service.GetCount(author);
-            int _count = count > 0 ? count : 1;
+            int _count = (int)ViewData["CheepsCount"];
 
             PagesData pagesData = new()
             {

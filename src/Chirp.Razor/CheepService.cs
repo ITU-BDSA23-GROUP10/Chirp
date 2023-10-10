@@ -1,7 +1,7 @@
-using SimpleDB.ChirpRepository;
 using SimpleDB.Models;
+using SimpleDB;
 
-namespace ChirpRazor;
+namespace Chirp.Razor;
 
 public record CheepViewModel(string Author, string Message, string Timestamp);
 

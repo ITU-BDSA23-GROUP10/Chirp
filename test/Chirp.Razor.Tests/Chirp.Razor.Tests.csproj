@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-  <Compile Include="..\..\GlobalUsings.cs" />
+  <Compile Include="../../GlobalUsings.cs" />
   </ItemGroup>
 
 </Project>

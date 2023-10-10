@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ChirpRazor;
+using Chirp.Razor;
+using SimpleDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +14,10 @@ builder.Services.AddSingleton<ICheepService, CheepService>();
 builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
 {
     var dbPath = serviceProvider.GetRequiredService<ChirpDBContext>().DbPath;
-    options.UseSqlite($"Data Source={dbPath}");
+    options.UseSqlite($"Data Source={DbPath}");
 }, ServiceLifetime.Scoped);
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
