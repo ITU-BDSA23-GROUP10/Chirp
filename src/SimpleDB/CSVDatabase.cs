@@ -1,4 +1,4 @@
-﻿namespace SimpleDB;
+﻿/*namespace SimpleDB;
 
 using CsvHelper;
 using System.Globalization;
@@ -46,5 +46,5 @@ public class CSVDatabase<T> : IDatabaseRepository<T>
     }
 
 }
-
+*/
 
