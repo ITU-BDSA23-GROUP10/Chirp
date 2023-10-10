@@ -13,7 +13,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         DbSet = dbContext.Set<Cheep>();
     }
 
-    #region IRepository<Cheep> Members
+    #region IChirpRepository<T> Members
 
     public void Insert(Cheep entity)
     {
@@ -30,24 +30,19 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         return DbSet.Where(predicate);
     }
 
-    public IQueryable<Cheep> GetAll()
+    public (IQueryable<Cheep>, int) GetAll()
     {
-        return DbSet;
+        return (DbSet, DbSet.Count());
     }
 
-    public Cheep GetById(int id)
+    public Cheep? GetById(int id)
     {
         return DbSet.Find(id);
     }
 
-    public int GetRowCount()
+    public (IQueryable<Cheep>, int) GetSome(int offset, int limit)
     {
-        return DbSet.Count();
-    }
-
-    public IQueryable<Cheep> GetSome(int offset, int limit)
-    {
-        return DbSet.Skip(offset).Take(limit);
+        return (DbSet.Skip(offset).Take(limit), DbSet.Count());
     }
 
     #endregion

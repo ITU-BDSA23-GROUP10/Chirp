@@ -23,7 +23,7 @@ public class DBFacade
         return _cheepRepository.GetSome(offset, limit).ToList();
     }
 
-    public (List<Cheep>? Cheeps, int AuthorsCheepsCount) GetCheepsByAuthor(string _author, int offset, int limit)
+    public List<Cheep> GetCheepsByAuthor(string _author, int offset, int limit)
     {
         return _authorRepository.GetAuthorsCheeps(_author, offset, limit);
     }
