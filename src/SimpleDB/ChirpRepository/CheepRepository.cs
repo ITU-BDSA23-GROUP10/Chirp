@@ -43,16 +43,19 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     public (List<Cheep>, int) GetSome(int offset, int limit)
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
-        var page = DbSet.Skip(offset).Take(limit);
-        var query = (from cheep in page
+        var query = (from cheep in DbSet
+                    .OrderByDescending(d => d.TimeStamp)
+                    .Skip(offset)
+                    .Take(limit)
                     select new Cheep
                     {
                         CheepId = cheep.CheepId,
                         Author = cheep.Author,
                         Text = cheep.Text,
                         TimeStamp = cheep.TimeStamp
-                    }).ToList();
-        
+                    })
+                    .ToList();
+
         return (query, DbSet.Count());
     }
 
