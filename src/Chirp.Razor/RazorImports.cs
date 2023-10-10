@@ -1,2 +1,0 @@
-// Namespaces
-global using SimpleDB;

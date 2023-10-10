@@ -1,25 +1,28 @@
+using SimpleDB.Models;
 using SimpleDB;
-namespace ChirpRazor;
+
+namespace Chirp.Razor;
+
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
 {
     //page is for pagination
-    public List<CheepViewModel> GetCheeps(int page);
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
-    Task<int> GetCount(string? author);
+    public (List<CheepViewModel>, int CheepsCount) GetCheeps(int page);
+    public (List<CheepViewModel>, int CheepsCount) GetCheepsFromAuthor(string author, int page);
     int GetLimit();
 }
 
 
 public class CheepService : ICheepService
 {
-    DBFacade facadeDB = new DBFacade();
+    protected readonly DBFacade facadeDB;
+    
     public readonly int limit = 32;
 
-    public async Task<int> GetCount(string? author = null)
+    public CheepService(ChirpDBContext dBContext)
     {
-        return await facadeDB.CountCheeps(author);
+        facadeDB = new DBFacade(dBContext);
     }
 
     public int GetLimit()
@@ -27,59 +30,68 @@ public class CheepService : ICheepService
         return limit;
     }
 
-    public List<CheepViewModel> GetCheeps(int page)
+    public (List<CheepViewModel>, int CheepsCount) GetCheeps(int page)
     {
         //pagination start
         //int limit = 32;
         int offset = (page - 1) * limit;
         //pagination end
 
-        List<Cheep> cheeps = facadeDB.GetCheeps(offset, limit);
-        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+        var (Cheeps, CheepsCount) = facadeDB.GetCheeps(offset, limit);
+        List<Cheep> cheeps = Cheeps;
 
-        foreach(Cheep cheep in cheeps)
+        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+        foreach(Cheep cheep in cheeps) 
         {
             cheepVM.Add(new CheepViewModel 
             (
-                cheep.Author,
-                cheep.Message,
-                UnixTimeStampToDateTimeString(cheep.Timestamp)
-            ));
-        }
-
-        return cheepVM;
-    }
-
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
-    {
-        //pagination start
-        //int limit = 32;
-        int offset = (page - 1) * limit;
-        //pagination end
-
-        List<Cheep> cheeps = facadeDB.GetCheepsAuthorSQL(author, offset, limit);
-        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
-
-       foreach(Cheep cheep in cheeps) 
-        {
-            cheepVM.Add(new CheepViewModel 
-            (
-                cheep.Author,
-                cheep.Message,
-                UnixTimeStampToDateTimeString(cheep.Timestamp)
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString()
             ));
         } 
 
         // filter by the provided author name
-        return cheepVM;
+        return (cheepVM, CheepsCount);
     }
 
-    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
+    public (List<CheepViewModel>, int CheepsCount) GetCheepsFromAuthor(string author, int page)
+    {
+        //pagination start
+        //int limit = 32;
+        int offset = (page - 1) * limit;
+        //pagination end
+
+        var (Cheeps, AuthorsCheepsCount) = facadeDB.GetCheepsByAuthor(author, offset, limit);
+
+        if (Cheeps == null)
+        {
+            return (new List<CheepViewModel>(), 0);
+        }
+
+        List<Cheep> cheeps = Cheeps;
+
+        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+        foreach(Cheep cheep in cheeps) 
+        {
+            cheepVM.Add(new CheepViewModel 
+            (
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString())
+            );
+        } 
+
+        // filter by the provided author name
+        return (cheepVM, AuthorsCheepsCount);
+    }
+
+    /*private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         return dateTime.ToString();
-    }
+    }*/
 
 }
