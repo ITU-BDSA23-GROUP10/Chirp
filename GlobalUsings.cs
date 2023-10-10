@@ -3,5 +3,6 @@
 
 // Namespaces
 using SimpleDB;
+using SimpleDB.Models;
 
 // 3rd-party class libraries
