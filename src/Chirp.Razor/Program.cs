@@ -1,3 +1,5 @@
+using ChirpRazor;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Logging.AddConsole();
