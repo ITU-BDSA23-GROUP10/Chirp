@@ -6,7 +6,6 @@ using SimpleDB.Models;
 
 namespace SimpleDB;
 
-
 public class DBFacade 
 {
     private readonly CheepRepository _cheepRepository;
