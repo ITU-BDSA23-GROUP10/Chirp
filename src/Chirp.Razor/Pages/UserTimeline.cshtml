@@ -1,5 +1,5 @@
-﻿@page "/{author}"
-@model Chirp.Razor.Pages.UserTimelineModel
+﻿﻿@page "/{author}"
+@model ChirpRazor.Pages.UserTimelineModel
 @using System
 @using SimpleDB
 @{
@@ -14,7 +14,7 @@
 <div>
     <h2> @routeName's Timeline </h2>
 
-    @if (Model.Cheeps.Any())
+    @if (Model.Cheeps?.Any() == true)
     {
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
