@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimpleDB;
 using Chirp.Razor;
+using SimpleDB.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 //var dbPath = "";
@@ -14,12 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();
-builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
+builder.Services.AddDbContext<ChirpDBContext>();
+
+/*builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
 {
     var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
     Path.Combine(Path.GetTempPath(), "chirp.db");
     options.UseSqlite($"Data Source={dbPath}"); 
-}, ServiceLifetime.Scoped);
+}, ServiceLifetime.Scoped);*/
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -45,6 +48,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ChirpDBContext>();
+        context.Database.Migrate();
         DbInitializer.SeedDatabase(context);
     }
     catch (Exception ex)
