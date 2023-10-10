@@ -17,6 +17,11 @@ public class CheepService : ICheepService
     DBFacade facadeDB = new DBFacade();
     public readonly int limit = 32;
 
+    public CheepService(ChirpDBContext dBContext)
+    {
+        facadeDB = new ChirpDBContext(dBContext);
+    }
+
     public async Task<int> GetCount(string? author = null)
     {
         return await facadeDB.CountCheeps(author);

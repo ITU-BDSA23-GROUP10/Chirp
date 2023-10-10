@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace SimpleDB;
@@ -10,8 +8,8 @@ namespace SimpleDB;
 public interface IDatabaseRepository<T>
 {
     void Insert(T entity);
-        void Delete(T entity);
-        IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate);
-        IQueryable<T> GetAll();
-        T GetById(int id);
+    void Delete(T entity);
+    IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate);
+    //(IQueryable<T>, int) GetAll();
+    T? GetById(int id);
 }
