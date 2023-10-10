@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using SimpleDB.Migrations;
 using SimpleDB.Models;
 
 namespace SimpleDB.ChirpRepository;
@@ -40,8 +41,13 @@ public class AuthorRepository : IDatabaseRepository<Author>
             return (new List<Cheep>(), 0);
         }
 
-        return (authorEntity.Cheeps.Skip(offset).Take(limit).ToList(),
-            authorEntity.Cheeps.Count);
+        // from StackOverflow: https://stackoverflow.com/a/29205357
+        var page = DbSet.Skip(offset).Take(limit);
+        var query = (from author_ in page
+                    where author_ == authorEntity
+                    select author_.Cheeps).FirstOrDefault();
+
+        return (query, DbSet.Count());
     }
 
     public Author? GetById(int id)

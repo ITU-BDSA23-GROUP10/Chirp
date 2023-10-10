@@ -13,14 +13,14 @@ public class DBFacade
     private readonly AuthorRepository _authorRepository;
 
     public DBFacade(ChirpDBContext dbContext)
-    {
-        _cheepRepository = new CheepRepository(dbContext);
+    {   
         _authorRepository = new AuthorRepository(dbContext);
+        _cheepRepository = new CheepRepository(dbContext);
     }
 
     public (List<Cheep> Cheeps, int CheepsCount) GetCheeps(int offset, int limit) 
     {
-        return ((List<Cheep>, int))_cheepRepository.GetSome(offset, limit);
+        return _cheepRepository.GetSome(offset, limit);
     }
 
     public (List<Cheep>? Cheeps, int AuthorsCheepsCount) GetCheepsByAuthor(string _author, int offset, int limit)

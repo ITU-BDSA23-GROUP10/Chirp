@@ -40,9 +40,20 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         return DbSet.Find(id);
     }
 
-    public (IQueryable<Cheep>, int) GetSome(int offset, int limit)
+    public (List<Cheep>, int) GetSome(int offset, int limit)
     {
-        return (DbSet.Skip(offset).Take(limit), DbSet.Count());
+        // From StackOverflow: https://stackoverflow.com/a/29205357
+        var page = DbSet.Skip(offset).Take(limit);
+        var query = (from p in page
+                    select new Cheep
+                    {
+                        CheepId = p.CheepId,
+                        Author = p.Author,
+                        Text = p.Text,
+                        TimeStamp = p.TimeStamp
+                    }).ToList();
+        
+        return (query, DbSet.Count());
     }
 
     #endregion
