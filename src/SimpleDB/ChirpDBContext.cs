@@ -18,6 +18,7 @@ public class ChirpDBContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             string dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? (Path.GetTempPath() + "/chirp.db");
-            options.UseSqlite($"Data Source={dbPath}");
+            options.UseSqlite($"Data Source={DbPath}");
         }
+
 }
