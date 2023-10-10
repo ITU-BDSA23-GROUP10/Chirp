@@ -13,7 +13,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
         DbSet = dbContext.Set<Author>();
     }
 
-    #region IChirpRepository<T> Members
+    #region IDatabaseRepository<T> Members
 
     public void Insert(Author entity)
     {

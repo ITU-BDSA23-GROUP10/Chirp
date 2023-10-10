@@ -13,7 +13,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         DbSet = dbContext.Set<Cheep>();
     }
 
-    #region IChirpRepository<T> Members
+    #region IDatabaseRepository<T> Members
 
     public void Insert(Cheep entity)
     {

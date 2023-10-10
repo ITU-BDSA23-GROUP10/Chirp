@@ -70,7 +70,6 @@ public class CheepService : ICheepService
         }
 
         List<Cheep> cheeps = Cheeps;
-        int cheepsCount = AuthorsCheepsCount;
 
         List<CheepViewModel> cheepVM = new List<CheepViewModel>();
         foreach(Cheep cheep in cheeps) 
@@ -84,7 +83,7 @@ public class CheepService : ICheepService
         } 
 
         // filter by the provided author name
-        return (cheepVM, cheepsCount);
+        return (cheepVM, AuthorsCheepsCount);
     }
 
     /*private static string UnixTimeStampToDateTimeString(double unixTimeStamp)

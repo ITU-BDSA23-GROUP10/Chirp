@@ -1,20 +1,24 @@
 using Microsoft.EntityFrameworkCore;
-using Chirp.Razor;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SimpleDB;
+using Chirp.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
+//var dbPath = "";
 
 //builder.Logging.AddConsole();
 
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<ICheepService, CheepService>();
-
+builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
 {
-    var dbPath = serviceProvider.GetRequiredService<ChirpDBContext>().DbPath;
-    options.UseSqlite($"Data Source={DbPath}");
+    var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+    Path.Combine(Path.GetTempPath(), "chirp.db");
+    options.UseSqlite($"Data Source={dbPath}"); 
 }, ServiceLifetime.Scoped);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
