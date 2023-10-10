@@ -44,13 +44,13 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
         var page = DbSet.Skip(offset).Take(limit);
-        var query = (from p in page
+        var query = (from cheep in page
                     select new Cheep
                     {
-                        CheepId = p.CheepId,
-                        Author = p.Author,
-                        Text = p.Text,
-                        TimeStamp = p.TimeStamp
+                        CheepId = cheep.CheepId,
+                        Author = cheep.Author,
+                        Text = cheep.Text,
+                        TimeStamp = cheep.TimeStamp
                     }).ToList();
         
         return (query, DbSet.Count());
