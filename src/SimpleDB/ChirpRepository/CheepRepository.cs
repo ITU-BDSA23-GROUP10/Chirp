@@ -43,6 +43,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     public (List<Cheep>, int) GetSome(int offset, int limit)
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
+        // Order by desc (x => x.Field) from StackOverflow: https://stackoverflow.com/a/5813479
         var query = (from cheep in DbSet
                     .OrderByDescending(d => d.TimeStamp)
                     .Skip(offset)
