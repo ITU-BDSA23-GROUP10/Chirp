@@ -1,5 +1,6 @@
-using System;
 namespace SimpleDB;
+using SimpleDB.Models;
+
 public static class DbInitializer
 {
     public static void SeedDatabase(ChirpDBContext chirpContext)
