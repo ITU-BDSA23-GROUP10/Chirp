@@ -27,4 +27,8 @@
       <ProjectReference Include="..\..\src\Chirp.Razor\Chirp.Razor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <Compile Include="..\..\GlobalUsings.cs" />
+  </ItemGroup>
+
 </Project>
