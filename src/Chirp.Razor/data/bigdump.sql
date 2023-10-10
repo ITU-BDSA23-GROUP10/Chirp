@@ -1,4 +1,5 @@
 -- Insert data into the message table with author_id = 3
+-- This file is made by ChatGPT
 INSERT INTO user VALUES(3, 'ChatGPT', 'chat@itu.dk');
 INSERT INTO message (author_id, text, pub_date) VALUES
   (3, 'This is message 1', 1630840800),

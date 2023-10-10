@@ -1,4 +1,6 @@
 namespace Chirp.Razor.Tests;
+
+using System.Threading.RateLimiting;
 using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -57,18 +59,23 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     }
 
     // is the root page the same as page 1?
-    [Fact]
-    public async void CheckIfTheRootPageTheSameAsPageOne()
+    [Theory]
+    [InlineData("/")]
+    [InlineData(@"/?page=0")]
+    [InlineData(@"/?page=1")]
+    public async void CheckIfTheRootPageTheSameAsPageOne(string page)
     {
-        var response0 = await _client.GetAsync(@"/{?page=0}");
-        response0.EnsureSuccessStatusCode();
-        var response1 = await _client.GetAsync(@"/{?page=1}");
-        response1.EnsureSuccessStatusCode();
+        var response = await _client.GetAsync(page);
+        response.EnsureSuccessStatusCode();
 
-        var contentPage0 = await response0.Content.ReadAsStringAsync();
-        var contentPage1 = await response1.Content.ReadAsStringAsync();
+        var contentPage = await response.Content.ReadAsStringAsync();
 
-        Assert.Equal(contentPage0, contentPage1);
+        string firstCheepAuthor = "<a href=\"/Jacqualine Gilcoine\">Jacqualine Gilcoine</a>";
+        string firstCheepMessage = "Starbuck now is what we hear the worst.";
+
+        Assert.Contains("<h2> Public Timeline </h2>", contentPage);
+        Assert.Contains(firstCheepAuthor, contentPage);
+        Assert.Contains(firstCheepMessage, contentPage);
     }
 
     // checks if there are 32 cheeps per page (this test uses Anglesharp)
