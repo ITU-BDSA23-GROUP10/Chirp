@@ -1,0 +1,2 @@
+// Namespaces
+global using SimpleDB;

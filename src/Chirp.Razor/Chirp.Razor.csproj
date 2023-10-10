@@ -19,4 +19,8 @@
     <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <Compile Include="..\..\GlobalUsings.cs" />
+  </ItemGroup>
+
 </Project>

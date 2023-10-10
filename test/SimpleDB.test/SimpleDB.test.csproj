@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\src\SimpleDB\SimpleDB.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <Compile Include="..\..\GlobalUsings.cs" />
+  </ItemGroup>
+
 </Project>

@@ -10,34 +10,13 @@ public class DBFacade
     private string sqlDBFilePath;
 
     private string sqlQuery;
+    public ChirpModel context;
+
 
     public DBFacade() {
-        string dbPath;
-        if(Environment.GetEnvironmentVariable("CHIRPDBPATH") != null) 
-            dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH"); 
-        else 
-            dbPath = Path.GetTempPath() + "/chirp.db";
-
-        if (!File.Exists(dbPath))
-        {
-            using (var connection = new SqliteConnection($"Data Source={dbPath}"))
-            { 
-                connection.Open();
-
-                // Code from: https://stackoverflow.com/a/1728859
-                string script = File.ReadAllText(@"data/schema.sql");
-                var command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-
-                script = File.ReadAllText(@"data/dump.sql");
-                command = connection.CreateCommand();
-                command.CommandText = script;
-                command.ExecuteNonQuery();
-            }
-        }
-
-        sqlDBFilePath = dbPath;
+        context = new ChirpModel();
+        DBInitializer(context);
+        
     }
 
     public async Task<int> CountCheeps(string? author = null)
@@ -74,35 +53,7 @@ public class DBFacade
 
     public List<Cheep> GetCheeps(int offset, int limit) 
     {
-        //limit and offset are for pagination
-        sqlQuery = @"SELECT U.username, M.text, M.pub_date FROM message M JOIN user U ON U.user_id = M.author_id ORDER by M.pub_date desc LIMIT @limit OFFSET @offset";
-        List<Cheep> cheeps; 
-
-        using (var connection = new SqliteConnection($"Data Source={sqlDBFilePath}"))
-        {
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-    
-            //for pagination
-            command.Parameters.AddWithValue("@limit", limit);
-            command.Parameters.AddWithValue("@offset", offset);
-            //end pagination
-
-            using var reader = command.ExecuteReader();
-            cheeps = new List<Cheep>();
-            while (reader.Read())
-            { 
-                cheeps.Add(new Cheep() 
-                {
-                    Author = reader.GetString(0), 
-                    Message = reader.GetString(1), 
-                    Timestamp = reader.GetInt64(2)
-                });  
-            }
-            return cheeps;
-        }
+       
     }
 
     private static void SQLPrepareStatement(SqliteCommand command, params (string, string)[] values)
@@ -152,4 +103,3 @@ public class DBFacade
    
 
 }
-
