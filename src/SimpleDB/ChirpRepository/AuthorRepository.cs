@@ -38,16 +38,22 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
         if (authorEntity == null)
         {
-            return (new List<Cheep>(), 0);
+            return (null, 0);
         }
 
-        // from StackOverflow: https://stackoverflow.com/a/29205357
-        var page = DbSet.Skip(offset).Take(limit);
-        var query = (from author_ in page
+        // query format from StackOverflow: https://stackoverflow.com/a/29205357
+        // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
+        // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
+        var query = (from author_ in DbSet
                     where author_ == authorEntity
-                    select author_.Cheeps).FirstOrDefault();
+                    from cheep in author_.Cheeps
+                    orderby cheep.TimeStamp descending
+                    select cheep)
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToList();
 
-        return (query, DbSet.Count());
+        return (query, authorEntity.Cheeps.Count);
     }
 
     public Author? GetById(int id)
