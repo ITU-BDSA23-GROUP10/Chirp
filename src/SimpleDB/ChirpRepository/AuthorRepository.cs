@@ -42,6 +42,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
         }
 
         // query format from StackOverflow: https://stackoverflow.com/a/29205357
+        // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
         // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
         var query = (from author_ in DbSet
                     where author_ == authorEntity
