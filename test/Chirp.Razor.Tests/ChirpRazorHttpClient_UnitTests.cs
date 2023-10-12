@@ -18,7 +18,7 @@ public class ChirpCliHttpClient_UnitTests
 
     // This tests if the expected base url and actual azure server url are the same
     [Fact]
-    public async Task HttpClient_IsCorrectlyConfigured()
+    public void HttpClient_IsCorrectlyConfigured()
     {
         //arrange
         var expectedBaseAddress = new Uri("https://bdsagroup10chirprazor.azurewebsites.net");
