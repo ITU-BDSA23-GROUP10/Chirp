@@ -53,6 +53,6 @@ jobs:
     - name: release project
       uses: softprops/action-gh-release@v1
       with: 
-        files: "Chirp*"
+        files: "*.zip"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
