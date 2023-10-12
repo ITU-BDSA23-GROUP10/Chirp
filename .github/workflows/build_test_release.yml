@@ -30,7 +30,7 @@ jobs:
         #Build for Windows
         windows_release_name="Chirp-$tag-win-x64"
 
-        dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "win-x64" --self-contained false -c Release -o "${windows_release_name}"
+        dotnet publish src/Chirp.Razor/Chirp.Razor.csproj --framework net7.0 --runtime "win-x64" --self-contained false -c Release -o "${windows_release_name}"
         7z a -tzip "${windows_release_name}.zip" "./${windows_release_name}/*"
 
         rm -r "$windows_release_name" # Delete output directory
@@ -38,7 +38,7 @@ jobs:
         #Build for Linux
         linux_release_name="Chirp-$tag-linux-x64"
 
-        dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "linux-x64" --self-contained false -c Release -o "${linux_release_name}"
+        dotnet publish src/Chirp.Razor/Chirp.Razor.csproj --framework net7.0 --runtime "linux-x64" --self-contained false -c Release -o "${linux_release_name}"
         7z a -tzip "${linux_release_name}.zip" "./${linux_release_name}/*"
 
         rm -r "$linux_release_name" # Delete output directory
@@ -46,7 +46,7 @@ jobs:
         #Build for MacOS
         mac_release_name="Chirp-$tag-osx-x64"
 
-        dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "osx-x64" --self-contained false -c Release -o "${mac_release_name}"
+        dotnet publish src/Chirp.Razor/Chirp.Razor.csproj --framework net7.0 --runtime "osx-x64" --self-contained false -c Release -o "${mac_release_name}"
         7z a -tzip "${mac_release_name}.zip" "./${mac_release_name}/*"
 
         rm -r "$mac_release_name" # Delete output directory
