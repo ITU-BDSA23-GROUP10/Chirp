@@ -1,6 +1,4 @@
-using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SimpleDB.Models;
 
 namespace SimpleDB;

@@ -1,6 +1,3 @@
-using System.Reflection.Metadata.Ecma335;
-using Microsoft.Data.Sqlite;
-using System.Linq;
 using SimpleDB.ChirpRepository;
 using SimpleDB.Models;
 
