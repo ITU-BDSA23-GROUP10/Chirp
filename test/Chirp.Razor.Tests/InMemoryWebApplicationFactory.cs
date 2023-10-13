@@ -19,9 +19,8 @@ public class CustomWebApplicationFactory<TProgram>
             var cheepDBContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ChirpDBContext>));
-
            
-                services.Remove(cheepDBContextDescriptor);
+            services.Remove(cheepDBContextDescriptor);
 
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==

@@ -1,6 +1,4 @@
 namespace Chirp.Razor.Tests.Integration;
-
-using System.Threading.RateLimiting;
 using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -8,7 +6,6 @@ using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDB;
 using SimpleDB.Models;
-using Microsoft.EntityFrameworkCore;
 
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
@@ -137,7 +134,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Fact]
     public async Task InMemoryDatabase_ShouldNotPersistData_test2()
     {
-        
         //arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
@@ -150,9 +146,5 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             
             Assert.Null(author);
         }
-        
-         
-
     }
-    
 }
