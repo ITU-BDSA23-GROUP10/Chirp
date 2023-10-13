@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _fixture;
+    private readonly CustomWebApplicationFactory<Program> _fixture;
     private readonly HttpClient _client;
 
     public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
-        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
+        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
     }
 
     // checks if the timeline has content
@@ -115,6 +115,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
             context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiwe"});
+            context.Authors.Add(new Author{Name = "testtesttesttesttest", Email = "testtest@hotmail.com"});
             await context.SaveChangesAsync();
         }
 
@@ -124,6 +125,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
             var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+
+            //this is used to check if the data comes into the in-memory database
             var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check" );
 
             Assert.NotNull(author);
