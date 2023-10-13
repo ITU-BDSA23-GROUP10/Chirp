@@ -25,6 +25,14 @@ public class CustomWebApplicationFactory<TProgram>
                 services.Remove(cheepDBContextDescriptor);
             }
 
+            // https://pmichaels.net/2022/07/03/integration-testing-with-in-memory-entity-framework/
+
+            var dbConnectionDescriptor = services.SingleOrDefault(
+                d => d.ServiceType ==
+                    typeof(DbConnection));
+
+            services.Remove(dbConnectionDescriptor);
+
             // Create a new Sqlite in-memory database and open a connection to it
             services.AddSingleton<DbConnection>(container =>
             {
@@ -32,12 +40,6 @@ public class CustomWebApplicationFactory<TProgram>
                 connection.Open();
                 return connection;
             });
-
-            var dbConnectionDescriptor = services.SingleOrDefault(
-                d => d.ServiceType ==
-                    typeof(DbConnection));
-
-            services.Remove(dbConnectionDescriptor);
             
             services.AddDbContext<ChirpDBContext>((container, options) =>
             {

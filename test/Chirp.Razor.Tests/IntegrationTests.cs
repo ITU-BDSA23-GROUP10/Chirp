@@ -5,6 +5,9 @@ using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
+using Microsoft.Extensions.DependencyInjection;
+using SimpleDB;
+using SimpleDB.Models;
 
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
@@ -99,4 +102,36 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Equal(32, listItems.Length);
     }
 
+    // https://pmichaels.net/2019/12/20/manually-adding-dbcontext-for-an-integration-test/
+
+    [Fact]
+    public async Task InMemoryDatabase_ShouldNotPersistData()
+    {
+        //arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        //act
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+
+            context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiwe"});
+            await context.SaveChangesAsync();
+        }
+
+        //Assert
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            Author au = (Author)context.Authors.Where(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+           
+           //verify
+           Assert.NotEmpty(context.Authors.Where(a => a.Name == "nayhlalolk" && a.Email == "oiwe" ));
+           Assert.Empty(context.Authors.Where(a => a.Name == "check" && a.Email == "check" ));
+        }
+
+
+    }
+    
 }
