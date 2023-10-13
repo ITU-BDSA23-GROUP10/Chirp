@@ -20,12 +20,8 @@ public class CustomWebApplicationFactory<TProgram>
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ChirpDBContext>));
 
-            if(cheepDBContextDescriptor != null)
-            {
+           
                 services.Remove(cheepDBContextDescriptor);
-            }
-
-            // https://pmichaels.net/2022/07/03/integration-testing-with-in-memory-entity-framework/
 
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
@@ -47,7 +43,11 @@ public class CustomWebApplicationFactory<TProgram>
                 options.UseSqlite(connection);
             });
 
-            
+            using var serviceProvider = services.BuildServiceProvider();
+            var context = serviceProvider.GetRequiredService<ChirpDBContext>();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            DbInitializer.SeedDatabase(context);
         });
 
         builder.UseEnvironment("Development");

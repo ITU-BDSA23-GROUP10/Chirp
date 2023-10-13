@@ -8,6 +8,7 @@ using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDB;
 using SimpleDB.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
@@ -98,11 +99,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         var document = await context.OpenAsync(req => req.Content(content));
         var listItems = document.QuerySelectorAll("ul#messagelist li");
 
-        //note: if the proper dump.sql data isnt integrated it'll only be equal to 2 cheeps on root page
         Assert.Equal(32, listItems.Length);
     }
-
-    // https://pmichaels.net/2019/12/20/manually-adding-dbcontext-for-an-integration-test/
 
     [Fact]
     public async Task InMemoryDatabase_ShouldNotPersistData()
@@ -124,13 +122,33 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         using (var scope = factory.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            Author au = (Author)context.Authors.Where(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
-           
-           //verify
-           Assert.NotEmpty(context.Authors.Where(a => a.Name == "nayhlalolk" && a.Email == "oiwe" ));
-           Assert.Empty(context.Authors.Where(a => a.Name == "check" && a.Email == "check" ));
-        }
 
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+            var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check" );
+
+            Assert.NotNull(author);
+            Assert.Null(nonauthor); 
+        }
+    }
+
+    [Fact]
+    public async Task InMemoryDatabase_ShouldNotPersistData_test2()
+    {
+        
+        //arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        
+        //Assert
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+            
+            Assert.Null(author);
+        }
+        
+         
 
     }
     

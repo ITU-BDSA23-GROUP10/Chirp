@@ -1,8 +1,5 @@
-using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SimpleDB.Models;
-using SQLitePCL;
 
 namespace SimpleDB;
 
@@ -24,13 +21,6 @@ public class ChirpDBContext : DbContext
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options, ModelBuilder modelBuilder)
         :base(options)
     {
-        // modelBuilder.Entity<Cheep>()
-        // .Property(c => c.CheepId)
-        // .IsRequired();
-        // modelBuilder.Entity<Cheep>()
-        // .HasIndex(c => c.CheepId)
-        // .IsUnique();
-
         //Cheep model
         modelBuilder.Entity<Cheep>()
         .Property(c => c.Author)
@@ -58,22 +48,7 @@ public class ChirpDBContext : DbContext
         modelBuilder.Entity<Author>()
         .HasIndex(au => au.Email)
         .IsUnique();
-
-
-/*mb.Entity<SomeObject>()
-            .Property(so => so.Type)
-            .IsUnicode(false)
-            .HasColumnName("Type")
-            .HasColumnType("varchar")
-            .HasMaxLength(50)
-            .IsRequired()
-            .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);*/
-
     
         //modelBuilder.Entity<Followers>().HasKey(k => new k (k.followers, k.follower)
     }
-
-    // Reverted to using Getting Started instead of Razor Page EF Core:
-    // https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
-    // now set to allow in-memory database configuration
 }
