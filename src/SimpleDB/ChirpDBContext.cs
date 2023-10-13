@@ -25,6 +25,12 @@ public class ChirpDBContext : DbContext
 
     // Reverted to using Getting Started instead of Razor Page EF Core:
     // https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
+    // now set to allow in-memory database configuration
     protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseSqlite($"Data Source={DbPath}");
+    {
+        if(!options.IsConfigured)
+        {
+            options.UseSqlite($"Data Source={DbPath}");
+        }
+    }
 }
