@@ -18,4 +18,4 @@ namespace SimpleDB.Migrations
 
         }
     }
-}
+}   
