@@ -1,16 +1,17 @@
-namespace Chirp.Razor.Tests;
+namespace Chirp.Razor.Tests.Integration;
 
 using System.Threading.RateLimiting;
 using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
+using Chirp.Razor.Tests.MemoryFactory;
 
-public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _fixture;
     private readonly HttpClient _client;
 
-    public IntegrationTest(WebApplicationFactory<Program> fixture)
+    public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });

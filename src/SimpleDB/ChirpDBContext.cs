@@ -59,7 +59,6 @@ public class ChirpDBContext : DbContext
         .HasIndex(au => au.Email)
         .IsUnique();
 
-// https://stackoverflow.com/a/64726342 <- ClassValidator o.O
 
 /*mb.Entity<SomeObject>()
             .Property(so => so.Type)
