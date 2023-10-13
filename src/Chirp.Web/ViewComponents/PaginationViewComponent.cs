@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Razor;
 using System.Threading.Tasks;
+using Chirp.Core;
 namespace Chirp.Razor.ViewComponents
 {
     // Overall ViewComponent code refactored from: https://www.learnrazorpages.com/razor-pages/view-components

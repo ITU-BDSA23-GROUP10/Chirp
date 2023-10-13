@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Razor;
+using Chirp.Core;
 
 namespace Chirp.Razor.Pages;
 
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<CheepViewModel>? Cheeps { get; set; }
+    public List<CheepDTO>? Cheeps { get; set; }
 
     /*public int CurrentPage { get; set; } = 1;
     public bool LastPage { get; set; } = false;

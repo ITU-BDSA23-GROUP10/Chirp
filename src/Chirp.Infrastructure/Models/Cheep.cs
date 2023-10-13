@@ -1,4 +1,4 @@
-namespace SimpleDB.Models;
+namespace Chirp.Infrastructure.Models;
 
 public record Cheep
 {

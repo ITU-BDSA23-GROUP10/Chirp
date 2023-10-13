@@ -1,5 +1,5 @@
-namespace SimpleDB;
-using SimpleDB.Models;
+namespace Chirp.Infrastructure;
+using Chirp.Infrastructure.Models;
 
 public static class DbInitializer
 {

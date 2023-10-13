@@ -1,9 +1,9 @@
 using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using SimpleDB.Models;
+using Chirp.Infrastructure.Models;
 
-namespace SimpleDB;
+namespace Chirp.Infrastructure;
 
 public class ChirpDBContext : DbContext
 {

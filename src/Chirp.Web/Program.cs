@@ -4,7 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimpleDB;
 using Chirp.Razor;
-using SimpleDB.Models;
+using Chirp.Infrastructure;
+using Chirp.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 //var dbPath = "";

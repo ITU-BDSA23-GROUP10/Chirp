@@ -1,17 +1,10 @@
-using SimpleDB.Models;
+using Chirp.Infrastructure;
 using SimpleDB;
+using Chirp.Core;
+using Chirp.Infrastructure.Models;
 
 namespace Chirp.Razor;
 
-public record CheepViewModel(string Author, string Message, string Timestamp);
-
-public interface ICheepService
-{
-    //page is for pagination
-    public (List<CheepViewModel>, int CheepsCount) GetCheeps(int page);
-    public (List<CheepViewModel>, int CheepsCount) GetCheepsFromAuthor(string author, int page);
-    int GetLimit();
-}
 
 
 public class CheepService : ICheepService
@@ -30,7 +23,7 @@ public class CheepService : ICheepService
         return limit;
     }
 
-    public (List<CheepViewModel>, int CheepsCount) GetCheeps(int page)
+    public (List<CheepDTO>, int CheepsCount) GetCheeps(int page)
     {
         //pagination start
         //int limit = 32;
@@ -40,10 +33,10 @@ public class CheepService : ICheepService
         var (Cheeps, CheepsCount) = facadeDB.GetCheeps(offset, limit);
         List<Cheep> cheeps = Cheeps;
 
-        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+        List<CheepDTO> cheepVM = new List<CheepDTO>();
         foreach(Cheep cheep in cheeps) 
         {
-            cheepVM.Add(new CheepViewModel 
+            cheepVM.Add(new CheepDTO 
             (
                 cheep.Author.Name,
                 cheep.Text,
@@ -55,7 +48,7 @@ public class CheepService : ICheepService
         return (cheepVM, CheepsCount);
     }
 
-    public (List<CheepViewModel>, int CheepsCount) GetCheepsFromAuthor(string author, int page)
+    public (List<CheepDTO>, int CheepsCount) GetCheepsFromAuthor(string author, int page)
     {
         //pagination start
         //int limit = 32;
@@ -66,15 +59,15 @@ public class CheepService : ICheepService
 
         if (Cheeps == null)
         {
-            return (new List<CheepViewModel>(), 0);
+            return (new List<CheepDTO>(), 0);
         }
 
         List<Cheep> cheeps = Cheeps;
 
-        List<CheepViewModel> cheepVM = new List<CheepViewModel>();
+        List<CheepDTO> cheepVM = new List<CheepDTO>();
         foreach(Cheep cheep in cheeps) 
         {
-            cheepVM.Add(new CheepViewModel 
+            cheepVM.Add(new CheepDTO 
             (
                 cheep.Author.Name,
                 cheep.Text,
