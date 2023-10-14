@@ -60,5 +60,44 @@ public class AuthorRepository : IDatabaseRepository<Author>
     {
         return DbSet.Find(id);
     }
+
+    public Author? GetAuthorByName(string name) 
+    {
+        //Not sure if author returns null if nothing is found, it probably should do that though
+        var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
+
+        return author;
+    }
+
+    public Author? GetAuthorByEmail(string email)
+    {
+        //Not sure if author returns null if nothing is found, it probably should do that though
+        var author = SearchFor(_author => _author.Email == email).FirstOrDefault(); 
+
+        return author;
+    }
+
+    public void CreateAuthor(string name, string email) 
+    {
+        Author author = null;
+        author = GetAuthorByEmail(email); 
+        if(author == null) 
+        {
+            author = GetAuthorByName(name);
+        }
+ 
+        if(author == null) 
+        {
+
+        //Find a way to get the last ID aka the biggest (This will be deprecated later when we switch to GUID / UUID)
+        var id = 9999; //temp value
+        DbSet.Add(new Author(){
+            AuthorId = id,
+            Name = name,
+            Email = email,
+            Cheeps = new List<Cheep>()
+        });
+        }
+    }
     #endregion
 }

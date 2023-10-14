@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System;
 using SimpleDB.Models;
 
 namespace SimpleDB.ChirpRepository;
@@ -59,6 +61,23 @@ public class CheepRepository : IDatabaseRepository<Cheep>
 
         return (query, DbSet.Count());
     }
+    public void CreateCheep(Author author, string text)
+    { 
 
+        //probably just run create author here since it will either create it and then add the cheep or not create it        
+
+        DateTime timestamp = DateTime.Now;
+
+        //Find a way to get the last id for the cheeps so that we can plus 1 it
+        var id = 9999; //temp value
+
+
+        DbSet.Add(new Cheep() {
+            CheepId = id,
+            Author = author,
+            Text = text,
+            TimeStamp = timestamp
+            });
+    }
     #endregion
 }
