@@ -67,6 +67,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     { 
         //probably just run create author here since it will either create it and then add the cheep or not create it
 
+        // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
 
         Insert(new Cheep() {
