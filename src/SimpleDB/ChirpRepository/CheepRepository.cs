@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
+ususing System.Globalization;
 using System;
 using SimpleDB.Models;
 
@@ -19,7 +19,9 @@ public class CheepRepository : IDatabaseRepository<Cheep>
 
     public void Insert(Cheep entity)
     {
+        //No need for us to find last id, from StackOverflow: https://stackoverflow.com/a/4068394
         DbSet.Add(entity);
+        dbContext.SaveChanges();
     }
 
     public void Delete(Cheep entity)
@@ -63,21 +65,14 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     }
     public void CreateCheep(Author author, string text)
     { 
-
-        //probably just run create author here since it will either create it and then add the cheep or not create it        
+        //probably just run create author here since it will either create it and then add the cheep or not create it
 
         DateTime timestamp = DateTime.Now;
 
-        //Find a way to get the last id for the cheeps so that we can plus 1 it
-        var id = 9999; //temp value
-
-
-        DbSet.Add(new Cheep() {
-            CheepId = id,
+        Insert(new Cheep() {
             Author = author,
             Text = text,
             TimeStamp = timestamp
-            });
+            }
+        );
     }
-    #endregion
-}
