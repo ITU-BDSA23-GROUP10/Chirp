@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-ususing System.Globalization;
+using System.Globalization;
 using System;
 using SimpleDB.Models;
 
@@ -9,10 +9,12 @@ namespace SimpleDB.ChirpRepository;
 public class CheepRepository : IDatabaseRepository<Cheep>
 {
     protected DbSet<Cheep> DbSet;
+    protected ChirpDBContext _dbContext;
 
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
+        _dbContext = dbContext;
     }
 
     #region IDatabaseRepository<T> Members
@@ -21,7 +23,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     {
         //No need for us to find last id, from StackOverflow: https://stackoverflow.com/a/4068394
         DbSet.Add(entity);
-        dbContext.SaveChanges();
+        _dbContext.SaveChanges();
     }
 
     public void Delete(Cheep entity)
@@ -76,4 +78,6 @@ public class CheepRepository : IDatabaseRepository<Cheep>
             TimeStamp = timestamp
             }
         );
+    }
+    #endregion
     }

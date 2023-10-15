@@ -8,6 +8,7 @@ namespace SimpleDB.ChirpRepository;
 public class AuthorRepository : IDatabaseRepository<Author>
 {
     protected DbSet<Author> DbSet;
+    protected ChirpDBContext _dbContext;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
@@ -19,6 +20,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
+        _dbContext.SaveChanges();
     }
 
     public void Delete(Author entity)
@@ -88,16 +90,13 @@ public class AuthorRepository : IDatabaseRepository<Author>
  
         if(author == null) 
         {
-
-        //Find a way to get the last ID aka the biggest (This will be deprecated later when we switch to GUID / UUID)
-        var id = 9999; //temp value
-        DbSet.Add(new Author(){
-            AuthorId = id,
+        Insert(new Author(){ 
             Name = name,
             Email = email,
             Cheeps = new List<Cheep>()
         });
         }
+
     }
     #endregion
 }
