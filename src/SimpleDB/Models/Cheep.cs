@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SimpleDB.Models;
 
 public record Cheep

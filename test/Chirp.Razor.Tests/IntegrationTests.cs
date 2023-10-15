@@ -1,19 +1,21 @@
-namespace Chirp.Razor.Tests;
-
-using System.Threading.RateLimiting;
+namespace Chirp.Razor.Tests.Integration;
 using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
+using Chirp.Razor.Tests.MemoryFactory;
+using Microsoft.Extensions.DependencyInjection;
+using SimpleDB;
+using SimpleDB.Models;
 
-public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _fixture;
+    private readonly CustomWebApplicationFactory<Program> _fixture;
     private readonly HttpClient _client;
 
-    public IntegrationTest(WebApplicationFactory<Program> fixture)
+    public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
-        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
+        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
     }
 
     // checks if the timeline has content
@@ -94,8 +96,55 @@ public class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
         var document = await context.OpenAsync(req => req.Content(content));
         var listItems = document.QuerySelectorAll("ul#messagelist li");
 
-        //note: if the proper dump.sql data isnt integrated it'll only be equal to 2 cheeps on root page
         Assert.Equal(32, listItems.Length);
     }
 
+    [Fact]
+    public async Task InMemoryDatabase_ShouldNotPersistData()
+    {
+        //arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        //act
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+
+            context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiwe"});
+            context.Authors.Add(new Author{Name = "testtesttesttesttest", Email = "testtest@hotmail.com"});
+            await context.SaveChangesAsync();
+        }
+
+        //Assert
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+
+            //this is used to check if the data comes into the in-memory database
+            var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check" );
+
+            Assert.NotNull(author);
+            Assert.Null(nonauthor); 
+        }
+    }
+
+    [Fact]
+    public async Task InMemoryDatabase_ShouldNotPersistData_test2()
+    {
+        //arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        
+        //Assert
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+            
+            Assert.Null(author);
+        }
+    }
 }
