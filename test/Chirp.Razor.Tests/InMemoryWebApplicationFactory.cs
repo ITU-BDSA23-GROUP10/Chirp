@@ -20,13 +20,19 @@ public class CustomWebApplicationFactory<TProgram>
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ChirpDBContext>));
            
-            services.Remove(cheepDBContextDescriptor);
+            if (cheepDBContextDescriptor != null)
+            {
+                services.Remove(cheepDBContextDescriptor);
+            }
 
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbConnection));
 
-            services.Remove(dbConnectionDescriptor);
+            if (dbConnectionDescriptor != null)
+            {
+                services.Remove(dbConnectionDescriptor);
+            }
 
             // Create a new Sqlite in-memory database and open a connection to it
             services.AddSingleton<DbConnection>(container =>

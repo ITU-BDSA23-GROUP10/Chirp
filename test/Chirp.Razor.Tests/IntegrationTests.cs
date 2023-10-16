@@ -100,7 +100,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     }
 
     [Fact]
-    public async Task InMemoryDatabase_ShouldNotPersistData()
+    public async Task AddingAuthors_WithContext_AddsToDatabase()
     {
         //arrange
         var factory = new CustomWebApplicationFactory<Program>();
@@ -132,7 +132,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     }
 
     [Fact]
-    public async Task InMemoryDatabase_ShouldNotPersistData_test2()
+    public void VerifyingAuthors_WithContext_DoesNotRetainData()
     {
         //arrange
         var factory = new CustomWebApplicationFactory<Program>();
