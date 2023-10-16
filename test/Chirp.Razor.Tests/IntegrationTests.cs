@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleDB;
 using SimpleDB.Models;
 
+//referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly CustomWebApplicationFactory<Program> _fixture;
@@ -99,6 +100,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Equal(32, listItems.Length);
     }
 
+    //checks the functionality of adding new authors to a database (in memory only)
     [Fact]
     public async Task AddingAuthors_WithContext_AddsToDatabase()
     {
@@ -111,7 +113,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiwe"});
+            context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiw33e@gmail.com"});
             context.Authors.Add(new Author{Name = "testtesttesttesttest", Email = "testtest@hotmail.com"});
             await context.SaveChangesAsync();
         }
@@ -121,9 +123,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
-
-            //this is used to check if the data comes into the in-memory database
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com" );
             var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check" );
 
             Assert.NotNull(author);
@@ -131,6 +131,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
+    // verifies that the database does not retain any data with the specific author in question after the test execution (in memory only).
     [Fact]
     public void VerifyingAuthors_WithContext_DoesNotRetainData()
     {
@@ -142,7 +143,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         using (var scope = factory.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiwe" );
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com" );
             
             Assert.Null(author);
         }
