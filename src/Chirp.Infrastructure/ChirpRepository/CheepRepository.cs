@@ -8,10 +8,12 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class CheepRepository : IDatabaseRepository<Cheep>
 {
     protected DbSet<Cheep> DbSet;
+    protected int maxid;
 
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
+        maxid = GetMaxId() + 1;
     }
 
     #region IDatabaseRepository<T> Members
@@ -60,7 +62,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         return (query, DbSet.Count());
     }
     public void CreateCheep(Author author, string text)
-    { 
+    {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
@@ -68,12 +70,24 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
 
-        Insert(new Cheep() {
+        Insert(new Cheep()
+        {
+            CheepId = maxid,
             Author = author,
             Text = text,
             TimeStamp = timestamp
-            }
-        );
+        });
+        maxid++;
+    }
+    public int GetMaxId()
+    {
+        var query = (from cheep in DbSet
+                     select cheep.CheepId)
+                    .ToList();
+
+
+
+        return query.Max();
     }
     #endregion
 }
