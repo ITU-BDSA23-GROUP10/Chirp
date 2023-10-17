@@ -42,7 +42,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         return DbSet.Find(id);
     }
 
-    public (List<Cheep>, int) GetSome(int offset, int limit)
+    public (List<CheepDTO>, int) GetSome(int offset, int limit)
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
         // Order by desc (x => x.Field) from StackOverflow: https://stackoverflow.com/a/5813479
@@ -50,12 +50,11 @@ public class CheepRepository : IDatabaseRepository<Cheep>
                     .OrderByDescending(d => d.TimeStamp)
                     .Skip(offset)
                     .Take(limit)
-                     select new Cheep
+                     select new CheepDTO
                      {
-                         CheepId = cheep.CheepId,
                          Author = cheep.Author,
-                         Text = cheep.Text,
-                         TimeStamp = cheep.TimeStamp
+                         Message = cheep.Text,
+                         Timestamp = cheep.TimeStamp
                      })
                     .ToList();
 

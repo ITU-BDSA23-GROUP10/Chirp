@@ -18,12 +18,12 @@ public class DBFacade
         _cheepRepository = new CheepRepository(dbContext);
     }
 
-    public (List<Cheep> Cheeps, int CheepsCount) GetCheeps(int offset, int limit) 
+    public (List<CheepDTO> Cheeps, int CheepsCount) GetCheeps(int offset, int limit) 
     {
         return _cheepRepository.GetSome(offset, limit);
     }
 
-    public (List<Cheep>? Cheeps, int AuthorsCheepsCount) GetCheepsByAuthor(string _author, int offset, int limit)
+    public (List<CheepDTO>? Cheeps, int AuthorsCheepsCount) GetCheepsByAuthor(string _author, int offset, int limit)
     {
         return _authorRepository.GetAuthorsCheeps(_author, offset, limit);
     }

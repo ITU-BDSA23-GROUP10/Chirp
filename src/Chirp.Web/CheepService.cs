@@ -28,21 +28,15 @@ public class CheepService : ICheepService
         //pagination end
 
         var (Cheeps, CheepsCount) = facadeDB.GetCheeps(offset, limit);
-        List<Cheep> cheeps = Cheeps;
 
-        List<CheepDTO> cheepVM = new List<CheepDTO>();
-        foreach (Cheep cheep in cheeps)
+        //If cheeps list is empty just give it an empty list to ensure that the site actually has a list
+        if (Cheeps == null)
         {
-            cheepVM.Add(new CheepDTO
-            (
-                cheep.Author.Name,
-                cheep.Text,
-                cheep.TimeStamp.ToString()
-            ));
-        }
+            return (new List<CheepDTO>(), 0);
+        } 
 
         // filter by the provided author name
-        return (cheepVM, CheepsCount);
+        return (Cheeps, CheepsCount);
     }
 
     public (List<CheepDTO>, int CheepsCount) GetCheepsFromAuthor(string author, int page)
@@ -54,27 +48,17 @@ public class CheepService : ICheepService
 
         var (Cheeps, AuthorsCheepsCount) = facadeDB.GetCheepsByAuthor(author, offset, limit);
 
+        //If cheeps list is empty just give it an empty list to ensure that the site actually has a list
         if (Cheeps == null)
         {
             return (new List<CheepDTO>(), 0);
         }
 
-        List<Cheep> cheeps = Cheeps;
-
-        List<CheepDTO> cheepVM = new List<CheepDTO>();
-        foreach (Cheep cheep in cheeps)
-        {
-            cheepVM.Add(new CheepDTO
-            (
-                cheep.Author.Name,
-                cheep.Text,
-                cheep.TimeStamp.ToString())
-            );
-        }
-
         // filter by the provided author name
-        return (cheepVM, AuthorsCheepsCount);
+        return (Cheeps, AuthorsCheepsCount);
     }
+
+    //Changes unix time stamps to be the european date month year standard
     /*private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
