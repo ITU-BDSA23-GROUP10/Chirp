@@ -7,7 +7,7 @@ using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
 
-
+[Collection("Sequential")]
 public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly CustomWebApplicationFactory<Program> _fixture;

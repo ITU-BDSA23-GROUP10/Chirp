@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 
-
+[Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
