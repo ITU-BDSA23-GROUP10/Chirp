@@ -4,13 +4,10 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 
 namespace Chirp.Razor;
-
-
-
 public class CheepService : ICheepService
 {
     protected readonly DBFacade facadeDB;
-    
+
     public readonly int limit = 32;
 
     public CheepService(ChirpDBContext dBContext)
@@ -34,15 +31,15 @@ public class CheepService : ICheepService
         List<Cheep> cheeps = Cheeps;
 
         List<CheepDTO> cheepVM = new List<CheepDTO>();
-        foreach(Cheep cheep in cheeps) 
+        foreach (Cheep cheep in cheeps)
         {
-            cheepVM.Add(new CheepDTO 
+            cheepVM.Add(new CheepDTO
             (
                 cheep.Author.Name,
                 cheep.Text,
                 cheep.TimeStamp.ToString()
             ));
-        } 
+        }
 
         // filter by the provided author name
         return (cheepVM, CheepsCount);
@@ -65,20 +62,19 @@ public class CheepService : ICheepService
         List<Cheep> cheeps = Cheeps;
 
         List<CheepDTO> cheepVM = new List<CheepDTO>();
-        foreach(Cheep cheep in cheeps) 
+        foreach (Cheep cheep in cheeps)
         {
-            cheepVM.Add(new CheepDTO 
+            cheepVM.Add(new CheepDTO
             (
                 cheep.Author.Name,
                 cheep.Text,
                 cheep.TimeStamp.ToString())
             );
-        } 
+        }
 
         // filter by the provided author name
         return (cheepVM, AuthorsCheepsCount);
     }
-
     /*private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
@@ -86,5 +82,4 @@ public class CheepService : ICheepService
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         return dateTime.ToString();
     }*/
-
 }
