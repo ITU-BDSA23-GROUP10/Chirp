@@ -160,7 +160,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             //Somehow use the repo methods to create a user here or outside the scope idk
         } 
-
     }
 
     [Fact]
@@ -178,13 +177,11 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Fact]
     public async Task CreateCheepInDatabase_AuthorDoesntExist() 
     {
-
     }
 
     [Fact]
     public async Task CreateCheepInDatabase_AuthorDoesExist() 
     {
-
     }
 
 }
