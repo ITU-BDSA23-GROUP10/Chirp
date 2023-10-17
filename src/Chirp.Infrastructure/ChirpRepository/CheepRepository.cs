@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SimpleDB.Models;
+using Chirp.Infrastructure.Models;
+using Chirp.Core;
 
-namespace SimpleDB.ChirpRepository;
+namespace Chirp.Infrastructure.ChirpRepository;
 
 public class CheepRepository : IDatabaseRepository<Cheep>
 {

@@ -2,25 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SimpleDB;
+using Chirp.Infrastructure;
 
 #nullable disable
 
-namespace SimpleDB.Migrations
+namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDBContext))]
-    [Migration("20231010104957_InitialCreate")]
-    partial class InitialCreate
+    partial class ChirpDBContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
 
-            modelBuilder.Entity("SimpleDB.Models.Author", b =>
+            modelBuilder.Entity("Chirp.Infrastructure.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
@@ -39,7 +36,7 @@ namespace SimpleDB.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("SimpleDB.Models.Cheep", b =>
+            modelBuilder.Entity("Chirp.Infrastructure.Cheep", b =>
                 {
                     b.Property<int>("CheepId")
                         .ValueGeneratedOnAdd()
@@ -50,6 +47,7 @@ namespace SimpleDB.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasMaxLength(160)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
@@ -62,9 +60,9 @@ namespace SimpleDB.Migrations
                     b.ToTable("Cheeps");
                 });
 
-            modelBuilder.Entity("SimpleDB.Models.Cheep", b =>
+            modelBuilder.Entity("Chirp.Infrastructure.Cheep", b =>
                 {
-                    b.HasOne("SimpleDB.Models.Author", "Author")
+                    b.HasOne("Chirp.Infrastructure.Author", "Author")
                         .WithMany("Cheeps")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -73,7 +71,7 @@ namespace SimpleDB.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("SimpleDB.Models.Author", b =>
+            modelBuilder.Entity("Chirp.Infrastructure.Author", b =>
                 {
                     b.Navigation("Cheeps");
                 });

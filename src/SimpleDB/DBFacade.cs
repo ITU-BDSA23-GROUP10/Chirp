@@ -1,8 +1,9 @@
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Data.Sqlite;
 using System.Linq;
-using SimpleDB.ChirpRepository;
-using SimpleDB.Models;
+using Chirp.Infrastructure.ChirpRepository;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure;
 
 namespace SimpleDB;
 
