@@ -12,6 +12,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
+        DbSet = dbContext.Set
     }
 
     #region IDatabaseRepository<T> Members
@@ -60,6 +61,21 @@ public class CheepRepository : IDatabaseRepository<Cheep>
 
         return (query, DbSet.Count());
     }
+    public void CreateCheep(Author author, string text)
+    { 
+        // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
+        // To ensure that the author is either created or already exists!!!
+        // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
+        // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
+        DateTime timestamp = DateTime.Now;
+
+        Insert(new Cheep() {
+            Author = author,
+            Text = text,
+            TimeStamp = timestamp
+            }
+        );
+    }
     #endregion
 }

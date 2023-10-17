@@ -91,13 +91,13 @@ public class AuthorRepository : IDatabaseRepository<Author>
  
         if(author == null) 
         {
-        Insert(new Author(){ 
+        Insert(new Author()
+        { 
             Name = name,
             Email = email,
             Cheeps = new List<Cheep>()
         });
-        }
-
+        }  
     }
     #endregion
 }
