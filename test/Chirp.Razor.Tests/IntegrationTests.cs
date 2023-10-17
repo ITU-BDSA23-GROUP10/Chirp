@@ -5,7 +5,7 @@ using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure.Models;
-using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure;
 
 
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0

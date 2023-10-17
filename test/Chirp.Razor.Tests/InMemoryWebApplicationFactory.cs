@@ -38,7 +38,6 @@ public class CustomWebApplicationFactory<TProgram>
             services.AddSingleton<DbConnection>(container =>
             {
                 var connection = new SqliteConnection("DataSource=:memory:");
-                connection.Open();
                 return connection;
             });
 
