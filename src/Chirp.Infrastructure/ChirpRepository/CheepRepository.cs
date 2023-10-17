@@ -12,7 +12,6 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
-        DbSet = dbContext.Set
     }
 
     #region IDatabaseRepository<T> Members
@@ -51,11 +50,11 @@ public class CheepRepository : IDatabaseRepository<Cheep>
                     .Skip(offset)
                     .Take(limit)
                      select new CheepDTO
-                     {
-                         Author = cheep.Author,
-                         Message = cheep.Text,
-                         Timestamp = cheep.TimeStamp
-                     })
+                     (
+                         cheep.Author.Name,
+                         cheep.Text,
+                         cheep.TimeStamp.ToString()
+                     ))
                     .ToList();
 
         return (query, DbSet.Count());

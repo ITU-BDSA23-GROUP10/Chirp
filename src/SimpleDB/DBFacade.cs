@@ -4,6 +4,7 @@ using System.Linq;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
+using Chirp.Core;
 
 namespace SimpleDB;
 

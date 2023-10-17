@@ -56,15 +56,15 @@ public class AuthorRepository : IDatabaseRepository<Author>
                     .Take(limit)
                     .ToList();
 
-        List<CheepDTO> cheeps = new List<CheepDTO>;
+        List<CheepDTO> cheeps = new List<CheepDTO>();
         foreach(Cheep cheep in query)
         {
-            cheeps.add(new CheepDTO() 
-            {
-                Author = cheep.Author,
-                Message = cheep.Text,
-                Timestamp = cheep.TimeStamp
-            });
+            cheeps.Add(new CheepDTO 
+            (
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString()
+            ));
         }
 
         return (cheeps, authorEntity.Cheeps.Count);

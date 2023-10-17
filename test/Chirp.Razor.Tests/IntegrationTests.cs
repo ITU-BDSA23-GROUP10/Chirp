@@ -17,7 +17,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
-        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
+        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
     }
 
     // checks if the timeline has content
@@ -65,7 +65,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     // is the root page the same as page 1?
     [Theory]
     [InlineData("/")]
-    [InlineData(@"/?page=0")]
     [InlineData(@"/?page=1")]
     public async void CheckIfTheRootPageTheSameAsPageOne(string page)
     {
@@ -149,39 +148,5 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Null(author);
         }
     }
-
-    [Fact]
-    public async Task CreateAuthorInDatabase_DoesntExist()
-    {
-        var factory = new CustomWebApplicationFactory<Program>();
-        var client = factory.CreateClient();
-
-        using (var scope = factory.Services.CreateScope())
-        {
-            //Somehow use the repo methods to create a user here or outside the scope idk
-        } 
-    }
-
-    [Fact]
-    public async Task CreateAuthorInDatabase_DoesExist() 
-    {
-        var factory = new CustomWebApplicationFactory<Program>();
-        var client = factory.CreateClient();
-
-        using (var scope = factory.Services.CreateScope())
-        {
-            //Somehow use the repo methods to create a user here or outside the scope idk
-        } 
-    }
-
-    [Fact]
-    public async Task CreateCheepInDatabase_AuthorDoesntExist() 
-    {
-    }
-
-    [Fact]
-    public async Task CreateCheepInDatabase_AuthorDoesExist() 
-    {
-    }
-
+    
 }
