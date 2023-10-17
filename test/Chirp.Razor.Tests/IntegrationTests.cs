@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleDB;
-using SimpleDB.Models;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Models;
+
 
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
@@ -113,8 +114,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            context.Authors.Add(new Author{Name = "nayhlalolk", Email = "oiw33e@gmail.com"});
-            context.Authors.Add(new Author{Name = "testtesttesttesttest", Email = "testtest@hotmail.com"});
+            context.Authors.Add(new Author { Name = "nayhlalolk", Email = "oiw33e@gmail.com" });
+            context.Authors.Add(new Author { Name = "testtesttesttesttest", Email = "testtest@hotmail.com" });
             await context.SaveChangesAsync();
         }
 
@@ -123,11 +124,11 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com" );
-            var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check" );
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com");
+            var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check");
 
             Assert.NotNull(author);
-            Assert.Null(nonauthor); 
+            Assert.Null(nonauthor);
         }
     }
 
@@ -138,13 +139,13 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         //arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
-        
+
         //Assert
         using (var scope = factory.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com" );
-            
+            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com");
+
             Assert.Null(author);
         }
     }

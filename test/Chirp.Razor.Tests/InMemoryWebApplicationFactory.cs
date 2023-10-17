@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleDB;
+using Chirp.Infrastructure;
 
 // referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class CustomWebApplicationFactory<TProgram>
@@ -19,7 +19,7 @@ public class CustomWebApplicationFactory<TProgram>
             var cheepDBContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ChirpDBContext>));
-           
+
             if (cheepDBContextDescriptor != null)
             {
                 services.Remove(cheepDBContextDescriptor);
@@ -41,7 +41,7 @@ public class CustomWebApplicationFactory<TProgram>
                 connection.Open();
                 return connection;
             });
-            
+
             services.AddDbContext<ChirpDBContext>((container, options) =>
             {
                 var connection = container.GetRequiredService<DbConnection>();
