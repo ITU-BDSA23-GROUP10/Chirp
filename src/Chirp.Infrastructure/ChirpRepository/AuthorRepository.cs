@@ -9,6 +9,7 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class AuthorRepository : IDatabaseRepository<Author>
 {
     protected DbSet<Author> DbSet;
+    protected ChirpDBContext _dbContext;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
@@ -20,6 +21,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
+        _dbContext.SaveChanges();
     }
 
     public void Delete(Author entity)
@@ -60,6 +62,42 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public Author? GetById(int id)
     {
         return DbSet.Find(id);
+    }
+
+    public Author? GetAuthorByName(string name) 
+    {
+        //Not sure if author returns null if nothing is found, it probably should do that though
+        var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
+
+        return author;
+    }
+
+    public Author? GetAuthorByEmail(string email)
+    {
+        //Not sure if author returns null if nothing is found, it probably should do that though
+        var author = SearchFor(_author => _author.Email == email).FirstOrDefault(); 
+
+        return author;
+    }
+
+    public void CreateAuthor(string name, string email) 
+    {
+        Author author = null;
+        author = GetAuthorByEmail(email); 
+        if(author == null) 
+        {
+            author = GetAuthorByName(name);
+        }
+ 
+        if(author == null) 
+        {
+        Insert(new Author(){ 
+            Name = name,
+            Email = email,
+            Cheeps = new List<Cheep>()
+        });
+        }
+
     }
     #endregion
 }

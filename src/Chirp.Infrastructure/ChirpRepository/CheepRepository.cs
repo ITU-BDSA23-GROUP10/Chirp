@@ -49,13 +49,13 @@ public class CheepRepository : IDatabaseRepository<Cheep>
                     .OrderByDescending(d => d.TimeStamp)
                     .Skip(offset)
                     .Take(limit)
-                    select new Cheep
-                    {
-                        CheepId = cheep.CheepId,
-                        Author = cheep.Author,
-                        Text = cheep.Text,
-                        TimeStamp = cheep.TimeStamp
-                    })
+                     select new Cheep
+                     {
+                         CheepId = cheep.CheepId,
+                         Author = cheep.Author,
+                         Text = cheep.Text,
+                         TimeStamp = cheep.TimeStamp
+                     })
                     .ToList();
 
         return (query, DbSet.Count());
