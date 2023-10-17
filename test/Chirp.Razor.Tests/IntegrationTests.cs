@@ -147,4 +147,42 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Null(author);
         }
     }
+
+    [Fact]
+    public async Task CreateAuthorInDatabase_DoesntExist()
+    {
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            //Somehow use the repo methods to create a user here or outside the scope idk
+        } 
+
+    }
+
+    [Fact]
+    public async Task CreateAuthorInDatabase_DoesExist() 
+    {
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            //Somehow use the repo methods to create a user here or outside the scope idk
+        } 
+    }
+
+    [Fact]
+    public async Task CreateCheepInDatabase_AuthorDoesntExist() 
+    {
+
+    }
+
+    [Fact]
+    public async Task CreateCheepInDatabase_AuthorDoesExist() 
+    {
+
+    }
+
 }
