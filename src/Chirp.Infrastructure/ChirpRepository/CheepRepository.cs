@@ -12,7 +12,6 @@ public class CheepRepository : IDatabaseRepository<Cheep>
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
-        DbSet = dbContext.Set
     }
 
     #region IDatabaseRepository<T> Members
