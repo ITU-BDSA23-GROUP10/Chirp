@@ -95,7 +95,6 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
     public void CreateAuthor(string name, string email)
     {
-
         Author author = null;
         author = GetAuthorByEmail(email);
         if (author == null)
@@ -126,8 +125,6 @@ public class AuthorRepository : IDatabaseRepository<Author>
         var query = (from author_ in DbSet
                      select author_.AuthorId)
                     .ToList();
-
-
 
         return query.Max();
     }

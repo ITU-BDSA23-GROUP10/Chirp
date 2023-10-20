@@ -48,7 +48,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             ar.CreateAuthor(authorName, authorEmail);
             await context.SaveChangesAsync();
 
-
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
             Assert.Equal(authorName, retrievedAuthor.Name);
@@ -74,7 +73,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             // Act
             ar.CreateAuthor(authorName, authorEmail);
             await context.SaveChangesAsync();
-
 
             // Assert
             Assert.Throws<Exception>(() => ar.CreateAuthor(authorName, authorEmail));
@@ -105,7 +103,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             cr.CreateCheep(ar.GetAuthorByName(authorName), message);
             await context.SaveChangesAsync();
-
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
@@ -147,15 +144,13 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
 
-
         using (var scope = factory.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
 
-            // Act
-            
+            // Act            
             try 
             {
                 cr.CreateCheep(ar.GetAuthorByName(authorName), message);
