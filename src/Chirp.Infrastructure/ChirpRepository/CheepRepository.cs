@@ -91,8 +91,6 @@ public class CheepRepository : IDatabaseRepository<Cheep>
                      select cheep.CheepId)
                     .ToList();
 
-
-
         return query.Max();
     }
     #endregion
