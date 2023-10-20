@@ -86,11 +86,10 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         }
     }
 
-    //TODO do it with cheeps not author plz 
-    /*[Theory]
-    [InlineData("test1", "test1@test.dk")]
-    [InlineData("test2", "test2@test.de")]
-    public async Task CreateCheepInDatabase_AuthorDoesntExist() 
+    [Theory]
+    [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
+    [InlineData("test2", "test2@test.de", "This is a test cheep2")]
+    public async Task CreateCheepInDatabase_AuthorExists(string authorName, string authorEmail, string message) 
     {
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
@@ -102,18 +101,22 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
 
             // Act
             ar.CreateAuthor(authorName, authorEmail);
+            await context.SaveChangesAsync();
+
+            cr.CreateCheep(ar.GetAuthorByName(authorName), message);
             await context.SaveChangesAsync();
 
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
             Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(authorEmail, retrievedAuthor.Email);
+            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
         }
-    }*/
+    }
 
     //TODO
     /*[Fact]
