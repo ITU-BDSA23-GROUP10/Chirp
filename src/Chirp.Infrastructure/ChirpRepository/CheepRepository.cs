@@ -67,6 +67,12 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
+        if(author == null) 
+        {
+            // This should most likely be changed to a custom exception pertaining to accounts not existing
+            throw new Exception("Author doesn't exist try again after creating an account");
+        }
+
         // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
 
