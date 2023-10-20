@@ -1,9 +1,7 @@
-using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
-using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
 
@@ -19,8 +17,9 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
     }
 
+    //Tests if the publictimline is visable and contains the elements for it to be correct
     [Fact]
-    public async void CanSeePublicTimeline()
+    public async Task CanSeePublicTimeline()
     {
         var response = await _client.GetAsync("/public");
         response.EnsureSuccessStatusCode();
@@ -30,7 +29,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         Assert.Contains("public's Timeline", content);
     }
 
-
+    //Tests if the program can create an author when it doesn't exist in the database
     [Theory]
     [InlineData("test1", "test1@test.dk")]
     [InlineData("test2", "test2@test.de")]
@@ -39,8 +38,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
-
-        // var context = null;
 
         using (var scope = factory.Services.CreateScope())
         {
@@ -59,6 +56,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         }
     }
 
+    //Tests if the program throws an exception when trying to create an author that already exists in the database
     [Theory]
     [InlineData("test1", "test1@test.dk")]
     [InlineData("test2", "test2@test.de")]
@@ -67,8 +65,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
-
-        // var context = null;
 
         using (var scope = factory.Services.CreateScope())
         {
@@ -86,6 +82,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         }
     }
 
+    // Tests to see if the program can create a cheep for an author that exists
     [Theory]
     [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
     [InlineData("test2", "test2@test.de", "This is a test cheep2")]
@@ -95,7 +92,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
 
-        // var context = null;
 
         using (var scope = factory.Services.CreateScope())
         {
@@ -118,16 +114,15 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         }
     }
 
+    //Tests if the program throws an exception when the program tries to create a cheep for an author that doesn't exist
     [Theory]
     [InlineData("test1", "This is a test cheep1")]
     [InlineData("test2", "This is a test cheep2")]
-    public async Task CreateCheepInDatabase_AuthorDoesntExist(string authorName, string message) 
+    public async Task CreateCheep_ThrowsException_WhenAuthorDoesNotExist(string authorName, string message) 
     {
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
-
-        // var context = null;
 
         using (var scope = factory.Services.CreateScope())
         {
@@ -140,6 +135,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         }
     }
 
+    //Tests if the program can create a cheep using a try catch to ensure the author exists
     [Theory]
     [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
     [InlineData("test2", "test2@test.de", "This is a test cheep2")]
@@ -151,7 +147,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
 
-        // var context = null;
 
         using (var scope = factory.Services.CreateScope())
         {
