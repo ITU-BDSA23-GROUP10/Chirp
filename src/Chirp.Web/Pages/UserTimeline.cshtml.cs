@@ -1,21 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Chirp.Razor;
 using Chirp.Core;
+using Chirp.Infrastructure.Models;
 
 namespace Chirp.Razor.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly ICheepService _service;
-    public List<CheepDTO>? Cheeps { get; set; }
+    private readonly IAuthorRepository<Author, Cheep> _service;
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    /*public int CurrentPage { get; set; } = 1;
-    public int TotalPages { get; set; } = 1;
-    public bool LastPage { get; set; } = false;
-    public bool CurrentAuthor { get; set; }*/
-
-    public UserTimelineModel(ICheepService service)
+    public UserTimelineModel(IAuthorRepository<Author, Cheep> service)
     {
         _service = service;
     }
@@ -26,7 +21,10 @@ public class UserTimelineModel : PageModel
         ViewData["Author"] = author;
         ViewData["Page"] = page;
 
-        (Cheeps, ViewData["CheepsCount"]) = _service.GetCheepsFromAuthor(author, page);
+        int limit = 32;
+        int offset = (page - 1) * limit;
+
+        (Cheeps, ViewData["CheepsCount"]) = _service.GetAuthorsCheeps(author, offset, limit);
 
         return Page();
     }
