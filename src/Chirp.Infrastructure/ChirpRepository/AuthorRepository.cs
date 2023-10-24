@@ -6,7 +6,7 @@ using Chirp.Core;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
-public class AuthorRepository : IDatabaseRepository<Author>
+public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
     protected int maxid;

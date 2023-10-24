@@ -6,6 +6,8 @@ using SimpleDB;
 using Chirp.Razor;
 using Chirp.Infrastructure;
 using Chirp.Core;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.ChirpRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 //var dbPath = "";
@@ -15,7 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<ICheepService, CheepService>();
+builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
+builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>();
 builder.Services.AddDbContext<ChirpDBContext>();
 
 /*builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
