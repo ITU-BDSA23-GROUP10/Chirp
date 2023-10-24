@@ -41,7 +41,6 @@ namespace Chirp.Razor.ViewComponents
 
             pagesData.LastPage = (page == pagesData.TotalPages);
             
-
             return View(pagesData);
         }
     }
