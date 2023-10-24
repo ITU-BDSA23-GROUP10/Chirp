@@ -5,11 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14FCB953-09C8-4096-87BA-AC55A8E19A73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDB", "src\SimpleDB\SimpleDB.csproj", "{D4877928-D7F2-4E37-8252-CA7371E4BCC1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Web", "src\Chirp.Web\Chirp.Web.csproj", "{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7952822C-41F5-4FEE-B657-E2A4517CB463}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.Tests", "test\Chirp.Razor.Tests\Chirp.Razor.Tests.csproj", "{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}"
 EndProject
@@ -22,10 +18,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D4877928-D7F2-4E37-8252-CA7371E4BCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4877928-D7F2-4E37-8252-CA7371E4BCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4877928-D7F2-4E37-8252-CA7371E4BCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4877928-D7F2-4E37-8252-CA7371E4BCC1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,7 +32,6 @@ Global
 		{4F38C84F-2CFF-4040-A8F8-95BB5AC0126B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D4877928-D7F2-4E37-8252-CA7371E4BCC1} = {14FCB953-09C8-4096-87BA-AC55A8E19A73}
 		{F6CD1341-AEE7-4CDB-9CF3-37006DA5B588} = {14FCB953-09C8-4096-87BA-AC55A8E19A73}
 	EndGlobalSection
 EndGlobal

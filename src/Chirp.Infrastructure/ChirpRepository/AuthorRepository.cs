@@ -34,7 +34,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return DbSet.Where(predicate);
     }
 
-    public (List<CheepDTO>?, int) GetAuthorsCheeps(string author, int offset, int limit)
+    public (List<CheepDTO>, int) GetAuthorsCheeps(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
         var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();

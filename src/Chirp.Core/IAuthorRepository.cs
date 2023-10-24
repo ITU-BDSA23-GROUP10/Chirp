@@ -11,7 +11,7 @@ public interface IAuthorRepository<Author, Cheep>
     void Delete(Author entity);
     IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
 
-    (List<CheepDTO>?, int) GetAuthorsCheeps(string author, int offset, int limit);
+    (List<CheepDTO>, int) GetAuthorsCheeps(string author, int offset, int limit);
 
     Author? GetAuthorByName(string name);
 
