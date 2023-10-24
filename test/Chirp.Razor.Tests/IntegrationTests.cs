@@ -6,6 +6,7 @@ using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
+using Chirp.Infrastructure.ChirpRepository;
 
 [Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
@@ -148,5 +149,42 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Null(author);
         }
     }
-    
+
+    //Tests if the program can create a cheep using a try catch to ensure the author exists
+    [Theory]
+    [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
+    [InlineData("test2", "test2@test.de", "This is a test cheep2")]
+    public async Task CreateCheepInDatabase_CreateAuthorAfterException(string authorName, string authorEmail, string message) 
+    {
+        // This test shows how we should use the different methods to properly create cheeps
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+
+            // Act            
+            try 
+            {
+                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+            } catch 
+            {
+                ar.CreateAuthor(authorName, authorEmail);
+                await context.SaveChangesAsync();
+                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+            } finally 
+            {
+                await context.SaveChangesAsync();
+            }
+
+            // Assert
+            var retrievedAuthor = ar.GetAuthorByName(authorName);
+            Assert.Equal(authorName, retrievedAuthor.Name);
+            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+        }
+    }
 }
