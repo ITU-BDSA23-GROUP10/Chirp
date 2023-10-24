@@ -10,10 +10,12 @@ public class AuthorRepository : IDatabaseRepository<Author>
 {
     protected DbSet<Author> DbSet;
     protected ChirpDBContext _dbContext;
+    protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Author>();
+        maxid = GetMaxId() + 1;
     }
 
     #region IDatabaseRepository<T> Members
@@ -21,7 +23,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
-        _dbContext.SaveChanges();
+        //await _dbContext.SaveChangesAsync();
     }
 
     public void Delete(Author entity)
@@ -34,7 +36,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
         return DbSet.Where(predicate);
     }
 
-    public (List<Cheep>?, int) GetAuthorsCheeps(string author, int offset, int limit)
+    public (List<CheepDTO>?, int) GetAuthorsCheeps(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
         var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
@@ -48,15 +50,26 @@ public class AuthorRepository : IDatabaseRepository<Author>
         // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
         // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
         var query = (from author_ in DbSet
-                    where author_ == authorEntity
-                    from cheep in author_.Cheeps
-                    orderby cheep.TimeStamp descending
-                    select cheep)
+                     where author_ == authorEntity
+                     from cheep in author_.Cheeps
+                     orderby cheep.TimeStamp descending
+                     select cheep)
                     .Skip(offset)
                     .Take(limit)
                     .ToList();
 
-        return (query, authorEntity.Cheeps.Count);
+        List<CheepDTO> cheeps = new List<CheepDTO>();
+        foreach (Cheep cheep in query)
+        {
+            cheeps.Add(new CheepDTO
+            (
+                cheep.Author.Name,
+                cheep.Text,
+                cheep.TimeStamp.ToString()
+            ));
+        }
+
+        return (cheeps, authorEntity.Cheeps.Count);
     }
 
     public Author? GetById(int id)
@@ -64,7 +77,7 @@ public class AuthorRepository : IDatabaseRepository<Author>
         return DbSet.Find(id);
     }
 
-    public Author? GetAuthorByName(string name) 
+    public Author? GetAuthorByName(string name)
     {
         //Not sure if author returns null if nothing is found, it probably should do that though
         var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
@@ -75,29 +88,45 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public Author? GetAuthorByEmail(string email)
     {
         //Not sure if author returns null if nothing is found, it probably should do that though
-        var author = SearchFor(_author => _author.Email == email).FirstOrDefault(); 
+        var author = SearchFor(_author => _author.Email == email).FirstOrDefault();
 
         return author;
     }
 
-    public void CreateAuthor(string name, string email) 
+    public void CreateAuthor(string name, string email)
     {
         Author author = null;
-        author = GetAuthorByEmail(email); 
-        if(author == null) 
+        author = GetAuthorByEmail(email);
+        if (author == null)
         {
             author = GetAuthorByName(name);
         }
- 
-        if(author == null) 
+
+        if (author != null)
         {
-        Insert(new Author()
-        { 
-            Name = name,
-            Email = email,
-            Cheeps = new List<Cheep>()
-        });
-        }  
+            throw new Exception("Author already exists");
+        }
+
+        if (author == null)
+        {
+            Insert(new Author()
+            {
+                AuthorId = maxid,
+                Name = name,
+                Email = email,
+                Cheeps = new List<Cheep>()
+            });
+            maxid++;
+        }
+    }
+
+    public int GetMaxId()
+    {
+        var query = (from author_ in DbSet
+                     select author_.AuthorId)
+                    .ToList();
+
+        return query.Max();
     }
     #endregion
 }

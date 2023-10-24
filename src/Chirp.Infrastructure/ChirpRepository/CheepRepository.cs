@@ -8,10 +8,12 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class CheepRepository : IDatabaseRepository<Cheep>
 {
     protected DbSet<Cheep> DbSet;
+    protected int maxid;
 
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Set<Cheep>();
+        maxid = GetMaxId() + 1;
     }
 
     #region IDatabaseRepository<T> Members
@@ -41,7 +43,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
         return DbSet.Find(id);
     }
 
-    public (List<Cheep>, int) GetSome(int offset, int limit)
+    public (List<CheepDTO>, int) GetSome(int offset, int limit)
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
         // Order by desc (x => x.Field) from StackOverflow: https://stackoverflow.com/a/5813479
@@ -49,32 +51,47 @@ public class CheepRepository : IDatabaseRepository<Cheep>
                     .OrderByDescending(d => d.TimeStamp)
                     .Skip(offset)
                     .Take(limit)
-                     select new Cheep
-                     {
-                         CheepId = cheep.CheepId,
-                         Author = cheep.Author,
-                         Text = cheep.Text,
-                         TimeStamp = cheep.TimeStamp
-                     })
+                     select new CheepDTO
+                     (
+                         cheep.Author.Name,
+                         cheep.Text,
+                         cheep.TimeStamp.ToString()
+                     ))
                     .ToList();
 
         return (query, DbSet.Count());
     }
     public void CreateCheep(Author author, string text)
-    { 
+    {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
+        if(author == null) 
+        {
+            // This should most likely be changed to a custom exception pertaining to accounts not existing
+            throw new Exception("Author doesn't exist try again after creating an account");
+        }
+
         // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
 
-        Insert(new Cheep() {
+        Insert(new Cheep()
+        {
+            CheepId = maxid,
             Author = author,
             Text = text,
             TimeStamp = timestamp
-            }
-        );
+        });
+        maxid++;
+    }
+    public int GetMaxId()
+    {
+        var query = (from cheep in DbSet
+                     select cheep.CheepId)
+                    .ToList();
+
+        return query.Max();
     }
     #endregion
 }
