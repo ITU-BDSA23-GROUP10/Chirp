@@ -61,7 +61,7 @@ public class CheepRepository : IDatabaseRepository<Cheep>
 
         return (query, DbSet.Count());
     }
-    public void CreateCheep(Author author, string text)
+    public void CreateCheep(Author? author, string text)
     {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!

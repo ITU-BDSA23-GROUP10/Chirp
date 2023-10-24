@@ -183,8 +183,19 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+            }
+
+            //Assert.Equal(authorName, retrievedAuthor.Name);
+            //Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
         }
     }
 }

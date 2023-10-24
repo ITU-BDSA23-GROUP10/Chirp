@@ -9,7 +9,6 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class AuthorRepository : IDatabaseRepository<Author>
 {
     protected DbSet<Author> DbSet;
-    protected ChirpDBContext _dbContext;
     protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
@@ -23,7 +22,6 @@ public class AuthorRepository : IDatabaseRepository<Author>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
-        //await _dbContext.SaveChangesAsync();
     }
 
     public void Delete(Author entity)
@@ -43,23 +41,28 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
         if (authorEntity == null)
         {
-            return (null, 0);
+            return (new List<CheepDTO>(), 0);
         }
 
         // query format from StackOverflow: https://stackoverflow.com/a/29205357
         // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
         // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
-        var query = (from author_ in DbSet
+        IQueryable<Cheep>? query = (from author_ in DbSet
                      where author_ == authorEntity
                      from cheep in author_.Cheeps
                      orderby cheep.TimeStamp descending
-                     select cheep)
-                    .Skip(offset)
-                    .Take(limit)
-                    .ToList();
+                     select cheep);
+                    //.Skip(offset)
+                    //.Take(limit);
+                    //.ToList();
+
+        if(query is null)
+        {
+            return (new List<CheepDTO>(), 0);
+        }
 
         List<CheepDTO> cheeps = new List<CheepDTO>();
-        foreach (Cheep cheep in query)
+        foreach (Cheep cheep in query.Skip(offset).Take(limit).ToList())
         {
             cheeps.Add(new CheepDTO
             (
@@ -95,9 +98,9 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
     public void CreateAuthor(string name, string email)
     {
-        Author author = null;
+        Author? author = null;
         author = GetAuthorByEmail(email);
-        if (author == null)
+        if (author is null)
         {
             author = GetAuthorByName(name);
         }

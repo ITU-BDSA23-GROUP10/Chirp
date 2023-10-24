@@ -8,7 +8,7 @@ namespace Chirp.Razor.Pages;
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<CheepDTO>? Cheeps { get; set; }
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
     /*public int CurrentPage { get; set; } = 1;
     public bool LastPage { get; set; } = false;

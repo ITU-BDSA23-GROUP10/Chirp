@@ -4,6 +4,7 @@ using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
+using Chirp.Infrastructure.Models;
 
 [Collection("Sequential")]
 public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>>
@@ -49,9 +50,17 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             await context.SaveChangesAsync();
 
             // Assert
-            var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(authorEmail, retrievedAuthor.Email);
+            Author? retrievedAuthor = ar.GetAuthorByName(authorName);
+            
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(authorEmail, retrievedAuthor.Email);
+            }
         }
     }
 
@@ -106,8 +115,16 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+            }
         }
     }
 
@@ -126,7 +143,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
-
+            await context.SaveChangesAsync();
             // Assert
             Assert.Throws<Exception>(() => cr.CreateCheep(ar.GetAuthorByName(authorName), message));
         }
