@@ -16,9 +16,18 @@ namespace Chirp.Razor.ViewComponents
 
         public IViewComponentResult Invoke(string? author = null)
         {
-            int page = (int)ViewData["Page"];
-            int _count = (int)ViewData["CheepsCount"];
-
+            int page = -1;
+            int _count = -1;
+            
+            try
+            {
+                page = (int)(ViewData["Page"] ?? -1);
+                _count = (int)(ViewData["CheepsCount"] ?? -1);
+            }
+            catch(Exception e)
+            {
+                throw new Exception("int conversion went wrong in the pagination: " + e.ToString());
+            }
             PagesData pagesData = new()
             {
                 TotalPages = (int)Math.Ceiling((double)_count / _service.GetLimit()),
@@ -31,6 +40,7 @@ namespace Chirp.Razor.ViewComponents
             }
 
             pagesData.LastPage = (page == pagesData.TotalPages);
+            
 
             return View(pagesData);
         }
