@@ -39,6 +39,8 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         // Helge has said we're to assume Author.Name are unique for now.
         var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
 
+        Console.WriteLine($"Author's cheepcount: {authorEntity?.Cheeps.Count()}");
+
         if (authorEntity is null)
         {
             return (new List<CheepDTO>(), 0);
@@ -53,13 +55,14 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
                      orderby cheep.TimeStamp descending
                      select cheep);
 
-        if(query is null)
+        if (query is null)
         {
             return (new List<CheepDTO>(), 0);
         }
 
         List<CheepDTO> cheeps = new List<CheepDTO>();
-        foreach (Cheep cheep in query.Skip(offset).Take(limit).ToList())
+        //foreach (Cheep cheep in query.Skip(offset).Take(limit).ToList())
+        foreach (Cheep cheep in authorEntity.Cheeps.Skip(offset).Take(limit))
         {
             cheeps.Add(new CheepDTO
             (

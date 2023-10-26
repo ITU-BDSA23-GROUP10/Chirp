@@ -9,12 +9,17 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-    //public string DbPath { get; }
+    // public string DbPath { get; }
 
-    public ChirpDBContext()
+    /*public ChirpDBContext()
     {
-        /*DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
-        Path.Combine(Path.GetTempPath(), "chirp.db");*/
+        DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+        Path.Combine(Path.GetTempPath(), "chirp.db");
+    }*/
+
+    public ChirpDBContext(DbContextOptions<ChirpDBContext> options)
+        : base(options)
+    {
     }
 
     /*protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -25,14 +30,19 @@ public class ChirpDBContext : DbContext
         // Cheeps
         modelBuilder.Entity<Cheep>().Property(ch => ch.Text).HasMaxLength(160);
 
-        // Author
-        modelBuilder.Entity<Author>().HasIndex(au => au.Name).IsUnique();
-        modelBuilder.Entity<Author>().HasIndex(au => au.Email).IsUnique();
-        modelBuilder.Entity<Author>().Property(au => au.Email).HasMaxLength(50);
-        
-        modelBuilder.Entity<Author>()
-            .HasMany(au => au.Cheep).WithOne(ch => ch.Author).
-            HasForeignKey<Cheep>(ch => ch.AuthorId).
-            IsReQuired(false);
+        // Authors
+        modelBuilder.Entity<Author>( author =>
+        {
+            // General Author properties
+            author.HasIndex(au => au.Name).IsUnique();
+            author.HasIndex(au => au.Email).IsUnique();
+            author.Property(au => au.Email).HasMaxLength(50);
+
+            // Establish relationship between Author and Cheeps
+            author.HasMany(au => au.Cheeps)
+            .WithOne(ch => ch.Author)
+            .HasForeignKey(ch => ch.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

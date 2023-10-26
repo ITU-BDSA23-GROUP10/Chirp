@@ -163,7 +163,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new(context);
 
             // Act
-            var author = ar.GetById(10);
+            var author = ar.GetAuthorById(10);
 
             // Assert
             Assert.NotNull(author);
@@ -187,10 +187,10 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new(context);
 
             // Act & Assert
-            Assert.NotNull(ar.GetById(10));
-            Assert.Equal("Jacqualine Gilcoine", ar.GetById(10).Name);
-            Assert.Equal("Jacqualine.Gilcoine@gmail.com", ar.GetById(10).Email);
-            Assert.NotEmpty(ar.GetById(10).Cheeps);
+            Assert.NotNull(ar.GetAuthorById(10));
+            Assert.Equal("Jacqualine Gilcoine", ar.GetAuthorById(10).Name);
+            Assert.Equal("Jacqualine.Gilcoine@gmail.com", ar.GetAuthorById(10).Email);
+            Assert.NotEmpty(ar.GetAuthorById(10).Cheeps.ToList());
         }
     }
 }

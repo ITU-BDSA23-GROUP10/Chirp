@@ -9,22 +9,30 @@ using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.ChirpRepository;
 
 var builder = WebApplication.CreateBuilder(args);
-//var dbPath = "";
 
 //builder.Logging.AddConsole();
 
+// Set up the database path
+var DbFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Chirp");
+if (!Directory.Exists(DbFolder)) 
+    Directory.CreateDirectory(DbFolder);
+var connectionString = $"Data Source={Path.Combine(DbFolder, "chirp.db")}";
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>();
+builder.Services.AddDbContext<ChirpDBContext>(
+    options =>
+    options.UseSqlite(connectionString));
+//builder.Services.AddDbContext<ChirpDBContext>();
 
-builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
+/*builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
 {
     var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
     Path.Combine(Path.GetTempPath(), "chirp.db");
     options.UseSqlite($"Data Source={dbPath}"); 
-}, ServiceLifetime.Scoped);
+}, ServiceLifetime.Scoped);*/
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
