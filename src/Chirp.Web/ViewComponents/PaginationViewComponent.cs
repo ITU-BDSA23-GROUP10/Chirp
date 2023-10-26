@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-namespace Chirp.Razor.ViewComponents
+namespace Chirp.Web.ViewComponents
 {
     // Overall ViewComponent code refactored from: https://www.learnrazorpages.com/razor-pages/view-components
 
