@@ -148,4 +148,49 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             Assert.Throws<Exception>(() => cr.CreateCheep(ar.GetAuthorByName(authorName), message));
         }
     }
+
+    // Tests if the program can duplicate an author object to another author obj from the database
+    [Fact]
+    public void DuplicateAuthorObjInDatabase_ListOfCheepsIsNotEmpty()
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new(context);
+
+            // Act
+            var author = ar.GetById(10);
+
+            // Assert
+            Assert.NotNull(author);
+            Assert.Equal("Jacqualine Gilcoine", author.Name);
+            Assert.Equal("Jacqualine.Gilcoine@gmail.com", author.Email);
+            Assert.NotEmpty(author.Cheeps);
+        }
+    }
+
+    // Test to see if we can retrieve an author's list of cheeps
+    [Fact]
+    public void RetrieveListOfCheepsFromAuthor_ListOfCheepsIsNotEmpty()
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new(context);
+
+            // Act & Assert
+            Assert.NotNull(ar.GetById(10));
+            Assert.Equal("Jacqualine Gilcoine", ar.GetById(10).Name);
+            Assert.Equal("Jacqualine.Gilcoine@gmail.com", ar.GetById(10).Email);
+            Assert.NotEmpty(ar.GetById(10).Cheeps);
+        }
+    }
 }
