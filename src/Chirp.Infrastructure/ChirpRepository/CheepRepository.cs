@@ -16,7 +16,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         maxid = GetMaxId() + 1;
     }
 
-    #region IDatabaseRepository<T> Members
+    #region ICheepRepository<Cheep, Author> Members
 
     public void Insert(Cheep entity)
     {
@@ -61,19 +61,20 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
         return (query, DbSet.Count());
     }
+
     public void CreateCheep(Author? author, string text)
     {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
-        if(author == null) 
+        if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
         }
 
-        // DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
+        // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
 
         Insert(new Cheep()
@@ -85,6 +86,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         });
         maxid++;
     }
+    
     public int GetMaxId()
     {
         var query = (from cheep in DbSet

@@ -17,7 +17,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         maxid = GetMaxId() + 1;
     }
 
-    #region IDatabaseRepository<T> Members
+    #region IAuthorRepository<Author, Cheep> Members
 
     public void Insert(Author entity)
     {
@@ -34,7 +34,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return DbSet.Where(predicate);
     }
 
-    public (List<CheepDTO>, int) GetAuthorsCheeps(string author, int offset, int limit)
+    public (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
         var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
@@ -72,14 +72,14 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return (cheeps, query.Count());
     }
 
-    public Author? GetById(int id)
+    public Author? GetAuthorById(int id)
     {
         return DbSet.Find(id);
     }
 
     public Author? GetAuthorByName(string name)
     {
-        //Not sure if author returns null if nothing is found, it probably should do that though
+        // FirstOrDefault returns null if no Author is found.
         var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
 
         return author;
@@ -87,7 +87,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
     public Author? GetAuthorByEmail(string email)
     {
-        //Not sure if author returns null if nothing is found, it probably should do that though
         var author = SearchFor(_author => _author.Email == email).FirstOrDefault();
 
         return author;

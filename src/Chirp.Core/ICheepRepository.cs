@@ -10,6 +10,9 @@ public interface ICheepRepository<Cheep, Author>
     void Insert(Cheep entity);
     void Delete(Cheep entity);
     IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate);
+    public (IQueryable<Cheep>, int) GetAll();
+    public Cheep? GetById(int id);
     (List<CheepDTO>, int) GetSome(int offset, int limit);
     void CreateCheep(Author author, string text);
+    public int GetMaxId();
 }
