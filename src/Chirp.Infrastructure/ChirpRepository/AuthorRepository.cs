@@ -39,7 +39,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         // Helge has said we're to assume Author.Name are unique for now.
         var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
 
-        if (authorEntity == null)
+        if (authorEntity is null)
         {
             return (new List<CheepDTO>(), 0);
         }
@@ -52,9 +52,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
                      from cheep in author_.Cheeps
                      orderby cheep.TimeStamp descending
                      select cheep);
-                    //.Skip(offset)
-                    //.Take(limit);
-                    //.ToList();
 
         if(query is null)
         {
@@ -72,7 +69,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
             ));
         }
 
-        return (cheeps, authorEntity.Cheeps.Count);
+        return (cheeps, query.Count());
     }
 
     public Author? GetById(int id)
@@ -105,12 +102,12 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
             author = GetAuthorByName(name);
         }
 
-        if (author != null)
+        if (author is not null)
         {
             throw new Exception("Author already exists");
         }
 
-        if (author == null)
+        if (author is null)
         {
             Insert(new Author()
             {
