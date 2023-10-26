@@ -5,7 +5,7 @@ using Chirp.Core;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
-public class CheepRepository : IDatabaseRepository<Cheep>
+public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected DbSet<Cheep> DbSet;
     protected int maxid;

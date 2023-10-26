@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Chirp.Razor;
 using Chirp.Core;
+using Chirp.Infrastructure.Models;
 
 namespace Chirp.Razor.Pages;
 
 public class PublicModel : PageModel
 {
-    private readonly ICheepService _service;
+    private readonly ICheepRepository<Cheep, Author> _service;
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    /*public int CurrentPage { get; set; } = 1;
-    public bool LastPage { get; set; } = false;
-    public int TotalPages { get; set; } = 1;*/
-
-    public PublicModel(ICheepService service)
+    public PublicModel(ICheepRepository<Cheep, Author> service)
     {
         _service = service;
     }
@@ -24,7 +20,10 @@ public class PublicModel : PageModel
     {
         ViewData["Page"] = page;
 
-        (Cheeps, ViewData["CheepsCount"]) = _service.GetCheeps(page);
+        int limit = 32;
+        int offset = (page - 1) * limit;
+
+        (Cheeps, ViewData["CheepsCount"]) = _service.GetSome(offset, limit);
 
         return Page();
     }
