@@ -34,45 +34,52 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return DbSet.Where(predicate);
     }
 
+    public Author GetAuthorWithCheeps(string authorName)
+    {
+        // The returned Author object can use Author.Cheeps to get all the Cheeps (sorted by descending timestamp)
+        
+        var author = DbSet.Include(_author => _author.Cheeps
+                    .OrderByDescending(_cheep => _cheep.TimeStamp))
+                    .Where(_author => _author.Name == authorName)
+                    .FirstOrDefault();
+        
+        if (author is null)
+        {
+            throw new Exception($"Author {authorName} not found");
+        }
+
+        return author;
+    }
+
     public (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
-        var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
+        var authorEntity = GetAuthorByName(author);
 
-        Console.WriteLine($"Author's cheepcount: {authorEntity?.Cheeps.Count()}");
+        int cheepsCount = DbSet.Entry(GetAuthorByName(author))
+                    .Collection(_author => _author.Cheeps)
+                    .Query().Count();
 
         if (authorEntity is null)
         {
-            return (new List<CheepDTO>(), 0);
+            return (new List<CheepDTO>(), cheepsCount);
         }
 
-        // query format from StackOverflow: https://stackoverflow.com/a/29205357
-        // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
-        // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
-        IQueryable<Cheep>? query = (from author_ in DbSet
-                     where author_ == authorEntity
-                     from cheep in author_.Cheeps
-                     orderby cheep.TimeStamp descending
-                     select cheep);
+        List<CheepDTO> cheeps = DbSet.Entry(GetAuthorByName(author))
+                    .Collection(_author => _author.Cheeps)
+                    .Query()
+                    .OrderByDescending(_cheep => _cheep.TimeStamp)
+                    .Skip(offset).Take(limit)
+                    .Select(_cheep => new CheepDTO
+                    (
+                        _cheep.Author.Name,
+                        _cheep.Text,
+                        _cheep.TimeStamp.ToString()
+                    ))
+                    .ToList()
+                    ?? new List<CheepDTO>();
 
-        if (query is null)
-        {
-            return (new List<CheepDTO>(), 0);
-        }
-
-        List<CheepDTO> cheeps = new List<CheepDTO>();
-        //foreach (Cheep cheep in query.Skip(offset).Take(limit).ToList())
-        foreach (Cheep cheep in authorEntity.Cheeps.Skip(offset).Take(limit))
-        {
-            cheeps.Add(new CheepDTO
-            (
-                cheep.Author.Name,
-                cheep.Text,
-                cheep.TimeStamp.ToString()
-            ));
-        }
-
-        return (cheeps, query.Count());
+        return (cheeps, cheepsCount);
     }
 
     public Author? GetAuthorById(int id)

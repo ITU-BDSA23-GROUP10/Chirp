@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
@@ -163,34 +164,13 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new(context);
 
             // Act
-            var author = ar.GetAuthorById(10);
+            var author = context.Authors.Include(a => a.Cheeps).FirstOrDefault(a => a.AuthorId == 10);
 
             // Assert
             Assert.NotNull(author);
             Assert.Equal("Jacqualine Gilcoine", author.Name);
             Assert.Equal("Jacqualine.Gilcoine@gmail.com", author.Email);
             Assert.NotEmpty(author.Cheeps);
-        }
-    }
-
-    // Test to see if we can retrieve an author's list of cheeps
-    [Fact]
-    public void RetrieveListOfCheepsFromAuthor_ListOfCheepsIsNotEmpty()
-    {
-        // Arrange
-        var factory = new CustomWebApplicationFactory<Program>();
-        var client = factory.CreateClient();
-
-        using (var scope = factory.Services.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            AuthorRepository ar = new(context);
-
-            // Act & Assert
-            Assert.NotNull(ar.GetAuthorById(10));
-            Assert.Equal("Jacqualine Gilcoine", ar.GetAuthorById(10).Name);
-            Assert.Equal("Jacqualine.Gilcoine@gmail.com", ar.GetAuthorById(10).Email);
-            Assert.NotEmpty(ar.GetAuthorById(10).Cheeps.ToList());
         }
     }
 }

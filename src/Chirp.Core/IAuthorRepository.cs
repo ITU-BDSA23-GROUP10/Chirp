@@ -10,10 +10,10 @@ public interface IAuthorRepository<Author, Cheep>
     void Insert(Author entity);
     void Delete(Author entity);
     IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
-
+    Author GetAuthorWithCheeps(string authorName);
     (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit);
 
-    public Author? GetAuthorById(int id);
+    Author? GetAuthorById(int id);
 
     Author? GetAuthorByName(string name);
 
