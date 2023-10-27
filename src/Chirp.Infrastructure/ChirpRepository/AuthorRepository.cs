@@ -54,15 +54,18 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
     public (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
-        var authorEntity = GetAuthorByName(author);
 
-        int cheepsCount = DbSet.Entry(GetAuthorByName(author))
-                    .Collection(_author => _author.Cheeps)
-                    .Query().Count();
+        int cheepsCount = 0;
 
-        if (authorEntity is null)
+        if (GetAuthorByName(author) is null)
         {
             return (new List<CheepDTO>(), cheepsCount);
+        }
+        else
+        {
+            cheepsCount = DbSet.Entry(GetAuthorByName(author))
+                    .Collection(_author => _author.Cheeps)
+                    .Query().Count();
         }
 
         List<CheepDTO> cheeps = DbSet.Entry(GetAuthorByName(author))

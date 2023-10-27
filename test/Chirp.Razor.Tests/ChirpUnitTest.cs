@@ -23,12 +23,12 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
     [Fact]
     public async Task CanSeePublicTimeline()
     {
-        var response = await _client.GetAsync("/public");
+        var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("public's Timeline", content);
+        Assert.Contains("Public Timeline", content);
     }
 
     //Tests if the program can create an author when it doesn't exist in the database
@@ -164,7 +164,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new(context);
 
             // Act
-            var author = context.Authors.Include(a => a.Cheeps).FirstOrDefault(a => a.AuthorId == 10);
+            var author = ar.GetAuthorWithCheeps("Jacqualine Gilcoine");
 
             // Assert
             Assert.NotNull(author);
