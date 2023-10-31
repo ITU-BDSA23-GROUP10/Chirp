@@ -76,7 +76,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-app.MapControllers
+app.MapControllers();
 
 app.Run();
 public partial class Program { }
