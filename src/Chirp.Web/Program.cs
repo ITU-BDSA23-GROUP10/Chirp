@@ -6,15 +6,24 @@ using SimpleDB;
 using Chirp.Razor;
 using Chirp.Infrastructure;
 using Chirp.Core;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 //var dbPath = "";
 
 //builder.Logging.AddConsole();
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
+builder.Services.AddRazorPages()
+    .AddMicrosoftIdentityUI();
 
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddDbContext<ChirpDBContext>();
 
@@ -64,7 +73,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
+
 app.MapRazorPages();
+app.MapControllers
 
 app.Run();
 public partial class Program { }
