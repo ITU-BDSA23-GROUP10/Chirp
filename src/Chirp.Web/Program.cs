@@ -8,7 +8,6 @@ using Chirp.Infrastructure;
 using Chirp.Core;
 
 var builder = WebApplication.CreateBuilder(args);
-//var dbPath = "";
 
 //builder.Logging.AddConsole();
 
