@@ -13,10 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.AddConsole();
 
 // Set up the database path
-var DbFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Chirp");
-if (!Directory.Exists(DbFolder)) 
-    Directory.CreateDirectory(DbFolder);
-var connectionString = $"Data Source={Path.Combine(DbFolder, "chirp.db")}";
+var DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+    Path.Combine(Path.GetTempPath(), "chirp.db");
+var connectionString = $"Data Source={DbPath}";
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -25,14 +24,6 @@ builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>()
 builder.Services.AddDbContext<ChirpDBContext>(
     options =>
     options.UseSqlite(connectionString));
-//builder.Services.AddDbContext<ChirpDBContext>();
-
-/*builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
-{
-    var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
-    Path.Combine(Path.GetTempPath(), "chirp.db");
-    options.UseSqlite($"Data Source={dbPath}"); 
-}, ServiceLifetime.Scoped);*/
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
