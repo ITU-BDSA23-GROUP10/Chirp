@@ -35,7 +35,7 @@ public class CustomWebApplicationFactory<TProgram>
             }
 
             // Create a new Sqlite in-memory database and open a connection to it
-            services.AddSingleton<DbConnection>(container =>
+            /*services.AddSingleton<DbConnection>(container =>
             {
                 var connection = new SqliteConnection("DataSource=:memory:");
                 return connection;
@@ -45,6 +45,11 @@ public class CustomWebApplicationFactory<TProgram>
             {
                 var connection = container.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);
+            });*/
+
+            services.AddDbContext<ChirpDBContext>(options =>
+            {
+                options.UseInMemoryDatabase("DataSource=:memory:");
             });
 
             using var serviceProvider = services.BuildServiceProvider();

@@ -25,12 +25,12 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Fact]
     public async Task CanSeePublicTimeline()
     {
-        var response = await _client.GetAsync("/public");
+        var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("public's Timeline", content);
+        Assert.Contains("Public Timeline", content);
     }
 
     // checks if authors (from dump.sql) have content
