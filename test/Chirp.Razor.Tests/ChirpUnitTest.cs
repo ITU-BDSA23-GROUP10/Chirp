@@ -1,9 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
+using Chirp.Infrastructure.Models;
 
 [Collection("Sequential")]
 public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>>
@@ -21,12 +23,12 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
     [Fact]
     public async Task CanSeePublicTimeline()
     {
-        var response = await _client.GetAsync("/public");
+        var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("public's Timeline", content);
+        Assert.Contains("Public Timeline", content);
     }
 
     //Tests if the program can create an author when it doesn't exist in the database
@@ -49,9 +51,17 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             await context.SaveChangesAsync();
 
             // Assert
-            var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(authorEmail, retrievedAuthor.Email);
+            Author? retrievedAuthor = ar.GetAuthorByName(authorName);
+            
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(authorEmail, retrievedAuthor.Email);
+            }
         }
     }
 
@@ -106,8 +116,16 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+            }
         }
     }
 
@@ -126,9 +144,33 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
-
+            await context.SaveChangesAsync();
             // Assert
             Assert.Throws<Exception>(() => cr.CreateCheep(ar.GetAuthorByName(authorName), message));
+        }
+    }
+
+    // Tests if the program can duplicate an author object to another author obj from the database
+    [Fact]
+    public void DuplicateAuthorObjInDatabase_ListOfCheepsIsNotEmpty()
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new(context);
+
+            // Act
+            var author = ar.GetAuthorWithCheeps("Jacqualine Gilcoine");
+
+            // Assert
+            Assert.NotNull(author);
+            Assert.Equal("Jacqualine Gilcoine", author.Name);
+            Assert.Equal("Jacqualine.Gilcoine@gmail.com", author.Email);
+            Assert.NotEmpty(author.Cheeps);
         }
     }
 }

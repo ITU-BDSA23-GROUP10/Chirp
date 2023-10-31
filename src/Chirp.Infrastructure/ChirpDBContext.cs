@@ -9,22 +9,40 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-    public string DbPath { get; } = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
-    Path.Combine(Path.GetTempPath(), "chirp.db");
+    // public string DbPath { get; }
 
-    // Parameterless from Reddit:
-    //https://www.reddit.com/r/dotnet/comments/rp90n2/unable_to_create_an_object_of_type_mycontext_for/
-    public ChirpDBContext()
+    /*public ChirpDBContext()
     {
-    }
+        DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+        Path.Combine(Path.GetTempPath(), "chirp.db");
+    }*/
 
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options)
         : base(options)
     {
     }
 
-    // Reverted to using Getting Started instead of Razor Page EF Core:
-    // https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseSqlite($"Data Source={DbPath}");
+    /*protected override void OnConfiguring(DbContextOptionsBuilder options)
+    => options.UseSqlite($"Data Source={DbPath}");*/
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Cheeps
+        modelBuilder.Entity<Cheep>().Property(ch => ch.Text).HasMaxLength(160);
+
+        // Authors
+        modelBuilder.Entity<Author>( author =>
+        {
+            // General Author properties
+            author.HasIndex(au => au.Name).IsUnique();
+            author.HasIndex(au => au.Email).IsUnique();
+            author.Property(au => au.Email).HasMaxLength(50);
+
+            // Establish relationship between Author and Cheeps
+            author.HasMany(au => au.Cheeps)
+            .WithOne(ch => ch.Author)
+            .HasForeignKey(ch => ch.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
 }

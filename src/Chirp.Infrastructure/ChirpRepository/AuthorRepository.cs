@@ -6,10 +6,9 @@ using Chirp.Core;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
-public class AuthorRepository : IDatabaseRepository<Author>
+public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
-    protected ChirpDBContext _dbContext;
     protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
@@ -18,12 +17,11 @@ public class AuthorRepository : IDatabaseRepository<Author>
         maxid = GetMaxId() + 1;
     }
 
-    #region IDatabaseRepository<T> Members
+    #region IAuthorRepository<Author, Cheep> Members
 
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
-        //await _dbContext.SaveChangesAsync();
     }
 
     public void Delete(Author entity)
@@ -36,50 +34,65 @@ public class AuthorRepository : IDatabaseRepository<Author>
         return DbSet.Where(predicate);
     }
 
-    public (List<CheepDTO>?, int) GetAuthorsCheeps(string author, int offset, int limit)
+    public Author GetAuthorWithCheeps(string authorName)
     {
-        // Helge has said we're to assume Author.Name are unique for now.
-        var authorEntity = SearchFor(_author => _author.Name == author).FirstOrDefault();
-
-        if (authorEntity == null)
+        // The returned Author object can use Author.Cheeps to get all the Cheeps (sorted by descending timestamp)
+        
+        var author = DbSet.Include(_author => _author.Cheeps
+                    .OrderByDescending(_cheep => _cheep.TimeStamp))
+                    .Where(_author => _author.Name == authorName)
+                    .FirstOrDefault();
+        
+        if (author is null)
         {
-            return (null, 0);
+            throw new Exception($"Author {authorName} not found");
         }
 
-        // query format from StackOverflow: https://stackoverflow.com/a/29205357
-        // from from stm from StackOverflow: https://stackoverflow.com/a/6257269
-        // orderby descending inspired from StackOverflow: https://stackoverflow.com/a/9687214
-        var query = (from author_ in DbSet
-                     where author_ == authorEntity
-                     from cheep in author_.Cheeps
-                     orderby cheep.TimeStamp descending
-                     select cheep)
-                    .Skip(offset)
-                    .Take(limit)
-                    .ToList();
-
-        List<CheepDTO> cheeps = new List<CheepDTO>();
-        foreach (Cheep cheep in query)
-        {
-            cheeps.Add(new CheepDTO
-            (
-                cheep.Author.Name,
-                cheep.Text,
-                cheep.TimeStamp.ToString()
-            ));
-        }
-
-        return (cheeps, authorEntity.Cheeps.Count);
+        return author;
     }
 
-    public Author? GetById(int id)
+    public (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit)
+    {
+        // Helge has said we're to assume Author.Name are unique for now.
+
+        int cheepsCount = 0;
+
+        if (GetAuthorByName(author) is null)
+        {
+            return (new List<CheepDTO>(), cheepsCount);
+        }
+        else
+        {
+            cheepsCount = DbSet.Entry(GetAuthorByName(author))
+                    .Collection(_author => _author.Cheeps)
+                    .Query().Count();
+        }
+
+        List<CheepDTO> cheeps = DbSet.Entry(GetAuthorByName(author))
+                    .Collection(_author => _author.Cheeps)
+                    .Query()
+                    .OrderByDescending(_cheep => _cheep.TimeStamp)
+                    .Skip(offset).Take(limit)
+                    .Select(_cheep => new CheepDTO
+                    (
+                        _cheep.Author.Name,
+                        _cheep.Text,
+                        _cheep.TimeStamp.ToString()
+                    ))
+                    .ToList()
+                    ?? new List<CheepDTO>();
+
+        return (cheeps, cheepsCount);
+    }
+
+    public Author? GetAuthorById(int id)
     {
         return DbSet.Find(id);
     }
 
     public Author? GetAuthorByName(string name)
     {
-        //Not sure if author returns null if nothing is found, it probably should do that though
+        // FirstOrDefault returns null if no Author is found.
         var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
 
         return author;
@@ -87,7 +100,6 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
     public Author? GetAuthorByEmail(string email)
     {
-        //Not sure if author returns null if nothing is found, it probably should do that though
         var author = SearchFor(_author => _author.Email == email).FirstOrDefault();
 
         return author;
@@ -95,19 +107,19 @@ public class AuthorRepository : IDatabaseRepository<Author>
 
     public void CreateAuthor(string name, string email)
     {
-        Author author = null;
+        Author? author = null;
         author = GetAuthorByEmail(email);
-        if (author == null)
+        if (author is null)
         {
             author = GetAuthorByName(name);
         }
 
-        if (author != null)
+        if (author is not null)
         {
             throw new Exception("Author already exists");
         }
 
-        if (author == null)
+        if (author is null)
         {
             Insert(new Author()
             {

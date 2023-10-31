@@ -23,14 +23,14 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
     // checks if the timeline has content
     [Fact]
-    public async void CanSeePublicTimeline()
+    public async Task CanSeePublicTimeline()
     {
-        var response = await _client.GetAsync("/public");
+        var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("public's Timeline", content);
+        Assert.Contains("Public Timeline", content);
     }
 
     // checks if authors (from dump.sql) have content
@@ -54,7 +54,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Theory]
     [InlineData("Vobiscum")]
     [InlineData("Ad Astra")]
-    public async void CheckIfAuthorHasNoCheeps(string author)
+    public async Task CheckIfAuthorHasNoCheeps(string author)
     {
         var response = await _client.GetAsync($"/{author}");
         response.EnsureSuccessStatusCode();
@@ -67,7 +67,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Theory]
     [InlineData("/")]
     [InlineData(@"/?page=1")]
-    public async void CheckIfTheRootPageTheSameAsPageOne(string page)
+    public async Task CheckIfTheRootPageTheSameAsPageOne(string page)
     {
         var response = await _client.GetAsync(page);
         response.EnsureSuccessStatusCode();
@@ -88,7 +88,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [InlineData("?page=1")]
     [InlineData("?page=2")]
     [InlineData("?page=3")]
-    public async void CheckIfThereThirtyTwoCheepsPerPage(string page)
+    public async Task CheckIfThereThirtyTwoCheepsPerPage(string page)
     {
         var response = await _client.GetAsync($"/{page}");
         response.EnsureSuccessStatusCode();
@@ -156,7 +156,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [InlineData("test2", "test2@test.de", "This is a test cheep2")]
     public async Task CreateCheepInDatabase_CreateAuthorAfterException(string authorName, string authorEmail, string message) 
     {
-        // This test shows how we should use the different methods to properly create cheeps
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
@@ -183,8 +182,16 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
             // Assert
             var retrievedAuthor = ar.GetAuthorByName(authorName);
-            Assert.Equal(authorName, retrievedAuthor.Name);
-            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+            }
         }
     }
 }
