@@ -21,6 +21,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
 
+builder.Services.AddOptions();
+
 
 // Add services to the container.
 //builder.Services.AddRazorPages();
