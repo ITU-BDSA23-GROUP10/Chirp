@@ -1,4 +1,4 @@
-namespace Chirp.Razor;
+namespace Chirp.Web;
 
 public class PagesData {
         public int CurrentPage { get; set; } = 1;

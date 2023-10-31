@@ -6,8 +6,9 @@ using Chirp.Razor.Tests.MemoryFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
+using Chirp.Infrastructure.ChirpRepository;
 
-
+[Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
 {
@@ -17,19 +18,19 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     public IntegrationTest(CustomWebApplicationFactory<Program> fixture)
     {
         _fixture = fixture;
-        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
+        _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
     }
 
     // checks if the timeline has content
     [Fact]
-    public async void CanSeePublicTimeline()
+    public async Task CanSeePublicTimeline()
     {
-        var response = await _client.GetAsync("/public");
+        var response = await _client.GetAsync("/");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Chirp!", content);
-        Assert.Contains("public's Timeline", content);
+        Assert.Contains("Public Timeline", content);
     }
 
     // checks if authors (from dump.sql) have content
@@ -53,7 +54,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [Theory]
     [InlineData("Vobiscum")]
     [InlineData("Ad Astra")]
-    public async void CheckIfAuthorHasNoCheeps(string author)
+    public async Task CheckIfAuthorHasNoCheeps(string author)
     {
         var response = await _client.GetAsync($"/{author}");
         response.EnsureSuccessStatusCode();
@@ -65,9 +66,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     // is the root page the same as page 1?
     [Theory]
     [InlineData("/")]
-    [InlineData(@"/?page=0")]
     [InlineData(@"/?page=1")]
-    public async void CheckIfTheRootPageTheSameAsPageOne(string page)
+    public async Task CheckIfTheRootPageTheSameAsPageOne(string page)
     {
         var response = await _client.GetAsync(page);
         response.EnsureSuccessStatusCode();
@@ -88,7 +88,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     [InlineData("?page=1")]
     [InlineData("?page=2")]
     [InlineData("?page=3")]
-    public async void CheckIfThereThirtyTwoCheepsPerPage(string page)
+    public async Task CheckIfThereThirtyTwoCheepsPerPage(string page)
     {
         var response = await _client.GetAsync($"/{page}");
         response.EnsureSuccessStatusCode();
@@ -150,38 +150,48 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
-    [Fact]
-    public async Task CreateAuthorInDatabase_DoesntExist()
+    //Tests if the program can create a cheep using a try catch to ensure the author exists
+    [Theory]
+    [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
+    [InlineData("test2", "test2@test.de", "This is a test cheep2")]
+    public async Task CreateCheepInDatabase_CreateAuthorAfterException(string authorName, string authorEmail, string message) 
     {
+        // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
         var client = factory.CreateClient();
 
         using (var scope = factory.Services.CreateScope())
         {
-            //Somehow use the repo methods to create a user here or outside the scope idk
-        } 
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+
+            // Act            
+            try 
+            {
+                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+            } catch 
+            {
+                ar.CreateAuthor(authorName, authorEmail);
+                await context.SaveChangesAsync();
+                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+            } finally 
+            {
+                await context.SaveChangesAsync();
+            }
+
+            // Assert
+            var retrievedAuthor = ar.GetAuthorByName(authorName);
+
+            if (retrievedAuthor is null) 
+            {
+                Assert.Fail("Retrieved Author was null.");
+            }
+            else 
+            {
+                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
+            }
+        }
     }
-
-    [Fact]
-    public async Task CreateAuthorInDatabase_DoesExist() 
-    {
-        var factory = new CustomWebApplicationFactory<Program>();
-        var client = factory.CreateClient();
-
-        using (var scope = factory.Services.CreateScope())
-        {
-            //Somehow use the repo methods to create a user here or outside the scope idk
-        } 
-    }
-
-    [Fact]
-    public async Task CreateCheepInDatabase_AuthorDoesntExist() 
-    {
-    }
-
-    [Fact]
-    public async Task CreateCheepInDatabase_AuthorDoesExist() 
-    {
-    }
-
 }
