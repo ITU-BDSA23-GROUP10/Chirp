@@ -24,7 +24,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" /> 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.13" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.15.3" />
