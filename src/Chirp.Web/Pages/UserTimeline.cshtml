@@ -1,0 +1,41 @@
+﻿@page "/{author}"
+@model Chirp.Web.Pages.UserTimelineModel
+@using System
+@using SimpleDB
+@{
+
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("author");
+    ViewData["RouteName"] = routeName;
+
+}
+
+<div>
+    <h2> @routeName's Timeline </h2>
+
+    @if (Model.Cheeps?.Any() == true)
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in Model.Cheeps)
+            {
+                <li>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.Author">@cheep.Author</a>
+                        </strong>
+                        @cheep.Message
+                        <small>&mdash; @cheep.Timestamp</small>
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no cheeps so far.</em>
+    }
+
+    @await Component.InvokeAsync("Pagination", ViewData["Author"])
+
+</div>
