@@ -5,12 +5,24 @@ using Microsoft.Extensions.Logging;
 using Chirp.Web;
 using Chirp.Infrastructure;
 using Chirp.Core;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.ChirpRepository;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Logging.AddConsole();
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
+builder.Services.AddRazorPages()
+    .AddMicrosoftIdentityUI();
+
+builder.Services.AddOptions();
 
 // Set up the database path
 var DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
@@ -18,6 +30,13 @@ var DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
 var connectionString = $"Data Source={DbPath}";
 
 // Add services to the container.
+
+/*builder.Services.AddDbContext<ChirpDBContext>((serviceProvider, options) =>
+{
+    var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+    Path.Combine(Path.GetTempPath(), "chirp.db");
+    options.UseSqlite($"Data Source={dbPath}"); 
+}, ServiceLifetime.Scoped);*/
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>();
@@ -64,7 +83,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
+
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();
 public partial class Program { }

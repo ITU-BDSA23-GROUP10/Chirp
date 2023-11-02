@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Principal
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+@using Microsoft.Extensions.Options
+@using Microsoft.Identity.Web
+
+@inject IOptionsMonitor<MicrosoftIdentityOptions> AzureADB2COptions
+
+@{
+    var options = AzureADB2COptions.Get(OpenIdConnectDefaults.AuthenticationScheme);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
@@ -12,6 +23,24 @@
     @* Snippet from W3Schools: https://www.w3schools.com/tags/att_style.asp *@
         <a href="/" style="text-decoration: none; color: white;">Chirp!</a>
     </h1>
+        <div class=navigation>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div>
+                <a href="/@(User.Identity.Name)">my timeline</a> |
+                <a href="/">public timeline</a> |
+                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(User.Identity.Name)]</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                <a href="/">public timeline</a> |
+                <a ... >register</a>
+                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">login</a>
+            </div>
+        }
+    </div>
 
     <div class=body>
         @RenderBody()
