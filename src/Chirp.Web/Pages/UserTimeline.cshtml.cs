@@ -16,7 +16,7 @@ public class UserTimelineModel : PageModel
     }
 
     //get method with pagination
-    public ActionResult OnGet(string author, [FromQuery(Name = "page")] int page = 1)
+    public async Task<ActionResult> OnGetAsync(string author, [FromQuery(Name = "page")] int page = 1)
     {
         ViewData["Author"] = author;
         ViewData["Page"] = page;
