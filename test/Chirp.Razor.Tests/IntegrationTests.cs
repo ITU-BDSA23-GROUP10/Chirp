@@ -50,17 +50,30 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Contains($"{author}'s Timeline", content);
     }
 
-    // checks if unknown author has cheeps
+    // Checks if author, with no cheeps, has no cheeps.
     [Theory]
     [InlineData("Vobiscum")]
     [InlineData("Ad Astra")]
     public async Task CheckIfAuthorHasNoCheeps(string author)
     {
-        var response = await _client.GetAsync($"/{author}");
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
 
-        Assert.Contains("There are no cheeps so far.", content);
+        //act
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+
+            context.Authors.Add(new Author { Name = author, Email = $"test@gmail.com" });
+            await context.SaveChangesAsync();
+            
+            var response = await _client.GetAsync($"/{author}");
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+
+            Assert.Contains("There are no cheeps so far.", content);
+        } 
+
     }
 
     // is the root page the same as page 1?
@@ -169,19 +182,19 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             // Act            
             try 
             {
-                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
             } catch 
             {
                 ar.CreateAuthor(authorName, authorEmail);
                 await context.SaveChangesAsync();
-                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
             } finally 
             {
                 await context.SaveChangesAsync();
             }
 
             // Assert
-            var retrievedAuthor = ar.GetAuthorByName(authorName);
+            var retrievedAuthor = await ar.GetAuthorByName(authorName);
 
             if (retrievedAuthor is null) 
             {
