@@ -4,6 +4,7 @@ namespace Chirp.Infrastructure.Models;
 
 public record Cheep
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CheepId { get; set; }
     public required string Text { get; set; }
     public DateTime TimeStamp { get; set; }

@@ -13,7 +13,6 @@ using Microsoft.Identity.Web.UI;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.ChirpRepository;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Logging.AddConsole();
@@ -25,9 +24,9 @@ builder.Services.AddRazorPages()
 builder.Services.AddOptions();
 
 // Set up the database path
-var DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
+/*var DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
     Path.Combine(Path.GetTempPath(), "chirp.db");
-var connectionString = $"Data Source={DbPath}";
+var connectionString = $"Data Source={DbPath}";*/
 
 // Add services to the container.
 
@@ -42,7 +41,7 @@ builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>();
 builder.Services.AddDbContext<ChirpDBContext>(
     options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
