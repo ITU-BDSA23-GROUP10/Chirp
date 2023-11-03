@@ -20,7 +20,7 @@ public class PublicModel : PageModel
     {
         ViewData["Page"] = page;
 
-        int limit = 32;
+        int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
         (Cheeps, ViewData["CheepsCount"]) = _service.GetSome(offset, limit);

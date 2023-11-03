@@ -21,7 +21,7 @@ public class UserTimelineModel : PageModel
         ViewData["Author"] = author;
         ViewData["Page"] = page;
 
-        int limit = 32;
+        int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
         (Cheeps, ViewData["CheepsCount"]) = _service.GetCheepsByAuthor(author, offset, limit);
