@@ -38,16 +38,16 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return (DbSet, DbSet.Count());
     }
 
-    public async Task<Cheep?> GetById(int id)
+    public Cheep? GetById(int id)
     {
-        return await DbSet.FindAsync(id);
+        return DbSet.Find(id);
     }
 
-    public async Task<Tuple<List<CheepDTO>, int>> GetSome(int offset, int limit)
+    public (List<CheepDTO>, int) GetSome(int offset, int limit)
     {
         // From StackOverflow: https://stackoverflow.com/a/29205357
         // Order by desc (x => x.Field) from StackOverflow: https://stackoverflow.com/a/5813479
-        var query = await (from cheep in DbSet
+        var query = (from cheep in DbSet
                     .OrderByDescending(d => d.TimeStamp)
                     .Skip(offset)
                     .Take(limit)
@@ -57,9 +57,9 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                          cheep.Text,
                          cheep.TimeStamp.ToString()
                      ))
-                    .ToListAsync();
+                    .ToList();
 
-        return new Tuple<List<CheepDTO>, int>(query, DbSet.Count());
+        return (query, DbSet.Count());
     }
 
     public void CreateCheep(Author? author, string text)

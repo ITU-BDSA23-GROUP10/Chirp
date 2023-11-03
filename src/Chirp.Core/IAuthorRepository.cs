@@ -10,16 +10,16 @@ public interface IAuthorRepository<Author, Cheep>
     void Insert(Author entity);
     void Delete(Author entity);
     IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
-    Task<Author> GetAuthorWithCheeps(string authorName);
-    Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit);
+    Author GetAuthorWithCheeps(string authorName);
+    (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit);
 
-    Task<Author?> GetAuthorById(int id);
+    Author? GetAuthorById(int id);
 
-    Task<Author?> GetAuthorByName(string name);
+    Author? GetAuthorByName(string name);
 
-    Task<Author?> GetAuthorByEmail(string email);
+    Author? GetAuthorByEmail(string email);
 
-    Task CreateAuthor(string name, string email);
+    void CreateAuthor(string name, string email);
 
     public int GetMaxId();
 }

@@ -11,8 +11,8 @@ public interface ICheepRepository<Cheep, Author>
     void Delete(Cheep entity);
     IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate);
     (IQueryable<Cheep>, int) GetAll();
-    Task<Cheep?> GetById(int id);
-    Task<Tuple<List<CheepDTO>, int>> GetSome(int offset, int limit);
-    void CreateCheep(Author? author, string text);
+    Cheep? GetById(int id);
+    (List<CheepDTO>, int) GetSome(int offset, int limit);
+    void CreateCheep(Author author, string text);
     int GetMaxId();
 }

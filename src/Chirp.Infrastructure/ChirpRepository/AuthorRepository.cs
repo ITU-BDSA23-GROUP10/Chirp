@@ -34,18 +34,24 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return DbSet.Where(predicate);
     }
 
-    public async Task<Author> GetAuthorWithCheeps(string authorName)
+    public Author GetAuthorWithCheeps(string authorName)
     {
         // The returned Author object can use Author.Cheeps to get all the Cheeps (sorted by descending timestamp)
         
-        var author = await DbSet.Include(_author => _author.Cheeps
+        var author = DbSet.Include(_author => _author.Cheeps
                     .OrderByDescending(_cheep => _cheep.TimeStamp))
                     .Where(_author => _author.Name == authorName)
-                    .FirstOrDefaultAsync() ?? throw new Exception($"Author {authorName} not found");
+                    .FirstOrDefault();
+        
+        if (author is null)
+        {
+            throw new Exception($"Author {authorName} not found");
+        }
+
         return author;
     }
 
-    public async Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit)
+    public (List<CheepDTO>, int) GetCheepsByAuthor(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
 
@@ -53,16 +59,16 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (GetAuthorByName(author) is null)
         {
-            return new Tuple<List<CheepDTO>, int>(new List<CheepDTO>(), cheepsCount);
+            return (new List<CheepDTO>(), cheepsCount);
         }
         else
         {
-            cheepsCount = DbSet.Entry(await GetAuthorByName(author))
+            cheepsCount = DbSet.Entry(GetAuthorByName(author))
                     .Collection(_author => _author.Cheeps)
                     .Query().Count();
         }
 
-        List<CheepDTO> cheeps = DbSet.Entry(await GetAuthorByName(author))
+        List<CheepDTO> cheeps = DbSet.Entry(GetAuthorByName(author))
                     .Collection(_author => _author.Cheeps)
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
@@ -76,36 +82,36 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
                     .ToList()
                     ?? new List<CheepDTO>();
 
-        return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
+        return (cheeps, cheepsCount);
     }
 
-    public async Task<Author?> GetAuthorById(int id)
+    public Author? GetAuthorById(int id)
     {
-        return await DbSet.FindAsync(id);
+        return DbSet.Find(id);
     }
 
-    public async Task<Author?> GetAuthorByName(string name)
+    public Author? GetAuthorByName(string name)
     {
         // FirstOrDefault returns null if no Author is found.
-        var author = await SearchFor(_author => _author.Name == name).FirstOrDefaultAsync();
+        var author = SearchFor(_author => _author.Name == name).FirstOrDefault();
 
         return author;
     }
 
-    public async Task<Author?> GetAuthorByEmail(string email)
+    public Author? GetAuthorByEmail(string email)
     {
-        var author = await SearchFor(_author => _author.Email == email).FirstOrDefaultAsync();
+        var author = SearchFor(_author => _author.Email == email).FirstOrDefault();
 
         return author;
     }
 
-    public async Task CreateAuthor(string name, string email)
+    public void CreateAuthor(string name, string email)
     {
         Author? author = null;
-        author = await GetAuthorByEmail(email);
+        author = GetAuthorByEmail(email);
         if (author is null)
         {
-            author = await GetAuthorByName(name);
+            author = GetAuthorByName(name);
         }
 
         if (author is not null)
@@ -134,10 +140,5 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         return query.Max();
     }
-
-    // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
-    // {
-    //     throw new NotImplementedException();
-    // }
     #endregion
 }

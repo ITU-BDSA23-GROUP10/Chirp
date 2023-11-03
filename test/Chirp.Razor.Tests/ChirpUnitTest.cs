@@ -51,7 +51,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             await context.SaveChangesAsync();
 
             // Assert
-            Author? retrievedAuthor = await (Task<Author>) ar.GetAuthorByName(authorName);
+            Author? retrievedAuthor = ar.GetAuthorByName(authorName);
             
             if (retrievedAuthor is null) 
             {
@@ -85,7 +85,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             await context.SaveChangesAsync();
 
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => await ar.CreateAuthor(authorName, authorEmail));
+            Assert.Throws<Exception>(() => ar.CreateAuthor(authorName, authorEmail));
             //Assert.Equal(authorName, retrievedAuthor.Name);
         }
     }
@@ -111,11 +111,11 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             ar.CreateAuthor(authorName, authorEmail);
             await context.SaveChangesAsync();
 
-            cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
+            cr.CreateCheep(ar.GetAuthorByName(authorName), message);
             await context.SaveChangesAsync();
 
             // Assert
-            var retrievedAuthor = await ar.GetAuthorByName(authorName);
+            var retrievedAuthor = ar.GetAuthorByName(authorName);
 
             if (retrievedAuthor is null) 
             {
@@ -146,13 +146,13 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             CheepRepository cr = new CheepRepository(context);
             await context.SaveChangesAsync();
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => cr.CreateCheep(await ar.GetAuthorByName(authorName), message));
+            Assert.Throws<Exception>(() => cr.CreateCheep(ar.GetAuthorByName(authorName), message));
         }
     }
 
     // Tests if the program can duplicate an author object to another author obj from the database
     [Fact]
-    public async Task DuplicateAuthorObjInDatabase_ListOfCheepsIsNotEmpty()
+    public void DuplicateAuthorObjInDatabase_ListOfCheepsIsNotEmpty()
     {
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
@@ -164,7 +164,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new(context);
 
             // Act
-            var author = await ar.GetAuthorWithCheeps("Jacqualine Gilcoine");
+            var author = ar.GetAuthorWithCheeps("Jacqualine Gilcoine");
 
             // Assert
             Assert.NotNull(author);

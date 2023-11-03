@@ -16,14 +16,14 @@ public class PublicModel : PageModel
     }
 
     /* get method with pagination*/
-    public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
+    public ActionResult OnGet([FromQuery(Name = "page")] int page = 1)
     {
         ViewData["Page"] = page;
 
-        int limit = PagesData.CheepsPerPage;
+        int limit = 32;
         int offset = (page - 1) * limit;
 
-        (Cheeps, ViewData["CheepsCount"]) = await _service.GetSome(offset, limit);
+        (Cheeps, ViewData["CheepsCount"]) = _service.GetSome(offset, limit);
 
         return Page();
     }
