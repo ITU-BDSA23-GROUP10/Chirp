@@ -169,19 +169,19 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             // Act            
             try 
             {
-                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
             } catch 
             {
                 ar.CreateAuthor(authorName, authorEmail);
                 await context.SaveChangesAsync();
-                cr.CreateCheep(ar.GetAuthorByName(authorName), message);
+                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
             } finally 
             {
                 await context.SaveChangesAsync();
             }
 
             // Assert
-            var retrievedAuthor = ar.GetAuthorByName(authorName);
+            var retrievedAuthor = await ar.GetAuthorByName(authorName);
 
             if (retrievedAuthor is null) 
             {
