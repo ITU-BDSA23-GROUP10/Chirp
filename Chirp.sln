@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.Tests", "test\C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{43DF375A-03AD-4A64-B321-4F7014B7903A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChirpIntegraiton.Tests", "test\ChirpIntegraiton.Tests\ChirpDatabase.Tests.csproj", "{BAF6AEBD-C55F-4D6C-A337-4B024FB99807}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChirpDatabase.Tests", "test\ChirpDatabase.Tests\ChirpDatabase.Tests.csproj", "{BAF6AEBD-C55F-4D6C-A337-4B024FB99807}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
