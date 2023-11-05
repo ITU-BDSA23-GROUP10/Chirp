@@ -21,7 +21,7 @@ namespace Chirp.Web.ViewComponents
             }
             PagesData pagesData = new()
             {
-                TotalPages = (int)Math.Ceiling((double)_count / 32),
+                TotalPages = (int)Math.Ceiling((double)_count / PagesData.CheepsPerPage),
                 CurrentPage = page,
             };
 
