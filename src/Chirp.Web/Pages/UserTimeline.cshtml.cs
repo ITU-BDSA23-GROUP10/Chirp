@@ -18,13 +18,25 @@ public class UserTimelineModel : PageModel
     //get method with pagination
     public async Task<ActionResult> OnGetAsync(string author, [FromQuery(Name = "page")] int page = 1)
     {
+
         ViewData["Author"] = author;
         ViewData["Page"] = page;
 
         int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
-        (Cheeps, ViewData["CheepsCount"]) = await _service.GetCheepsByAuthor(author, offset, limit).ConfigureAwait(false);
+        AsyncPadlock padlock = new();
+
+        try
+        {
+            await padlock.Lock();
+            
+            (Cheeps, ViewData["CheepsCount"]) = await _service.GetCheepsByAuthor(author, offset, limit);
+        }
+        finally
+        {
+            padlock.Dispose();
+        }
 
         return Page();
     }
