@@ -60,13 +60,10 @@ jobs:
         # https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#bundles
         chmod +x efbundle
         ./efbundle --connection "$CONNECTION_STRING"
-        
+
     - name: Logout of Azure CLI
       run: az logout
 
-  release:
-    runs-on: ubuntu-latest
-    steps:
     - name: Deploy Project
       shell: bash
       run: |
@@ -98,7 +95,7 @@ jobs:
         7z a -tzip "${mac_release_name}.zip" "./${mac_release_name}/*"
 
         rm -r "$mac_release_name" # Delete output directory
-    - name: release project
+    - name: release project test
       uses: softprops/action-gh-release@v1
       with: 
         files: "*.zip"
