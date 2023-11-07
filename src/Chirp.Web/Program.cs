@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
-using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.ChirpRepository;
 
 var builder = WebApplication.CreateBuilder(args);
