@@ -10,11 +10,13 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
+    protected ChirpDBContext context;
     protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Set<Author>();
+        DbSet = dbContext.Authors;
+        context = dbContext;
         maxid = GetMaxId() + 1;
     }
 
@@ -23,6 +25,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
+        context.SaveChanges();
     }
 
     public void Delete(Author entity)
@@ -108,12 +111,12 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (email is not null)
         {
-            author = await GetAuthorByEmail(email)
+            author = await GetAuthorByEmail(email);
         }
 
         if (author is null)
         {
-            author = await GetAuthorByName(name)
+            author = await GetAuthorByName(name);
         }
 
         if (author is not null)
@@ -125,17 +128,11 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         {
             var authorEnity = new Author()
             {
-                AuthorId = maxid,
                 Name = name,
                 Email = email ?? null,
                 Cheeps = new List<Cheep>()
             };
-            
-            Console.WriteLine("AUTHOR ID: " + authorEnity.AuthorId);
-
             Insert(authorEnity);
-            var newAuthor = await GetAuthorByName(name);
-            //Console.WriteLine("Author: " + newAuthor.Name + " is now created with ID " + newAuthor.AuthorId);
 
             maxid++;
         }

@@ -9,11 +9,13 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected static DbSet<Cheep> DbSet;
+    protected ChirpDBContext context;
     protected int maxid;
 
     public CheepRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Set<Cheep>();
+        DbSet = dbContext.Cheeps;
+        context = dbContext;
         maxid = GetMaxId() + 1;
     }
 
@@ -22,6 +24,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
     public void Insert(Cheep entity)
     {
         DbSet.Add(entity);
+        context.SaveChanges();
     }
 
     public void Delete(Cheep entity)
