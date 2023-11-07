@@ -105,7 +105,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return author;
     }
 
-    public async Task CreateAuthor(string name, string? email)
+    public async Task CreateAuthor(string name, string? email = null)
     {
         Author? author = null;
 

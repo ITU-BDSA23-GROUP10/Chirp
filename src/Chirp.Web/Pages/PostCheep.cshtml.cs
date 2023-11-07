@@ -51,7 +51,7 @@ public class PostCheepModel : PageModel
             Console.WriteLine("The author is null!!!");
             Console.WriteLine("USERNAME: " + userName);
             Console.WriteLine("USERNAME NAME: " + userName);
-            await _authorService.CreateAuthor(userName, null);
+            await _authorService.CreateAuthor(userName);
             author = await _authorService.GetAuthorByName(userName);
         }
 
