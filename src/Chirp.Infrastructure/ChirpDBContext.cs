@@ -28,12 +28,19 @@ public class ChirpDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Cheeps
-        modelBuilder.Entity<Cheep>().Property(ch => ch.Text).HasMaxLength(160);
+        modelBuilder.Entity<Cheep>( cheep =>
+        {
+            cheep.Property(ch => ch.CheepId).ValueGeneratedOnAdd();
+            cheep.HasKey(ch => ch.CheepId);
+            cheep.Property(ch => ch.Text).HasMaxLength(160);
+        });
 
         // Authors
         modelBuilder.Entity<Author>( author =>
         {
             // General Author properties
+            author.Property(au => au.AuthorId).ValueGeneratedOnAdd();
+            author.HasKey(au => au.AuthorId);
             author.HasIndex(au => au.Name).IsUnique();
             author.HasIndex(au => au.Email).IsUnique();
             author.Property(au => au.Email).HasMaxLength(50);
