@@ -60,7 +60,13 @@ jobs:
         # https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#bundles
         chmod +x efbundle
         ./efbundle --connection "$CONNECTION_STRING"
+        
+    - name: Logout of Azure CLI
+      run: az logout
 
+  release:
+    runs-on: ubuntu-latest
+    steps:
     - name: Deploy Project
       shell: bash
       run: |
@@ -99,8 +105,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Logout of Azure CLI
-      run: az logout
 
       # AZURE CREDENTIALS
       # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
