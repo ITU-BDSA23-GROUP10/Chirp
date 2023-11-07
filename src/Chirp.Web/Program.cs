@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Chirp.Web;
 using Chirp.Infrastructure;
+using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -69,6 +70,8 @@ using (var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<ChirpDBContext>();
         context.Database.Migrate();
         DbInitializer.SeedDatabase(context);
+        
+
     }
     catch (Exception ex)
     {
