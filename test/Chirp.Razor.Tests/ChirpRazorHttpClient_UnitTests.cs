@@ -30,7 +30,7 @@ public class ChirpCliHttpClient_UnitTests
 
     /* commented out these tests until the sql server is up on azure
     //this tests to see whether or not the endpoint /cheeps works from the web app url
-    [Fact]
+    /*[Fact]
     public async Task HttpClient_IsItCorrectEndpoint_OnGetCheeps()
     {
         //arrange
@@ -41,10 +41,10 @@ public class ChirpCliHttpClient_UnitTests
 
         //assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
+    }*/
 
     //this tests to see whether or not the endpoint /cheeps has data to be read from the web app url
-    [Fact]
+    /*[Fact]
     public async Task HttpClient_IsThereDatatoGet_OnGetCheeps()
     {
         //arrange
@@ -59,4 +59,3 @@ public class ChirpCliHttpClient_UnitTests
         
     }
     */
-}
