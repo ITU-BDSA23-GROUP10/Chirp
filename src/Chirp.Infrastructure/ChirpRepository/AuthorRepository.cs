@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
+using System;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
@@ -101,13 +102,18 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return author;
     }
 
-    public async Task CreateAuthor(string name, string email)
+    public async Task CreateAuthor(string name, string? email)
     {
         Author? author = null;
-        author = await GetAuthorByEmail(email);
+
+        if (email is not null)
+        {
+            author = await GetAuthorByEmail(email)
+        }
+
         if (author is null)
         {
-            author = await GetAuthorByName(name);
+            author = await GetAuthorByName(name)
         }
 
         if (author is not null)
@@ -117,13 +123,20 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (author is null)
         {
-            Insert(new Author()
+            var authorEnity = new Author()
             {
                 AuthorId = maxid,
                 Name = name,
-                Email = email,
+                Email = email ?? null,
                 Cheeps = new List<Cheep>()
-            });
+            };
+            
+            Console.WriteLine("AUTHOR ID: " + authorEnity.AuthorId);
+
+            Insert(authorEnity);
+            var newAuthor = await GetAuthorByName(name);
+            //Console.WriteLine("Author: " + newAuthor.Name + " is now created with ID " + newAuthor.AuthorId);
+
             maxid++;
         }
     }

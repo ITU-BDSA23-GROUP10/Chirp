@@ -13,6 +13,6 @@ public interface ICheepRepository<Cheep, Author>
     (IQueryable<Cheep>, int) GetAll();
     Task<Cheep?> GetById(int id);
     Task<Tuple<List<CheepDTO>, int>> GetSome(int offset, int limit);
-    void CreateCheep(Author? author, string text);
+    Task CreateCheep(CheepCreateDTO cheepCreateDTO, Author author);
     int GetMaxId();
 }

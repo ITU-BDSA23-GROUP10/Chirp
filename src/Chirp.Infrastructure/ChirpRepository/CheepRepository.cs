@@ -2,12 +2,13 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
+using FluentValidation;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
 public class CheepRepository : ICheepRepository<Cheep, Author>
 {
-    protected DbSet<Cheep> DbSet;
+    protected static DbSet<Cheep> DbSet;
     protected int maxid;
 
     public CheepRepository(ChirpDBContext dbContext)
@@ -62,26 +63,26 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return new Tuple<List<CheepDTO>, int>(query, DbSet.Count());
     }
 
-    public void CreateCheep(Author? author, string text)
+    public async Task CreateCheep(CheepCreateDTO newCheep, Author author)
     {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
+        /*author = newCheep.author;
+
         if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
-        }
+        }*/
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         DateTime timestamp = DateTime.Now;
-
         Insert(new Cheep()
         {
-            CheepId = maxid,
             Author = author,
-            Text = text,
+            Text = newCheep.text,
             TimeStamp = timestamp
         });
         maxid++;
@@ -96,4 +97,13 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return query.Max();
     }
     #endregion
+}
+
+public class CheepCreateValidator : AbstractValidator<CheepCreateDTO>
+{
+    public CheepCreateValidator()
+    {
+        RuleFor(x => x.author).NotEmpty();
+        RuleFor(x => x.text).NotEmpty().Length(0, 160);
+    }
 }
