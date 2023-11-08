@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 
-namespace Chirp.Web.Pages;
+namespace Chirp.Web.Pages1;
 
 public class PostCheepModel : PageModel
 {
