@@ -20,6 +20,4 @@ public interface IAuthorRepository<Author, Cheep>
     Task<Author?> GetAuthorByEmail(string email);
 
     Task CreateAuthor(string name, string? email = null);
-
-    public int GetMaxId();
 }

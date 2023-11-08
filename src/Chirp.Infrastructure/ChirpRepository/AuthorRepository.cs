@@ -11,13 +11,11 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
     protected ChirpDBContext context;
-    protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Authors;
         context = dbContext;
-        maxid = GetMaxId() + 1;
     }
 
     #region IAuthorRepository<Author, Cheep> Members
@@ -133,19 +131,9 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
                 Cheeps = new List<Cheep>()
             };
             Insert(authorEnity);
-
-            maxid++;
         }
     }
 
-    public int GetMaxId()
-    {
-        var query = (from author_ in DbSet
-                     select author_.AuthorId)
-                    .ToList();
-
-        return query.Max();
-    }
 
     // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
     // {

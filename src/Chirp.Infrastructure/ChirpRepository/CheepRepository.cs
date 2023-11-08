@@ -10,13 +10,11 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected static DbSet<Cheep> DbSet;
     protected ChirpDBContext context;
-    protected int maxid;
 
     public CheepRepository(ChirpDBContext dbContext)
     {
         DbSet = dbContext.Cheeps;
         context = dbContext;
-        maxid = GetMaxId() + 1;
     }
 
     #region ICheepRepository<Cheep, Author> Members
@@ -88,17 +86,8 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             Text = newCheep.text,
             TimeStamp = timestamp
         });
-        maxid++;
     }
     
-    public int GetMaxId()
-    {
-        var query = (from cheep in DbSet
-                     select cheep.CheepId)
-                    .ToList();
-
-        return query.Max();
-    }
     #endregion
 }
 

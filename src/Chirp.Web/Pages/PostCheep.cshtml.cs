@@ -48,20 +48,14 @@ public class PostCheepModel : PageModel
         // Create new auther if does not exist in database ready
         if (author is null) 
         {
-            Console.WriteLine("The author is null!!!");
-            Console.WriteLine("USERNAME: " + userName);
-            Console.WriteLine("USERNAME NAME: " + userName);
             await _authorService.CreateAuthor(userName);
             author = await _authorService.GetAuthorByName(userName);
         }
-
-        Console.WriteLine("author AFTER CHECK: " + author);
 
         var cheep = new CheepCreateDTO(NewCheep.Message, userName);
         
         await _cheepService.CreateCheep(cheep, author);
 
-        Console.WriteLine(await _cheepService.GetById(_cheepService.GetMaxId()));
         }
         finally
         {
