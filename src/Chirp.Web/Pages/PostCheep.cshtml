@@ -1,0 +1,16 @@
+﻿@page "/PostCheep"
+@model Chirp.Web.Pages.PostCheepModel
+@using System
+@using Chirp.Web.Pages;
+@{
+        ViewData["Title"] = "Chirp!";
+        Layout = "Shared/_Layout";
+}
+
+<div class="cheepbox">
+        <h3>What's on your mind @(User.Identity.Name)?</h3>
+        <form method="post">
+                <input style="float: left" type="text" asp-for="NewCheep.Message">
+                <input type="submit" value="Share">
+        </form>
+</div>
