@@ -79,8 +79,11 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         }*/
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
+
+        var validation = new CheepCreateValidator(newCheep, author)    
+
         DateTime timestamp = DateTime.Now;
-        Insert(new Cheep()
+        Insert(new Cheep(CheepCreateDTO newCheep, Author author)
         {
             Author = author,
             Text = newCheep.text,
@@ -93,7 +96,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
 public class CheepCreateValidator : AbstractValidator<CheepCreateDTO>
 {
-    public CheepCreateValidator()
+    public CheepCreateValidator(CheepCreateDTO newCheep, Author author)
     {
         RuleFor(x => x.author).NotEmpty();
         RuleFor(x => x.text).NotEmpty().Length(0, 160);
