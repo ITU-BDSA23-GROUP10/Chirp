@@ -11,7 +11,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected static DbSet<Cheep> DbSet;
     protected ChirpDBContext context;
-    protected var validator = new CheepCreateValidator();  
+    protected CheepCreateValidator validator = new CheepCreateValidator();  
 
     public CheepRepository(ChirpDBContext dbContext)
     {
