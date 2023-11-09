@@ -13,17 +13,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     env:
-      # how to implement the secrets in github:
-      # https://youtu.be/tXv_npAP90k?si=EMC8pgYt5paIQTZN&t=122
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       WEB_APP_NAME: ${{ secrets.WEB_APP_NAME }}
       RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
-      # AZURE_DB_URL: ${{ secrets.AZURE_DB_URL }}
-      # USER_NAME: ${{ secrets.USER_NAME }}
-      # PASSWORD: ${{ secrets.PASSWORD }}
-      # DB_NAME: ${{ secrets.DB_NAME }}
 
     steps:
     - name: Checkout Code
@@ -52,11 +45,7 @@ jobs:
 
     - name: Apply EF migrations
       run: |
-        # the --output tsv is just formatting (tab-seperated values), json is the default (might change this to json?)
-        # the az command gets the password and other details directly from azure
-        # --query "[0].value" --output tsv
-        CONNECTION_STRING=$(az webapp config connection-string list --name $WEB_APP_NAME --resource-group $RESOURCE_GROUP )
-        # Rasmus used efbundle in his code
+        CONNECTION_STRING=$(az webapp config connection-string list --name $WEB_APP_NAME --resource-group $RESOURCE_GROUP --query "[0].value" --output tsv)
         # https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#bundles
         chmod +x efbundle
         ./efbundle --connection "$CONNECTION_STRING"
@@ -64,12 +53,36 @@ jobs:
     - name: Logout of Azure CLI
       run: az logout
 
-      # AZURE CREDENTIALS
-      # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
-      # For the azure credentials value for github it should be formatted as json
-      # check in terminal you have the azure client installed by writing az version
-      # insert the following command (after youre logged in): az ad sp create-for-rbac
-      # dont know if i have access? command to see which subscription IDs are available:
-      # az account list --output table
-      # az ad sp create-for-rbac --name "chirpgroup10database" --role contributor --scopes /subscriptions/7d28c7ae-3a30-445f-b5c5-17afb26b07f8/resourceGroups/bdsagroup10chirpremotedb_group --sdk-auth
-      #comment
+    - name: Build with dotnet
+      run: dotnet build src/Chirp.Web --configuration Release
+
+    - name: dotnet publish
+      run: dotnet publish src/Chirp.Web -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: .net-app
+        path: ${{env.DOTNET_ROOT}}/myapp
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'bdsagroup10chirprazor'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9E47BF3083E44D9B9B09C495395E44EF }}
+          package: .
