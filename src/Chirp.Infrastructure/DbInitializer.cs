@@ -697,7 +697,6 @@ public static class DbInitializer
             a12.Cheeps = new List<Cheep>() { c657 };
 
             chirpContext.Authors.AddRange(authors);
-            chirpContext.Cheeps.AddRange(cheeps);
             chirpContext.SaveChanges();
         }
     }

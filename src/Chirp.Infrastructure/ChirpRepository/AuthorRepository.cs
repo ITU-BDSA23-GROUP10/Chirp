@@ -3,19 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
-using System;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
 public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
-    protected ChirpDBContext context;
+    protected int maxid;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Authors;
-        context = dbContext;
+        DbSet = dbContext.Set<Author>();
+        maxid = GetMaxId() + 1;
     }
 
     #region IAuthorRepository<Author, Cheep> Members
@@ -23,7 +22,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
-        context.SaveChanges();
     }
 
     public void Delete(Author entity)
@@ -103,15 +101,10 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return author;
     }
 
-    public async Task CreateAuthor(string name, string? email = null)
+    public async Task CreateAuthor(string name, string email)
     {
         Author? author = null;
-
-        if (email is not null)
-        {
-            author = await GetAuthorByEmail(email);
-        }
-
+        author = await GetAuthorByEmail(email);
         if (author is null)
         {
             author = await GetAuthorByName(name);
@@ -124,16 +117,25 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (author is null)
         {
-            var authorEnity = new Author()
+            Insert(new Author()
             {
+                AuthorId = maxid,
                 Name = name,
-                Email = email ?? null,
+                Email = email,
                 Cheeps = new List<Cheep>()
-            };
-            Insert(authorEnity);
+            });
+            maxid++;
         }
     }
 
+    public int GetMaxId()
+    {
+        var query = (from author_ in DbSet
+                     select author_.AuthorId)
+                    .ToList();
+
+        return query.Max();
+    }
 
     // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
     // {

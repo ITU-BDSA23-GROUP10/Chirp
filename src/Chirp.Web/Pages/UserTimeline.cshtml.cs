@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
@@ -8,20 +7,14 @@ namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : PageModel
 {
-
-    [BindProperty]
-    public NewCheep NewCheep {get; set;} = new();
-
-    readonly ICheepRepository<Cheep, Author> _cheepService;
-    readonly IAuthorRepository<Author, Cheep> _authorService;
+    private readonly IAuthorRepository<Author, Cheep> _service;
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
-    
-    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep> authorService)
+
+    public UserTimelineModel(IAuthorRepository<Author, Cheep> service)
     {
-        _cheepService = cheepService;
-        _authorService = authorService;
+        _service = service;
     }
-    
+
     //get method with pagination
     public async Task<ActionResult> OnGetAsync(string author, [FromQuery(Name = "page")] int page = 1)
     {
@@ -38,7 +31,7 @@ public class UserTimelineModel : PageModel
         {
             await padlock.Lock();
             
-            (Cheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
+            (Cheeps, int cheepsCount) = await _service.GetCheepsByAuthor(author, offset, limit);
             ViewData["CheepsCount"] = cheepsCount;
         }
         finally
@@ -47,36 +40,5 @@ public class UserTimelineModel : PageModel
         }
 
         return Page();
-    }
-
-    public async Task<IActionResult> OnPost()
-    {
-
-        AsyncPadlock padlock = new();
-        var userName = User.Identity.Name;
-
-        try
-        {
-        await padlock.Lock();
-        var author = await _authorService.GetAuthorByName(userName);
-
-        // Create new auther if does not exist in database ready
-        if (author is null) 
-        {
-            await _authorService.CreateAuthor(userName);
-            author = await _authorService.GetAuthorByName(userName);
-        }
-
-        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-        
-        await _cheepService.CreateCheep(cheep, author);
-
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
-
-        return Redirect("https://localhost:5273/" + userName);
     }
 }

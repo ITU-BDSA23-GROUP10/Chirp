@@ -42,6 +42,7 @@ public class ChirpDBContext : DbContext
             author.Property(au => au.AuthorId).ValueGeneratedOnAdd();
             author.HasKey(au => au.AuthorId);
             author.HasIndex(au => au.Name).IsUnique();
+            author.HasIndex(au => au.Email).IsUnique();
             author.Property(au => au.Email).HasMaxLength(50);
 
             // Establish relationship between Author and Cheeps
