@@ -11,6 +11,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected static DbSet<Cheep> DbSet;
     protected ChirpDBContext context;
+    protected var validator = new CheepCreateValidator();  
 
     public CheepRepository(ChirpDBContext dbContext)
     {
@@ -80,8 +81,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         }*/
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
-        var validator = new CheepCreateValidator();  
-
+        
         try
         {
             var validationResult = validator.Validate(newCheep);
