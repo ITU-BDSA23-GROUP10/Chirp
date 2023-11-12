@@ -33,19 +33,20 @@ public class ChirpDatabaseTest : IAsyncLifetime
         return context;
     }
 
-    [Fact]
-    public async void CreateValidCheepInDatabase_WhereAuthorExists()
+    [Theory]
+    [InlineData("Obi-Wan", "Hello there")]
+    [InlineData("Grievous", "General Kenobi. A bold one i see")]
+    public async void CreateValidCheepInDatabase_WhereAuthorExists(string authorName, string message)
     {   
-        // Assert
+        // Arrange
         var context = await SetupContext(_sqlServer.GetConnectionString());
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
 
         // Act
-        var authorName = "Test author";
         await authorService.CreateAuthor(authorName);
-        var cheep = new CheepCreateDTO("Test message", authorName);
+        var cheep = new CheepCreateDTO(message, authorName);
 
         await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
         
@@ -53,6 +54,35 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
         // Assert
         Assert.Equal(1, dbCheep.Item2);
-        Assert.Equal("Test message", dbCheep.Item1.FirstOrDefault().Text);
+        Assert.Equal(message, dbCheep.Item1.FirstOrDefault().Text);
+    }
+
+    [Fact]
+    public async void Create100Cheeps_ReadLast32()
+    {
+        // Arrange
+        var context = await SetupContext(_sqlServer.GetConnectionString());
+
+        var cheepService = new CheepRepository(context);
+        var authorService = new AuthorRepository(context);
+
+        // Act
+        for (int i = 0; i < 100; i++)
+        {
+            var authorName = "Test author " + i;
+            var newAuthor = authorService.CreateAuthor(authorName);
+            var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
+            await newAuthor;
+            cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
+        }
+
+        while (cheepService.GetAll().Item2 != 100) {
+            Thread.Sleep(40);
+        }
+
+        // Assert
+        var cheeps = await cheepService.GetSome(0, 32);
+        Assert.Equal(32, cheeps.Item1.Count);
+        Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message);
     }
 }
