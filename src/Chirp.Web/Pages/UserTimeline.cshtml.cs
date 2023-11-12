@@ -7,12 +7,49 @@ namespace Chirp.Web.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly IAuthorRepository<Author, Cheep> _service;
+    [BindProperty]
+    public NewCheep NewCheep {get; set;} = new();
+
+    readonly ICheepRepository<Cheep, Author> _cheepService;
+    private readonly IAuthorRepository<Author, Cheep> _authorService;
+
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(IAuthorRepository<Author, Cheep> service)
+    public UserTimelineModel(IAuthorRepository<Author, Cheep> authorService, ICheepRepository<Cheep, Author> cheepService)
     {
-        _service = service;
+        _authorService = authorService;
+        _cheepService = cheepService;
+    }
+
+    public async Task<IActionResult> OnPost()
+    {
+
+        AsyncPadlock padlock = new();
+        var userName = User.Identity.Name;
+
+        try
+        {
+        await padlock.Lock();
+        var author = await _authorService.GetAuthorByName(userName);
+
+        // Create new auther if does not exist in database ready
+        if (author is null) 
+        {
+            await _authorService.CreateAuthor(userName);
+            author = await _authorService.GetAuthorByName(userName);
+        }
+
+        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+        
+        await _cheepService.CreateCheep(cheep, author);
+
+        }
+        finally
+        {
+            padlock.Dispose();
+        }
+
+        return Redirect("https://localhost:5273/" + userName);
     }
 
     //get method with pagination
@@ -30,8 +67,7 @@ public class UserTimelineModel : PageModel
         try
         {
             await padlock.Lock();
-            
-            (Cheeps, int cheepsCount) = await _service.GetCheepsByAuthor(author, offset, limit);
+            (Cheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
             ViewData["CheepsCount"] = cheepsCount;
         }
         finally
