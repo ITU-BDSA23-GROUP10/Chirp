@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Infrastructure.Models;
+using Chirp.Core;
 
 [Collection("Sequential")]
 public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>>
@@ -108,10 +109,11 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             CheepRepository cr = new CheepRepository(context);
 
             // Act
-            ar.CreateAuthor(authorName, authorEmail);
+            await ar.CreateAuthor(authorName, authorEmail);
             await context.SaveChangesAsync();
 
-            cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
+            var cheep = new CheepCreateDTO(message, authorName);
+            await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
             await context.SaveChangesAsync();
 
             // Assert
@@ -145,8 +147,10 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
             await context.SaveChangesAsync();
+            var cheep = new CheepCreateDTO(message, authorName);
+
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => cr.CreateCheep(await ar.GetAuthorByName(authorName), message));
+            await Assert.ThrowsAsync<Exception>(async() => await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName)));
         }
     }
 

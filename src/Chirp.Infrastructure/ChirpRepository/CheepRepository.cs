@@ -2,18 +2,21 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
 public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected DbSet<Cheep> DbSet;
-    protected int maxid;
+    protected ChirpDBContext context;
+    protected CheepCreateValidator validator = new CheepCreateValidator();  
 
     public CheepRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Set<Cheep>();
-        maxid = GetMaxId() + 1;
+        DbSet = dbContext.Cheeps;
+        context = dbContext;
     }
 
     #region ICheepRepository<Cheep, Author> Members
@@ -21,6 +24,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
     public void Insert(Cheep entity)
     {
         DbSet.Add(entity);
+        context.SaveChanges();
     }
 
     public void Delete(Cheep entity)
@@ -62,38 +66,55 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return new Tuple<List<CheepDTO>, int>(query, DbSet.Count());
     }
 
-    public void CreateCheep(Author? author, string text)
+    public async Task CreateCheep(CheepCreateDTO newCheep, Author author)
     {
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
+        /*author = newCheep.author;
+
         if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
-        }
+        }*/
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
-        DateTime timestamp = DateTime.Now;
-
-        Insert(new Cheep()
+        
+        try
         {
-            CheepId = maxid,
-            Author = author,
-            Text = text,
-            TimeStamp = timestamp
-        });
-        maxid++;
+            var validationResult = validator.Validate(newCheep);
+            bool status = validationResult.IsValid;
+
+            if(!status)
+            {
+                List<ValidationFailure> failures = validationResult.Errors;
+                throw new Exception(string.Join(", ", failures));
+            }
+
+            DateTime timestamp = DateTime.Now;
+            Insert(new Cheep()
+            {
+                Author = author,
+                Text = newCheep.text,
+                TimeStamp = timestamp
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message, ", failed validation");
+        }
     }
     
-    public int GetMaxId()
-    {
-        var query = (from cheep in DbSet
-                     select cheep.CheepId)
-                    .ToList();
-
-        return query.Max();
-    }
     #endregion
+}
+
+public class CheepCreateValidator : AbstractValidator<CheepCreateDTO> 
+{
+    public CheepCreateValidator()
+    {
+        RuleFor(x => x.author).NotEmpty();
+        RuleFor(x => x.text).NotEmpty().Length(0, 160);
+    }
 }

@@ -2,17 +2,55 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
-    private readonly ICheepRepository<Cheep, Author> _service;
+    [BindProperty]
+    public NewCheep NewCheep {get; set;} = new();
+
+    readonly ICheepRepository<Cheep, Author> _cheepService;
+    readonly IAuthorRepository<Author, Cheep> _authorService;
+
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public PublicModel(ICheepRepository<Cheep, Author> service)
+    public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep> authorService)
     {
-        _service = service;
+        _cheepService = cheepService;
+        _authorService = authorService;
+    }
+
+    public async Task<IActionResult> OnPost()
+    {
+
+        AsyncPadlock padlock = new();
+        var userName = User.Identity.Name;
+
+        try
+        {
+        await padlock.Lock();
+        var author = await _authorService.GetAuthorByName(userName);
+
+        // Create new auther if does not exist in database ready
+        if (author is null) 
+        {
+            await _authorService.CreateAuthor(userName);
+            author = await _authorService.GetAuthorByName(userName);
+        }
+
+        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+        
+        await _cheepService.CreateCheep(cheep, author);
+
+        }
+        finally
+        {
+            padlock.Dispose();
+        }
+
+        return Redirect("https://localhost:5273/" + userName);
     }
 
     /* get method with pagination*/
@@ -23,8 +61,27 @@ public class PublicModel : PageModel
         int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
-        (Cheeps, ViewData["CheepsCount"]) = await _service.GetSome(offset, limit);
+        AsyncPadlock padlock = new();
+        try
+        {
+            await padlock.Lock();
+
+            (Cheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
+            ViewData["CheepsCount"] = cheepsCount;
+        }
+        finally
+        {
+            padlock.Dispose();
+        }
 
         return Page();
     }
+}
+
+public class NewCheep 
+{
+    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
+    [MaxLength(160)]
+    [Display(Name = "text")]
+    public string? Message {get; set;} = string.Empty;
 }

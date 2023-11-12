@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
+using Chirp.Core;
 
 [Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
@@ -179,15 +180,16 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
 
+            var cheep = new CheepCreateDTO(message, authorName);
             // Act            
             try 
             {
-                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
+                await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
             } catch 
             {
-                ar.CreateAuthor(authorName, authorEmail);
+                await ar.CreateAuthor(authorName, authorEmail);
                 await context.SaveChangesAsync();
-                cr.CreateCheep(await ar.GetAuthorByName(authorName), message);
+                await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
             } finally 
             {
                 await context.SaveChangesAsync();

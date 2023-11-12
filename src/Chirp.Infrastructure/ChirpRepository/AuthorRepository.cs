@@ -3,18 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
+using System;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
 public class AuthorRepository : IAuthorRepository<Author, Cheep>
 {
     protected DbSet<Author> DbSet;
-    protected int maxid;
+    protected ChirpDBContext context;
 
     public AuthorRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Set<Author>();
-        maxid = GetMaxId() + 1;
+        DbSet = dbContext.Authors;
+        context = dbContext;
     }
 
     #region IAuthorRepository<Author, Cheep> Members
@@ -22,6 +23,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
     public void Insert(Author entity)
     {
         DbSet.Add(entity);
+        context.SaveChanges();
     }
 
     public void Delete(Author entity)
@@ -51,18 +53,20 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         int cheepsCount = 0;
 
-        if (GetAuthorByName(author) is null)
+        var authorEntity = await GetAuthorByName(author);
+
+        if (authorEntity is null)
         {
             return new Tuple<List<CheepDTO>, int>(new List<CheepDTO>(), cheepsCount);
         }
         else
         {
-            cheepsCount = DbSet.Entry(await GetAuthorByName(author))
+            cheepsCount = DbSet.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query().Count();
         }
 
-        List<CheepDTO> cheeps = DbSet.Entry(await GetAuthorByName(author))
+        List<CheepDTO> cheeps = DbSet.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
@@ -99,10 +103,15 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return author;
     }
 
-    public async Task CreateAuthor(string name, string email)
+    public async Task CreateAuthor(string name, string? email = null)
     {
         Author? author = null;
-        author = await GetAuthorByEmail(email);
+
+        if (email is not null)
+        {
+            author = await GetAuthorByEmail(email);
+        }
+
         if (author is null)
         {
             author = await GetAuthorByName(name);
@@ -115,25 +124,16 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (author is null)
         {
-            Insert(new Author()
+            var authorEnity = new Author()
             {
-                AuthorId = maxid,
                 Name = name,
-                Email = email,
+                Email = email ?? null,
                 Cheeps = new List<Cheep>()
-            });
-            maxid++;
+            };
+            Insert(authorEnity);
         }
     }
 
-    public int GetMaxId()
-    {
-        var query = (from author_ in DbSet
-                     select author_.AuthorId)
-                    .ToList();
-
-        return query.Max();
-    }
 
     // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
     // {
