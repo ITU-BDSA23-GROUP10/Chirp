@@ -1,6 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
-using SimpleDB;
 using Xunit;
 
 namespace Chirp.CLI.test;
@@ -30,6 +28,7 @@ public class ChirpCliHttpClient_UnitTests
         Assert.Equal(expectedBaseAddress, actualBaseAdress);
     }
 
+    /* commented out these tests until the sql server is up on azure
     //this tests to see whether or not the endpoint /cheeps works from the web app url
     /*[Fact]
     public async Task HttpClient_IsItCorrectEndpoint_OnGetCheeps()
@@ -58,5 +57,6 @@ public class ChirpCliHttpClient_UnitTests
         //assert
         Assert.NotEmpty(cheeps);
         
-    }*/
+    }
+    */
 }

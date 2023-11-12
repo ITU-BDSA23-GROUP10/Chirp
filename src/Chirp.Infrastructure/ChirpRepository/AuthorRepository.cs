@@ -51,18 +51,20 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         int cheepsCount = 0;
 
-        if (GetAuthorByName(author) is null)
+        var authorEntity = await GetAuthorByName(author);
+
+        if (authorEntity is null)
         {
             return new Tuple<List<CheepDTO>, int>(new List<CheepDTO>(), cheepsCount);
         }
         else
         {
-            cheepsCount = DbSet.Entry(await GetAuthorByName(author))
+            cheepsCount = DbSet.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query().Count();
         }
 
-        List<CheepDTO> cheeps = DbSet.Entry(await GetAuthorByName(author))
+        List<CheepDTO> cheeps = DbSet.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)

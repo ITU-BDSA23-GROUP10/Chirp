@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Chirp.Infrastructure.Models;
 
 public record Author
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int AuthorId { get; set; }
     public required string Name { get; set; }
     public required string Email { get; set; }

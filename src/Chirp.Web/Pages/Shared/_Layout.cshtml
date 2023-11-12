@@ -24,7 +24,7 @@
         <a href="/" style="text-decoration: none; color: white;">Chirp!</a>
     </h1>
         <div class=navigation>
-        @if (User.Identity.IsAuthenticated)
+        @if (User.Identity is not null && User.Identity.IsAuthenticated)
         {
             <div>
                 <a href="/@(User.Identity.Name)">my timeline</a> |
