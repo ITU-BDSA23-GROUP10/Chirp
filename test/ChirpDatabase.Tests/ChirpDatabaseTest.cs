@@ -22,7 +22,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
         return _sqlServer.DisposeAsync().AsTask();
     }
 
-    private async Task<ChirpDBContext> SetupContext(string ConnectionString)
+    private static ChirpDBContext SetupContext(string ConnectionString)
     {
         var contextOptions = new DbContextOptionsBuilder<ChirpDBContext>()
             .UseSqlServer(ConnectionString)
@@ -39,7 +39,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
     public async void CreateValidCheepInDatabase_WhereAuthorExists(string authorName, string message)
     {   
         // Arrange
-        var context = await SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(_sqlServer.GetConnectionString());
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
@@ -61,7 +61,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
     public async void Create100Cheeps_ReadMostResent32()
     {
         // Arrange
-        var context = await SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(_sqlServer.GetConnectionString());
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
@@ -81,5 +81,25 @@ public class ChirpDatabaseTest : IAsyncLifetime
         Assert.Equal(100, allCheeps.Item2); // All cheeps are created
         Assert.Equal(32, cheeps.Item1.Count); // Only getting 32 cheeps
         Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message); // The cheeps gotten is the most resent 
+    }
+
+    [Theory]
+    [InlineData("Obi-Wan", "obi-wan@jedi.com")]
+    [InlineData("General Grievous", "xXjediSlayerXx@sith.co.uk")]
+    public async void CreateAuthorsWithEmail(string name, string email)
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+    
+        var authorService = new AuthorRepository(context);
+
+        // Act
+        await authorService.CreateAuthor(name, email);
+        
+        // Assert
+        var authorByName = await authorService.GetAuthorByName(name);
+        Assert.Equal(name, authorByName.Name);
+        var authorByEmail = await authorService.GetAuthorByEmail(email);
+        Assert.Equal(email, authorByEmail.Email);
     }
 }
