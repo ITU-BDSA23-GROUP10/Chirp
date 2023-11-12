@@ -58,7 +58,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
     }
 
     [Fact]
-    public async void Create100Cheeps_ReadLast32()
+    public async void Create100Cheeps_ReadMostResent32()
     {
         // Arrange
         var context = await SetupContext(_sqlServer.GetConnectionString());
@@ -70,21 +70,16 @@ public class ChirpDatabaseTest : IAsyncLifetime
         for (int i = 0; i < 100; i++)
         {
             var authorName = "Test author " + i;
-            var newAuthor = authorService.CreateAuthor(authorName);
+            await authorService.CreateAuthor(authorName);
             var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
-            await newAuthor;
-            cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
-        }
-
-        while (cheepService.GetAll().Item2 != 100) {
-            Thread.Sleep(40);
+            await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
         }
 
         // Assert
         var allCheeps = cheepService.GetAll();
         var cheeps = await cheepService.GetSome(0, 32);
-        Assert.Equal(100, allCheeps.Item2);
-        Assert.Equal(32, cheeps.Item1.Count);
-        Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message);
+        Assert.Equal(100, allCheeps.Item2); // All cheeps are created
+        Assert.Equal(32, cheeps.Item1.Count); // Only getting 32 cheeps
+        Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message); // The cheeps gotten is the most resent 
     }
 }
