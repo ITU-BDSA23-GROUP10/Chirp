@@ -11,8 +11,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 {
     protected DbSet<Cheep> DbSet;
     protected ChirpDBContext context;
-    protected CheepCreateValidator validator = new CheepCreateValidator();
-
+    protected CheepCreateValidator validator = new CheepCreateValidator();  
 
     public CheepRepository(ChirpDBContext dbContext)
     {
@@ -107,6 +106,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             Console.WriteLine(e.Message, ", failed validation");
         }
     }
+    
     #endregion
 }
 
