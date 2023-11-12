@@ -81,7 +81,9 @@ public class ChirpDatabaseTest : IAsyncLifetime
         }
 
         // Assert
+        var allCheeps = cheepService.GetAll();
         var cheeps = await cheepService.GetSome(0, 32);
+        Assert.Equal(100, allCheeps.Item2);
         Assert.Equal(32, cheeps.Item1.Count);
         Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message);
     }
