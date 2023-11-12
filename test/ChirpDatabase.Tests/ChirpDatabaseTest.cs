@@ -22,15 +22,22 @@ public class ChirpDatabaseTest : IAsyncLifetime
         return _sqlServer.DisposeAsync().AsTask();
     }
 
-    [Fact]
-    public async void CreateACheepInDatabase_WhereAuthorExists()
-    {   
-        // Assert
+    private async Task<ChirpDBContext> SetupContext(string ConnectionString)
+    {
         var contextOptions = new DbContextOptionsBuilder<ChirpDBContext>()
-            .UseSqlServer(_sqlServer.GetConnectionString())
+            .UseSqlServer(ConnectionString)
             .Options;
         var context = new ChirpDBContext(contextOptions);
         context.Database.Migrate();
+        
+        return context;
+    }
+
+    [Fact]
+    public async void CreateValidCheepInDatabase_WhereAuthorExists()
+    {   
+        // Assert
+        var context = await SetupContext(_sqlServer.GetConnectionString());
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
