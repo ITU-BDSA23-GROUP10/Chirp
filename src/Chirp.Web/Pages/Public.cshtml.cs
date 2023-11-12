@@ -11,7 +11,7 @@ public class PublicModel : PageModel
     [BindProperty]
     public NewCheep NewCheep {get; set;} = new();
 
-    private readonly ICheepRepository<Cheep, Author> _cheepService;
+    readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep> _authorService;
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
@@ -22,7 +22,7 @@ public class PublicModel : PageModel
         _authorService = authorService;
     }
 
-     public async Task<IActionResult> OnPost()
+    public async Task<IActionResult> OnPost()
     {
 
         AsyncPadlock padlock = new();

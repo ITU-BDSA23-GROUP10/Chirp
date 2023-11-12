@@ -11,11 +11,11 @@ public class UserTimelineModel : PageModel
     public NewCheep NewCheep {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
-    private readonly IAuthorRepository<Author, Cheep> _authorService;
+    readonly IAuthorRepository<Author, Cheep> _authorService;
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(IAuthorRepository<Author, Cheep> authorService, ICheepRepository<Cheep, Author> cheepService)
+    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep> authorService)
     {
         _authorService = authorService;
         _cheepService = cheepService;
