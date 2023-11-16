@@ -50,7 +50,7 @@ public class PublicModel : PageModel
             padlock.Dispose();
         }
 
-        return Redirect("https://localhost:5273/" + userName);
+        return Redirect("/" + userName);
     }
 
     /* get method with pagination*/
