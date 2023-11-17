@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace PlaywrightTests;
 
+
+//run thes test
+//pwsh bin/Debug/net8.0/playwright.ps1 codegen https://localhost:5273 --ignore-https-errors
+
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
 class Program
@@ -16,11 +20,11 @@ class Program
         {
             Headless = false,
         });
-        var context = await browser.NewContextAsync();
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
         var page = await context.NewPageAsync();
 
-        await page.GotoAsync("https://bdsagroup10chirprazor.azurewebsites.net/");
+        await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
 
@@ -47,11 +51,11 @@ class Program
         {
             Headless = false,
         });
-        var context = await browser.NewContextAsync();
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
         var page = await context.NewPageAsync();
 
-        await page.GotoAsync("https://bdsagroup10chirprazor.azurewebsites.net/");
+        await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
 
