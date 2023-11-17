@@ -30,13 +30,14 @@
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.Author">@cheep.Author</a>
-                        </strong>
-                        @cheep.Message
-                        <small>&mdash; @cheep.Timestamp</small>
-                    </p>
+                    <div class="activity">
+                        <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
+                        <div>
+                            <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
+                            <small>&mdash; @cheep.Timestamp</small>
+                            <p>@cheep.Message</p>
+                        </div>
+                    </div>
                 </li>
             }
         </ul>

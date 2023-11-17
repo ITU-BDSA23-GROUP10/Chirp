@@ -3,13 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
 public class CheepRepository : ICheepRepository<Cheep, Author>
 {
-    protected static DbSet<Cheep> DbSet;
+    protected DbSet<Cheep> DbSet;
     protected ChirpDBContext context;
+    protected CheepCreateValidator validator = new CheepCreateValidator();  
 
     public CheepRepository(ChirpDBContext dbContext)
     {
@@ -79,19 +81,36 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         }*/
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
-        DateTime timestamp = DateTime.Now;
-        Insert(new Cheep()
+        
+        try
         {
-            Author = author,
-            Text = newCheep.text,
-            TimeStamp = timestamp
-        });
+            var validationResult = validator.Validate(newCheep);
+            bool status = validationResult.IsValid;
+
+            if(!status)
+            {
+                List<ValidationFailure> failures = validationResult.Errors;
+                throw new Exception(string.Join(", ", failures));
+            }
+
+            DateTime timestamp = DateTime.Now;
+            Insert(new Cheep()
+            {
+                Author = author,
+                Text = newCheep.text,
+                TimeStamp = timestamp
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message, ", failed validation");
+        }
     }
     
     #endregion
 }
 
-public class CheepCreateValidator : AbstractValidator<CheepCreateDTO>
+public class CheepCreateValidator : AbstractValidator<CheepCreateDTO> 
 {
     public CheepCreateValidator()
     {

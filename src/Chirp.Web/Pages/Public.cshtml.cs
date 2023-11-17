@@ -1,20 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
-
     [BindProperty]
     public NewCheep NewCheep {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep> _authorService;
-    
+
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
     public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep> authorService)
@@ -51,7 +50,7 @@ public class PublicModel : PageModel
             padlock.Dispose();
         }
 
-        return Redirect("https://localhost:5273/" + userName);
+        return Redirect("/" + userName);
     }
 
     /* get method with pagination*/
