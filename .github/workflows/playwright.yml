@@ -16,6 +16,6 @@ jobs:
         dotnet-version: 8.0.x
     - run: dotnet build
     - name: Ensure browsers are installed
-      run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps --ignore-https-errors
+      run: pwsh test/PlaywrightTests/bin/Debug/net8.0/playwright.ps1 install --with-deps --ignore-https-errors
     - name: Run your tests
       run: dotnet test
