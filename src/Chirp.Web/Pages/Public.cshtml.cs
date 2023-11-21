@@ -11,11 +11,14 @@ public class PublicModel : PageModel
     [BindProperty]
     public NewCheep NewCheep {get; set;} = new();
 
+    [BindProperty]
+    public NewFollow NewFollow {get; set;} = new();
+
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
 
-    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
+    public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();
 
     public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
     {
@@ -68,7 +71,7 @@ public class PublicModel : PageModel
         {
             await padlock.Lock();
 
-            (Cheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
+            (DisplayedCheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
             ViewData["CheepsCount"] = cheepsCount;
         }
         finally
@@ -78,7 +81,23 @@ public class PublicModel : PageModel
 
         return Page();
     }
+
+    public async Task<IActionResult> OnPostFollow() 
+    {
+        var LoggedInUserName = User.Identity.Name;
+        var FollowedUserName = NewFollow.Author;
+
+        var followDTO = new FollowDTO()
+        {
+            followerId = await _authorService.GetAuthorByName(LoggedInUserName).AuthorId,
+            followingId = await _authorService.GetAuthorByName(FollowedUserName).AuthorId
+        };
+        await _userService.FollowUser(followDTO);
+
+        return Redirect("/" + LoggedInUserName);
+    }
 }
+
 
 public class NewCheep 
 {
@@ -86,4 +105,10 @@ public class NewCheep
     [MaxLength(160)]
     [Display(Name = "text")]
     public string? Message {get; set;} = string.Empty;
+}
+
+public class NewFollow 
+{
+    [Display(Name = "author")]
+    public string? Author {get; set;} = string.Empty;
 }

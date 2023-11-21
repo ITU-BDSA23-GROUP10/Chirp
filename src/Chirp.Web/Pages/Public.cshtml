@@ -34,6 +34,15 @@
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
                             <p>@cheep.Message</p>
+                            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                            {  
+                                // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
+                                //@if() Add if statement to check if you are following that person
+                                <form  asp-page-handler="Follow" method="post">
+                                    <input type="hidden" name="author" value="@cheep.Author"/>
+                                    <button class="FollowButton"> Follow </button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </li>
