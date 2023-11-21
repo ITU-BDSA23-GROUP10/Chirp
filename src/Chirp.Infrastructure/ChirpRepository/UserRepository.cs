@@ -70,6 +70,13 @@ public class UserRepository : IUserRepository<User>
         return user;
     }
 
+    public async Task<int> GetUserIDByName(string name)
+    {
+        // FirstOrDefault returns null if no User is found.
+        var user = await SearchFor(_user => _user.Name == name).FirstOrDefaultAsync();
+        return user?.UserId ?? -1;
+    }
+
     public async Task CreateUser(string name, string? email = null)
     {
         User? user = null;

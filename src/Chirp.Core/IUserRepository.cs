@@ -16,6 +16,9 @@ public interface IUserRepository<User>
     Task<User?> GetUserByName(string name);
 
     Task<User?> GetUserByEmail(string email);
+
+    Task<int> GetUserIDByName(string name);
+
     Task CreateUser(string name, string? email = null);
     Task FollowUser(FollowDTO followDTO);
 }

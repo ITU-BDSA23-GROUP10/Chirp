@@ -92,11 +92,11 @@ public class PublicModel : PageModel
         var LoggedInUserName = User.Identity.Name;
         var FollowedUserName = NewFollow.Author;
 
-        var followDTO = new FollowDTO()
-        {
-            followerId = await _authorService.GetAuthorByName(LoggedInUserName).AuthorId,
-            followingId = await _authorService.GetAuthorByName(FollowedUserName).AuthorId
-        };
+        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+
+        var followDTO = new FollowDTO(followerId, followingId);
+        
         await _userService.FollowUser(followDTO);
 
         return Redirect("/" + LoggedInUserName);
