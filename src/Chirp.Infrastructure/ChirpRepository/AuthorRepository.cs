@@ -29,6 +29,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
     public void Delete(Author entity)
     {
         DbSet.Remove(entity);
+        context.SaveChanges();
     }
 
     public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
@@ -96,21 +97,9 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
         return author;
     }
 
-    public async Task<Author?> GetAuthorByEmail(string email)
-    {
-        var author = await SearchFor(_author => _author.Email == email).FirstOrDefaultAsync();
-
-        return author;
-    }
-
     public async Task CreateAuthor(string name, string? email = null)
     {
         Author? author = null;
-
-        if (email is not null)
-        {
-            author = await GetAuthorByEmail(email);
-        }
 
         if (author is null)
         {
@@ -124,13 +113,13 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
 
         if (author is null)
         {
-            var authorEnity = new Author()
+            var authorEntity = new Author()
             {
                 Name = name,
                 Email = email ?? null,
                 Cheeps = new List<Cheep>()
             };
-            Insert(authorEnity);
+            Insert(authorEntity);
         }
     }
 
