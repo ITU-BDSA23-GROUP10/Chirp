@@ -45,7 +45,7 @@ public class ChirpDBContext : DbContext
             user.Property(us => us.Email).HasMaxLength(50);
 
             user.HasMany(us => us.Following)
-            .WithOne(us => us.Followers)
+            .WithMany(us => us.Followers)
             .HasForeignKey(us => us.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         });

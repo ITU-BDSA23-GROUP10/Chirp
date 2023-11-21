@@ -12,9 +12,9 @@ public class UserRepository : IUserRepository<User>
     protected DbSet<User> DbSet;
     protected ChirpDBContext context;
 
-    public AuthorRepository(ChirpDBContext dbContext)
+    public UserRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Authors;
+        DbSet = dbContext.Users;
         context = dbContext;
     }
 
@@ -32,29 +32,29 @@ public class UserRepository : IUserRepository<User>
         context.SaveChanges();
     }
 
-    public IQueryable<Author> SearchFor(Expression<Func<User, bool>> predicate)
+    public IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
     {
         return DbSet.Where(predicate);
     }
 
-    public async Task<Author?> GetUserById(int id)
+    public async Task<User?> GetUserById(int id)
     {
         return await DbSet.FindAsync(id);
     }
 
-    public async Task<Author?> GetUserByName(string name)
+    public async Task<User?> GetUserByName(string name)
     {
-        // FirstOrDefault returns null if no Author is found.
-        var author = await SearchFor(_author => _author.Name == name).FirstOrDefaultAsync();
+        // FirstOrDefault returns null if no User is found.
+        var user = await SearchFor(_user => _user.Name == name).FirstOrDefaultAsync();
 
-        return author;
+        return user;
     }
 
-    public async Task<Author?> GetUserByEmail(string email)
+    public async Task<User?> GetUserByEmail(string email)
     {
-        var author = await SearchFor(_author => _author.Email == email).FirstOrDefaultAsync();
+        var user = await SearchFor(_user => _user.Email == email).FirstOrDefaultAsync();
 
-        return author;
+        return user;
     }
 
     public async Task CreateUser(string name, string? email = null)
@@ -81,8 +81,7 @@ public class UserRepository : IUserRepository<User>
             var userEntity = new User()
             {
                 Name = name,
-                Email = email ?? null,
-                Cheeps = new List<Cheep>()
+                Email = email ?? null
             };
             Insert(userEntity);
         }

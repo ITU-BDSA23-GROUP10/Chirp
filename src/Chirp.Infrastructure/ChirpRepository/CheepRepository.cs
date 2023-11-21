@@ -57,7 +57,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                     .Take(limit)
                      select new CheepDTO
                      (
-                         cheep.Author.Name,
+                         cheep.Author.User.Name,
                          cheep.Text,
                          cheep.TimeStamp.ToString()
                      ))
