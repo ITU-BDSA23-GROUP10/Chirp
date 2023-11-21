@@ -41,7 +41,12 @@ public class PublicModel : PageModel
         // Create new auther if does not exist in database ready
         if (author is null) 
         {
-            await _authorService.CreateAuthor(await _userService.GetUserByName(userName));
+            var user = await _userService.GetUserByName(userName);
+            if (user is null) {
+                await _userService.CreateUser(userName);
+                user = await _userService.GetUserByName(userName);
+            }
+            await _authorService.CreateAuthor(user);
             author = await _authorService.GetAuthorByName(userName);
         }
 
