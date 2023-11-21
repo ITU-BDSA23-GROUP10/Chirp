@@ -56,6 +56,7 @@ public class ChirpDBContext : DbContext
         {
             // code from https://stackoverflow.com/a/2912896
             follows.HasKey(_follow => new { _follow.FollowerId, _follow.FollowingId });
+            
         });
 
         // Authors

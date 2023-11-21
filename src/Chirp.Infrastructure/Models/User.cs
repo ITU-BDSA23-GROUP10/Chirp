@@ -7,11 +7,11 @@ public record User {
     public int UserId { get; set; }
     public required string Name { get; set; }
     public string? Email { get; set; }
-    public HashSet<User> Following { get; set; } = new HashSet<User>();
-    public HashSet<User> Followers { get; set; } = new HashSet<User>();
 }
 
 public record Follows {
+    [ForeignKey("User")]
     public required int FollowerId { get; set; }
+    [ForeignKey("User")]
     public required int FollowingId { get; set; }
 }
