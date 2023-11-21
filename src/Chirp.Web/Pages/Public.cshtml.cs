@@ -12,14 +12,16 @@ public class PublicModel : PageModel
     public NewCheep NewCheep {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
-    readonly IAuthorRepository<Author, Cheep> _authorService;
+    readonly IAuthorRepository<Author, Cheep, User> _authorService;
+    readonly IUserRepository<User> _userService;
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep> authorService)
+    public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
     {
         _cheepService = cheepService;
         _authorService = authorService;
+        _userService = userService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -36,7 +38,7 @@ public class PublicModel : PageModel
         // Create new auther if does not exist in database ready
         if (author is null) 
         {
-            await _authorService.CreateAuthor(userName);
+            await _authorService.CreateAuthor(await _userService.GetUserByName(userName));
             author = await _authorService.GetAuthorByName(userName);
         }
 

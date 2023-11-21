@@ -7,8 +7,8 @@ namespace Chirp.Core;
 
 public interface IUserRepository<User>
 {
-    void Insert(User entity);
-    void Delete(User entity);
+    void InsertUser(User entity);
+    void DeleteUser(User entity);
     IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate);
 
     Task<User?> GetUserById(int id);
@@ -16,6 +16,6 @@ public interface IUserRepository<User>
     Task<User?> GetUserByName(string name);
 
     Task<User?> GetUserByEmail(string email);
-
     Task CreateUser(string name, string? email = null);
+    Task FollowUser(FollowDTO followDTO);
 }

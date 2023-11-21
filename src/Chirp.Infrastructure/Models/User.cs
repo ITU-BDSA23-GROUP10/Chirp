@@ -10,3 +10,8 @@ public record User {
     public HashSet<User> Following { get; set; } = new HashSet<User>();
     public HashSet<User> Followers { get; set; } = new HashSet<User>();
 }
+
+public record Follows {
+    public required int FollowerId { get; set; }
+    public required int FollowingId { get; set; }
+}

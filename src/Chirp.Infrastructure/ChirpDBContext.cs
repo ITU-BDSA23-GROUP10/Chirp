@@ -10,6 +10,7 @@ public class ChirpDBContext : DbContext
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Follows> Follows { get; set; }
     // public string DbPath { get; }
 
     /*public ChirpDBContext()
@@ -44,10 +45,17 @@ public class ChirpDBContext : DbContext
             user.HasIndex(us => us.Name).IsUnique();
             user.Property(us => us.Email).HasMaxLength(50);
 
-            user.HasMany(us => us.Following)
-            .WithMany(us => us.Followers)
-            .HasForeignKey(us => us.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // user.HasMany(us => us.Following)
+            // .WithMany(us => us.Followers)
+            // .HasForeignKey(us => us.UserId)
+            // .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Follows
+        modelBuilder.Entity<Follows>( follows => 
+        {
+            // code from https://stackoverflow.com/a/2912896
+            follows.HasKey(_follow => new { _follow.FollowerId, _follow.FollowingId });
         });
 
         // Authors

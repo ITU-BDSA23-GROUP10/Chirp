@@ -9,37 +9,50 @@ namespace Chirp.Infrastructure.ChirpRepository;
 
 public class UserRepository : IUserRepository<User>
 {
-    protected DbSet<User> DbSet;
+    protected DbSet<User> DbSetUser; 
+    protected DbSet<Follows> DbSetFollows;   
     protected ChirpDBContext context;
 
     public UserRepository(ChirpDBContext dbContext)
     {
-        DbSet = dbContext.Users;
+        DbSetUser = dbContext.Users;
         context = dbContext;
     }
 
     #region IUserRepository<User> Members
 
-    public void Insert(User entity)
+    public void InsertUser(User entity)
     {
-        DbSet.Add(entity);
+        DbSetUser.Add(entity);
         context.SaveChanges();
     }
 
-    public void Delete(User entity)
+    public void DeleteUser(User entity)
     {
-        DbSet.Remove(entity);
+        DbSetUser.Remove(entity);
+        context.SaveChanges();
+    }
+
+    public void InsertFollow(Follows entity)
+    {
+        DbSetFollows.Add(entity);
+        context.SaveChanges();
+    }
+
+    public void DeleteFollow(Follows entity)
+    {
+        DbSetFollows.Remove(entity);
         context.SaveChanges();
     }
 
     public IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
     {
-        return DbSet.Where(predicate);
+        return DbSetUser.Where(predicate);
     }
 
     public async Task<User?> GetUserById(int id)
     {
-        return await DbSet.FindAsync(id);
+        return await DbSetUser.FindAsync(id);
     }
 
     public async Task<User?> GetUserByName(string name)
@@ -83,8 +96,19 @@ public class UserRepository : IUserRepository<User>
                 Name = name,
                 Email = email ?? null
             };
-            Insert(userEntity);
+            InsertUser(userEntity);
         }
     }
+
+    public async Task FollowUser(FollowDTO followDTO)
+    {
+        var newFollow = new Follows()
+        {
+            FollowerId = followDTO.followerId,
+            FollowingId = followDTO.followingId
+        };
+        InsertFollow(newFollow);
+    }
+
     #endregion
 }

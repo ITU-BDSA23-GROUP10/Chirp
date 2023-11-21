@@ -48,6 +48,13 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .FirstOrDefaultAsync() ?? throw new Exception($"Author {authorName} not found");
         return author;
     }
+    public async Task<Author?> GetAuthorByName(string name)
+    {
+        // FirstOrDefault returns null if no User is found.
+        var author = await SearchFor(_author => _author.User.Name == name).FirstOrDefaultAsync();
+
+        return author;
+    }
 
     public async Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit)
     {
