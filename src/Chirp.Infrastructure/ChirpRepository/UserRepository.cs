@@ -109,14 +109,18 @@ public class UserRepository : IUserRepository<User>
     }
 
     public async Task FollowUser(FollowDTO followDTO)
-    {
-        var newFollow = new Follows()
+    {  
+        if(followDTO.followerId == followDTO.followingId)
         {
-            FollowerId = followDTO.followerId,
-            FollowingId = followDTO.followingId
-        };
-        InsertFollow(newFollow);
-        
+            throw new Exception("You cannot follow yourself");
+        } else {
+            var newFollow = new Follows()
+            {
+                FollowerId = followDTO.followerId,
+                FollowingId = followDTO.followingId
+            };
+            InsertFollow(newFollow);
+        }
     }
 
     #endregion
