@@ -133,7 +133,7 @@ public class UserRepository : IUserRepository<User>
         return await DbSetFollows.AnyAsync(f => f.FollowerId == followerId && f.FollowingId == followingId);
     }
 
-    //unfollowing
+    //unfollowing an author
     public async Task UnfollowUser(FollowDTO unfollowDTO)
     {
         var record = await DbSetFollows.FirstOrDefaultAsync(f => f.FollowerId == unfollowDTO.followerId && f.FollowingId == unfollowDTO.followingId);
@@ -147,6 +147,19 @@ public class UserRepository : IUserRepository<User>
             throw new Exception("Unfollow record does not exist");
         }
     }
+
+    /*
+    //to show all cheeps a logged in user is following 
+    public async Task<List<User>> GetFollowedUsers(int userId)
+    {
+        var followedUsers = await context.Follows
+            .Where(f => f.FollowerId == userId)
+            .Select(f => f.Following)
+            .ToListAsync();
+
+        return followedUsers;
+    }*/
+
 
     #endregion
 }

@@ -61,6 +61,8 @@ public class UserTimelineModel : PageModel
         ViewData["Author"] = author;
         ViewData["Page"] = page;
 
+        //var userName = User.Identity.Name;
+
         int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
@@ -69,6 +71,11 @@ public class UserTimelineModel : PageModel
         try
         {
             await padlock.Lock();
+            
+            /*var userId = await _userService.GetUserIDByName(userName);
+            var followedUsers = await _userService.GetFollowedUsers(userId);
+            var followedUserNames = followedUsers.Select(u => u.Name).ToList();*/
+
             (Cheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
             ViewData["CheepsCount"] = cheepsCount;
         }

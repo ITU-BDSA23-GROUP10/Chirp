@@ -92,6 +92,7 @@ public class PublicModel : PageModel
         return Page();
     }
 
+    //follow form button
     public async Task<IActionResult> OnPostFollow() 
     {
         var LoggedInUserName = User.Identity.Name;
@@ -118,9 +119,10 @@ public class PublicModel : PageModel
         return Redirect("/" + LoggedInUserName);
     }
 
+    //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
-        // Convert the username to userId
+        // Convert the username to Id
         var followerId = await _userService.GetUserIDByName(User.Identity.Name);
         var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 

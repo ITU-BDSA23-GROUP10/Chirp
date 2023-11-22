@@ -20,7 +20,10 @@ public interface IUserRepository<User>
     Task<int> GetUserIDByName(string name);
 
     Task CreateUser(string name, string? email = null);
+
+    //follower
     Task FollowUser(FollowDTO followDTO);
     Task<bool> IsFollowing(int followerId, int followingId);
     Task UnfollowUser(FollowDTO unfollowDTO);
+    //Task<List<User>> GetFollowedUsers(int userId);
 }
