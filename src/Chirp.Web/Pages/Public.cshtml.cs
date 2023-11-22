@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
-using CsvHelper;
 
 namespace Chirp.Web.Pages;
 
@@ -103,7 +102,6 @@ public class PublicModel : PageModel
             Console.WriteLine(e.Message);
             await _userService.CreateUser(LoggedInUserName);
         }
-
 
         var followerId = await _userService.GetUserIDByName(LoggedInUserName);
         var followingId = await _userService.GetUserIDByName(FollowedUserName);

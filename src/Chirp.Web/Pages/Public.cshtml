@@ -1,6 +1,9 @@
 ﻿@page "/"
 @model Chirp.Web.Pages.PublicModel
 @using System
+@using Chirp.Core
+@using Chirp.Infrastructure.Models;
+@inject IUserRepository<User> UserRepository
 @{
 
     ViewData["Title"] = "Chirp!";
@@ -34,14 +37,42 @@
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
                             <p>@cheep.Message</p>
+                 
                             @if (User.Identity is not null && User.Identity.IsAuthenticated)
                             {  
+                                //get the id of the logged in user                    
+                                var userIdTask = UserRepository.GetUserIDByName(User.Identity.Name);
+                                
+                                //this is Async and .Result is not Asynchrous 
+                                Task.WaitAll(userIdTask);
+
+                                var userId = userIdTask.Result;
+                                <p>this is the userId @userId</p>
+                                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
+                                <p>this is the authorId @authorId</p>
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
-                                <form  asp-page-handler="Follow" method="post">
-                                    <input type="hidden" name="author" value="@cheep.Author"/>
-                                    <button class="FollowButton"> Follow </button>
-                                </form>
+                                if(userId == authorId)
+                                {
+                                    //silence is golden (no form is shown since the logged in user shouldnt follow themselves)
+                                }
+                                else if(userId != authorId)
+                                {
+                                    if(UserRepository.IsFollowing(userId, authorId).Result)
+                                    {
+                                        <form asp-page-handler="Unfollow" method="post">
+                                            <input type="hidden" name="author" value="@authorId"/>
+                                            <button class="FollowButton"> Unfollow </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-page-handler="Follow" method="post" >
+                                            <input type="hidden" name="author" value="@authorId"/>
+                                            <button class="FollowButton"> Follow </button>
+                                        </form>
+                                    }
+                                }
                             }
                         </div>
                     </div>
