@@ -43,13 +43,13 @@
                                 //get the id of the logged in user                    
                                 var userIdTask = UserRepository.GetUserIDByName(User.Identity.Name);
                                 
-                                //this is Async and .Result is not Asynchrous 
+                                //the task is Async and .Result is not Asynchrous in razor, so this is a workaround for now - TODO should probably be done differently
                                 Task.WaitAll(userIdTask);
 
                                 var userId = userIdTask.Result;
-                                <p>this is the userId @userId</p>
+
                                 var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
-                                <p>this is the authorId @authorId</p>
+
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
@@ -58,7 +58,9 @@
                                 }
                                 else if(userId != authorId)
                                 {
-                                    if(UserRepository.IsFollowing(userId, authorId).Result)
+                                    var isFollowing = UserRepository.IsFollowing(userId, authorId).Result;
+                                    
+                                    if(isFollowing)
                                     {
                                         <form asp-page-handler="Unfollow" method="post">
                                             <input type="hidden" name="author" value="@authorId"/>

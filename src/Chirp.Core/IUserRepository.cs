@@ -21,4 +21,6 @@ public interface IUserRepository<User>
 
     Task CreateUser(string name, string? email = null);
     Task FollowUser(FollowDTO followDTO);
+    Task<bool> IsFollowing(int followerId, int followingId);
+    Task UnfollowUser(FollowDTO unfollowDTO);
 }

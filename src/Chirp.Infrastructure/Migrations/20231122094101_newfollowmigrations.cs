@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserAndFollow : Migration
+    public partial class newfollowmigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

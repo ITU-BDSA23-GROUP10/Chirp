@@ -110,13 +110,42 @@ public class UserRepository : IUserRepository<User>
 
     public async Task FollowUser(FollowDTO followDTO)
     {
-        var newFollow = new Follows()
+        var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
+
+        if (!exists)
         {
-            FollowerId = followDTO.followerId,
-            FollowingId = followDTO.followingId
-        };
-        InsertFollow(newFollow);
-        
+            var newFollow = new Follows()
+            {
+                FollowerId = followDTO.followerId,
+                FollowingId = followDTO.followingId
+            };
+            InsertFollow(newFollow);
+        }
+        else
+        {
+            throw new Exception("Follow record already exists");
+        }
+    }
+
+    //is the author following or not?
+    public async Task<bool> IsFollowing(int followerId, int followingId)
+    {
+        return await DbSetFollows.AnyAsync(f => f.FollowerId == followerId && f.FollowingId == followingId);
+    }
+
+    //unfollowing
+    public async Task UnfollowUser(FollowDTO unfollowDTO)
+    {
+        var record = await DbSetFollows.FirstOrDefaultAsync(f => f.FollowerId == unfollowDTO.followerId && f.FollowingId == unfollowDTO.followingId);
+
+        if (record != null)
+        {
+            DeleteFollow(record);
+        }
+        else
+        {
+            throw new Exception("Unfollow record does not exist");
+        }
     }
 
     #endregion
