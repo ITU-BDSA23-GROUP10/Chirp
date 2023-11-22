@@ -63,6 +63,8 @@ public class PublicModel : PageModel
         return Redirect("/" + userName);
     }
 
+    
+
     /* get method with pagination*/
     public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
     {
@@ -72,11 +74,14 @@ public class PublicModel : PageModel
         int offset = (page - 1) * limit;
 
         AsyncPadlock padlock = new();
+
+        
         try
         {
             await padlock.Lock();
 
             (DisplayedCheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
+            
             ViewData["CheepsCount"] = cheepsCount;
         }
         finally
@@ -111,6 +116,22 @@ public class PublicModel : PageModel
         await _userService.FollowUser(followDTO);
 
         return Redirect("/" + LoggedInUserName);
+    }
+
+    public async Task<IActionResult> OnPostUnfollow()
+    {
+        // Convert the username to userId
+        var followerId = await _userService.GetUserIDByName(User.Identity.Name);
+        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+
+        var unfollowDTO = new FollowDTO(followerId, followingId);
+            
+        await _userService.UnfollowUser(unfollowDTO);
+
+         // after the unfollowing set isFollowing to false so we can see the "follow" button again
+        //NewFollow.IsFollowing = false;
+
+        return Redirect("/" + User.Identity.Name);
     }
 }
 
