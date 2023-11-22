@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
+using CsvHelper;
 
 namespace Chirp.Web.Pages;
 
@@ -91,6 +92,18 @@ public class PublicModel : PageModel
     {
         var LoggedInUserName = User.Identity.Name;
         var FollowedUserName = NewFollow.Author;
+        
+        //Check if the user that is logged in exists
+        try {
+            var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
+            if (loggedInUser is null) {
+                throw new Exception("User does not exist");
+            }
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+            await _userService.CreateUser(LoggedInUserName);
+        }
+
 
         var followerId = await _userService.GetUserIDByName(LoggedInUserName);
         var followingId = await _userService.GetUserIDByName(FollowedUserName);

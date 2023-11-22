@@ -16,6 +16,7 @@ public class UserRepository : IUserRepository<User>
     public UserRepository(ChirpDBContext dbContext)
     {
         DbSetUser = dbContext.Users;
+        DbSetFollows = dbContext.Follows;
         context = dbContext;
     }
 
@@ -115,6 +116,7 @@ public class UserRepository : IUserRepository<User>
             FollowingId = followDTO.followingId
         };
         InsertFollow(newFollow);
+        
     }
 
     #endregion
