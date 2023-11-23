@@ -4,6 +4,7 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 
 
+
 namespace Chirp.Web.Pages;
 
 public class UserProfileModel : PageModel
@@ -25,8 +26,8 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         if(!User.Identity.IsAuthenticated) {
             return Redirect("/");
         }
-        if(_userService.GetUserByName(User.Identity.Name) == null) {
-            _userService.CreateUser(User.Identity.Name);
+        if(await _userService.GetUserByName(User.Identity.Name) == null) {
+            await _userService.CreateUser(User.Identity.Name);
         }
         var userName = User.Identity.Name;
         var user = await _userService.GetUserByName(userName);
@@ -43,6 +44,7 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         var user = await _userService.GetUserByName(userName);
         await _userService.DeleteAllFollowers(user.UserId);
         _userService.DeleteUser(user);
+
 
         return Redirect("/");
     }
