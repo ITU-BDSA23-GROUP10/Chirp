@@ -46,6 +46,7 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         _userService.DeleteUser(user);
 
 
+
         return Redirect("/");
     }
 

@@ -163,26 +163,16 @@ public class UserRepository : IUserRepository<User>
         return followedUsers;
     }
 
-    public async Task DeleteAllFollowers(int userId) {
-        //gets all users the user is following
-        List<int> followedUsers = await GetFollowedUsersId(userId);
-
-        //gets all users following the user
+    public async Task<List<int>> GetIdsFollowingUser(int userId) {
         var IdsFollowingUser = await DbSetFollows
             .Where(f => f.FollowingId == userId)
             .Select(f => f.FollowerId)
-            .ToListAsync();
+            .ToListAsync();    
 
-        //deletes all followers of the user
-        foreach(int id in IdsFollowingUser) {
-            var follow = new Follows() {
-                FollowerId = id,
-                FollowingId = userId
-            };
-            DeleteFollow(follow);
-            }
+        return IdsFollowingUser;       
+    }
 
-        //deletes all follows the user has
+    public async Task LoopDeleteFollowers(List<int> followedUsers, int userId) {
         foreach(int id in followedUsers) {
             var follow = new Follows() {
                 FollowerId = userId,
@@ -190,7 +180,22 @@ public class UserRepository : IUserRepository<User>
             };
             DeleteFollow(follow);
             }
-            
+        return;
+    }
+    
+    public async Task DeleteAllFollowers(int userId) {
+        //gets all users the user is following
+        List<int> followedUsers = await GetFollowedUsersId(userId);
+
+        //gets all users following the user
+        var IdsFollowingUser = await GetIdsFollowingUser(userId);
+
+        //deletes all followers of the user
+        await LoopDeleteFollowers(IdsFollowingUser, userId);
+
+        //deletes all follows the user has
+        await LoopDeleteFollowers(followedUsers, userId);
+        
         return;
         }
     #endregion
