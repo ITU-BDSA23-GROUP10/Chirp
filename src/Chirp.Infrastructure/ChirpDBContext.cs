@@ -56,19 +56,7 @@ public class ChirpDBContext : DbContext
         {
             // code from https://stackoverflow.com/a/2912896
             follows.HasKey(_follow => new { _follow.FollowerId, _follow.FollowingId });
-            /*
-             modelBuilder.Entity<Follows>()
-            .HasOne(f => f.Follower)
-            .WithMany(u => u.FollowingUsers)
-            .HasForeignKey(f => f.FollowerId)
-            .OnDelete(DeleteBehavior.NoAction); // or whatever behavior
-
-            modelBuilder.Entity<Follows>()
-            .HasOne(f => f.Following)
-            .WithMany(u => u.FollowedByUsers)
-            .HasForeignKey(f => f.FollowingId)
-            .OnDelete(DeleteBehavior.NoAction); 
-            */
+            
         });
 
         // Authors

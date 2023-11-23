@@ -29,9 +29,15 @@
 
     @if (Model.Cheeps?.Any() == true)
     {
+        //@if (routeName?.ToString() == cheep.Author)
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
+                //get the id of the logged in user                    
+                var userId = UserRepository.GetUserIDByName(User.Identity.Name).Result;
+                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
+                var isFollowing = UserRepository.IsFollowing(userId, authorId).Result;
+        
                 <li>
                     <div class="activity">
                         <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
@@ -42,16 +48,12 @@
                  
                             @if (User.Identity is not null && User.Identity.IsAuthenticated)
                             {  
-                                //get the id of the logged in user                    
-                                var userId = UserRepository.GetUserIDByName(User.Identity.Name).Result;
-                                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
-                                var isFollowing = UserRepository.IsFollowing(userId, authorId).Result;
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
                                 {
                                     //silence is golden (no form is shown since the logged in user shouldnt follow themselves)
-                                }
+                                } 
                                 else if(userId != authorId)
                                 {   
                                     if(isFollowing)
