@@ -130,9 +130,6 @@ public class PublicModel : PageModel
             
         await _userService.UnfollowUser(unfollowDTO);
 
-         // after the unfollowing set isFollowing to false so we can see the "follow" button again
-        //NewFollow.IsFollowing = false;
-
         return Redirect("/" + User.Identity.Name);
     }
 }

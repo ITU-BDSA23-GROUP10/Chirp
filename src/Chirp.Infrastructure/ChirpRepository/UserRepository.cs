@@ -126,6 +126,10 @@ public class UserRepository : IUserRepository<User>
             throw new Exception("Follow record already exists");
         }
     }
+    
+    public async Task<int> getUserFollowingCountById(int userId) {
+        return await DbSetFollows.CountAsync(f => f.FollowingId == userId);
+    }
 
     //is the author following or not?
     public async Task<bool> IsFollowing(int followerId, int followingId)
@@ -148,18 +152,15 @@ public class UserRepository : IUserRepository<User>
         }
     }
 
-    /*
     //to show all cheeps a logged in user is following 
-    public async Task<List<User>> GetFollowedUsers(int userId)
+    public async Task<List<int>> GetFollowedUsersId(int userId)
     {
-        var followedUsers = await context.Follows
+        var followedUsers = await DbSetFollows
             .Where(f => f.FollowerId == userId)
-            .Select(f => f.Following)
+            .Select(f => f.FollowingId)
             .ToListAsync();
 
         return followedUsers;
-    }*/
-
-
+    }
     #endregion
 }

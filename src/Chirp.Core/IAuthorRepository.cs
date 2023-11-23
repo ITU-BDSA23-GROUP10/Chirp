@@ -11,7 +11,9 @@ public interface IAuthorRepository<Author, Cheep, User>
     void Delete(Author entity);
     IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
     Task<Author> GetAuthorWithCheeps(string authorName);
+    Task<int> GetCheepsCountsFromAuthorId(int id);
     Task<Author?> GetAuthorByName(string name);
     Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit);
+    Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit);
     Task CreateAuthor(User user);
 }

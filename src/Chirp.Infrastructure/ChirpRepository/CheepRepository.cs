@@ -59,7 +59,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                      (
                          cheep.Author.User.Name,
                          cheep.Text,
-                         cheep.TimeStamp.ToString()
+                         cheep.TimeStamp
                      ))
                     .ToListAsync();
 

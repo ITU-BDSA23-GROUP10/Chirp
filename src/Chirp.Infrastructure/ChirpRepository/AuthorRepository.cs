@@ -48,6 +48,22 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .FirstOrDefaultAsync() ?? throw new Exception($"Author {authorName} not found");
         return author;
     }
+
+    public async Task<int> GetCheepsCountsFromAuthorId(int id) 
+    {
+        var authorEntity = SearchFor(_author => _author.User.UserId == id).FirstOrDefault();
+
+        if (authorEntity == null) {
+            return 0; // make this into an exception
+        }
+
+        int cheepsCount = DbSetAuthor.Entry(authorEntity)
+                    .Collection(_author => _author.Cheeps)
+                    .Query()
+                    .Count();
+        return cheepsCount;
+    }
+
     public async Task<Author?> GetAuthorByName(string name)
     {
         // FirstOrDefault returns null if no User is found.
@@ -56,6 +72,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         return author;
     }
 
+    //GetCheepsByAuthor should be replaced with GetCheepsByAuthorId, we should search by id not name
     public async Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit)
     {
         // Helge has said we're to assume Author.Name are unique for now.
@@ -84,12 +101,40 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     (
                         _cheep.Author.User.Name,
                         _cheep.Text,
-                        _cheep.TimeStamp.ToString()
+                        _cheep.TimeStamp
                     ))
                     .ToList()
                     ?? new List<CheepDTO>();
 
         return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
+    }
+
+    public async Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit)
+    {
+        int cheepsCount = 0;
+        
+        var authorEntity = SearchFor(_author => _author.User.UserId == id).FirstOrDefault();
+
+        if (authorEntity is null)
+        {
+            return new List<CheepDTO>();
+        }
+
+        List<CheepDTO> cheeps = DbSetAuthor.Entry(authorEntity)
+                    .Collection(_author => _author.Cheeps)
+                    .Query()
+                    .OrderByDescending(_cheep => _cheep.TimeStamp)
+                    .Skip(offset).Take(limit)
+                    .Select(_cheep => new CheepDTO
+                    (
+                        _cheep.Author.User.Name,
+                        _cheep.Text,
+                        _cheep.TimeStamp
+                    ))
+                    .ToList()
+                    ?? new List<CheepDTO>();
+
+        return new List<CheepDTO>(cheeps);
     }
 
     public async Task<Author?> GetAuthorById(int id)

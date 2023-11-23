@@ -14,6 +14,9 @@ public class UserTimelineModel : PageModel
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
 
+    // maybe remove
+    public List<CheepDTO> UserCheeps { get; set; } = new List<CheepDTO>();
+
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
     public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
@@ -61,23 +64,34 @@ public class UserTimelineModel : PageModel
         ViewData["Author"] = author;
         ViewData["Page"] = page;
 
-        //var userName = User.Identity.Name;
-
         int limit = PagesData.CheepsPerPage;
         int offset = (page - 1) * limit;
 
         AsyncPadlock padlock = new();
-
         try
         {
             await padlock.Lock();
             
-            /*var userId = await _userService.GetUserIDByName(userName);
-            var followedUsers = await _userService.GetFollowedUsers(userId);
-            var followedUserNames = followedUsers.Select(u => u.Name).ToList();*/
+            var userId = await _userService.GetUserIDByName(User.Identity.Name);
+            List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
 
-            (Cheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
-            ViewData["CheepsCount"] = cheepsCount;
+            List<CheepDTO> followingCheeps = new List<CheepDTO>();
+            int count = 0;
+            foreach(int id in FollowedUsers) {
+                followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(id, offset, limit));
+                count += await _authorService.GetCheepsCountsFromAuthorId(id);
+            }
+            
+            (UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
+            
+            //Cheeps = new List<CheepDTO>();
+            Cheeps.AddRange(UserCheeps);
+            Cheeps.AddRange(followingCheeps);
+
+            Cheeps = Cheeps.OrderByDescending(c => c.Timestamp).ToList(); 
+            
+            //ViewData["CheepsFollowed"] = FollowedUsers;
+            ViewData["CheepsCount"] = cheepsCount + count;
         }
         finally
         {
