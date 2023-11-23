@@ -9,6 +9,9 @@ public class UserTimelineModel : PageModel
 {
     [BindProperty]
     public NewCheep NewCheep {get; set;} = new();
+    
+    [BindProperty]
+    public NewFollow NewFollow {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
@@ -55,6 +58,20 @@ public class UserTimelineModel : PageModel
         }
 
         return Redirect("/" + userName);
+    }
+
+    //unfollow form button
+    public async Task<IActionResult> OnPostUnfollow()
+    {
+        // Convert the username to Id
+        var followerId = await _userService.GetUserIDByName(User.Identity.Name);
+        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+
+        var unfollowDTO = new FollowDTO(followerId, followingId);
+            
+        await _userService.UnfollowUser(unfollowDTO);
+
+        return Redirect("/" + User.Identity.Name);
     }
 
     //get method with pagination
