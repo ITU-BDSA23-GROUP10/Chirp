@@ -163,6 +163,7 @@ public class UserRepository : IUserRepository<User>
         return followedUsers;
     }
 
+    //Returns all ids of users following a user
     public async Task<List<int>> GetIdsFollowingUser(int userId) {
         var IdsFollowingUser = await DbSetFollows
             .Where(f => f.FollowingId == userId)
@@ -172,6 +173,7 @@ public class UserRepository : IUserRepository<User>
         return IdsFollowingUser;       
     }
 
+    //deletes all followers of a user
     public async Task LoopDeleteFollowers(List<int> followedUsers, int userId) {
         foreach(int id in followedUsers) {
             var follow = new Follows() {
@@ -195,7 +197,7 @@ public class UserRepository : IUserRepository<User>
 
         //deletes all follows the user has
         await LoopDeleteFollowers(followedUsers, userId);
-        
+
         return;
         }
     #endregion
