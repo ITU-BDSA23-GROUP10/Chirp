@@ -26,6 +26,13 @@
             <h3> Email: @ViewData["UserEmail"]</h3> 
         </div>
 
+        <div>
+            <form asp-page-handler="ForgetMe" method="post">
+                <input type="hidden" name="User" value="@User.Identity.Name"/>
+                <button class="frgtbttn forgetme"> Forget Me </button>
+            </form>
+        </div>
+
     }
     else
     {

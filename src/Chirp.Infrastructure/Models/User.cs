@@ -10,10 +10,8 @@ public record User {
 
 }
 
-public record Follows {
-    [ForeignKey("User")]
+public record Follows { 
     public required int FollowerId { get; set; }
-    [ForeignKey("User")]
     public required int FollowingId { get; set; }
 
     

@@ -8,10 +8,15 @@ namespace Chirp.Web.Pages;
 public class UserProfileModel : PageModel
 {
     readonly IUserRepository<User> _userService;
+    readonly IAuthorRepository<Author, Cheep, User> _authorService;
+    readonly ICheepRepository<Cheep, Author> _cheepService;
 
-public UserProfileModel(IUserRepository<User> userService)
+
+public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
     {
         _userService = userService;
+        _authorService = authorService;
+        _cheepService = cheepService;
     }
     
 
@@ -26,5 +31,15 @@ public UserProfileModel(IUserRepository<User> userService)
         return Page();
     }
 
+    public async Task<IActionResult> OnPostForgetMeAsync() {
+        if(!User.Identity.IsAuthenticated) {
+            return Redirect("/");
+        }
+        var userName = User.Identity.Name;
+        var user = await _userService.GetUserByName(userName);
+        await _userService.DeleteAllFollowers(user.UserId);
+        _userService.DeleteUser(user);
+        return Redirect("/");
+    }
 
 }

@@ -162,5 +162,29 @@ public class UserRepository : IUserRepository<User>
 
         return followedUsers;
     }
+
+    public async Task DeleteAllFollowers(int userId) {
+        List<int> followedUsers = await GetFollowedUsersId(userId);
+        //TODO Look at if this can be moved into the foreach loop
+        foreach(int id in followedUsers) {
+            bool isFollowing = await IsFollowing(id, userId);
+                if(isFollowing) {
+                    var followRev = new Follows() {
+                        FollowerId = id,
+                        FollowingId = userId
+                    };
+                DeleteFollow(followRev);
+                }
+        }
+        foreach(int id in followedUsers) {
+            var follow = new Follows() {
+                FollowerId = userId,
+                FollowingId = id
+            };
+            DeleteFollow(follow);
+        }
+            
+        return;
+    }
     #endregion
 }

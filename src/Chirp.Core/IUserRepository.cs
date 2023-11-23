@@ -26,4 +26,5 @@ public interface IUserRepository<User>
     Task<bool> IsFollowing(int followerId, int followingId);
     Task UnfollowUser(FollowDTO unfollowDTO);
     Task<List<int>> GetFollowedUsersId(int userId);
+    Task DeleteAllFollowers(int userId);
 }
