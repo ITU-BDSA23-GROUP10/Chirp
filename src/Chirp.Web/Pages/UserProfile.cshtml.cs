@@ -10,15 +10,11 @@ namespace Chirp.Web.Pages;
 public class UserProfileModel : PageModel
 {
     readonly IUserRepository<User> _userService;
-    readonly IAuthorRepository<Author, Cheep, User> _authorService;
-    readonly ICheepRepository<Cheep, Author> _cheepService;
 
 
 public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
     {
         _userService = userService;
-        _authorService = authorService;
-        _cheepService = cheepService;
     }
     
 
