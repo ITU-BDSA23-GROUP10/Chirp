@@ -140,7 +140,7 @@ public class UserTimelineModel : PageModel
             if (User.Identity.Name == author) // logged-in user's page
             {
                 (UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
-                Cheeps.Clear(); // clear the list before adding
+                Cheeps.Clear();
                 Cheeps.AddRange(UserCheeps);
                 Cheeps.AddRange(followingCheeps);
                 ViewData["CheepsCount"] = cheepsCount + count;
@@ -148,7 +148,7 @@ public class UserTimelineModel : PageModel
             else // other users' pages
             {
                 (UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
-                Cheeps.Clear(); // clear the list before adding
+                Cheeps.Clear();
                 Cheeps.AddRange(UserCheeps);
                 ViewData["CheepsCount"] = cheepsCount;
             }

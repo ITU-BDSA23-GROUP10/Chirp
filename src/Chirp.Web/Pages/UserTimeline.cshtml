@@ -51,7 +51,7 @@
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
                                 {
-                                    //silence is golden (no form is shown since the logged in user shouldnt follow themselves)
+                                    //no form is shown since the logged in user shouldnt follow themselves
                                 } 
                                 else if(userId != authorId)
                                 {   
@@ -66,7 +66,7 @@
                                     {
                                         <form asp-page-handler="Follow" method="post" >
                                             <input type="hidden" name="author" value="@cheep.Author"/>
-                                                <button class="flwbtn follow"> Follow </button>
+                                            <button class="flwbtn follow"> Follow </button>
                                         </form>
                                     }
                                 }
