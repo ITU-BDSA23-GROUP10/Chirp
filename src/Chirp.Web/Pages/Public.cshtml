@@ -2,7 +2,7 @@
 @model Chirp.Web.Pages.PublicModel
 @using System
 @using Chirp.Core
-@using Chirp.Infrastructure.Models;
+@using Chirp.Infrastructure.Models
 @inject IUserRepository<User> UserRepository
 @{
 
@@ -41,9 +41,9 @@
                             @if (User.Identity is not null && User.Identity.IsAuthenticated)
                             {  
                                 //get the id of the logged in user                    
-                                var userId = UserRepository.GetUserIDByName(User.Identity.Name).Result;
-                                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
-                                var isFollowing = UserRepository.IsFollowing(userId, authorId).Result;
+                                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                                var authorId = Model.FindUserIDByName(@cheep.Author).Result;
+                                var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
@@ -63,11 +63,11 @@
                                     {
                                         <form asp-page-handler="Follow" method="post" >
                                             <input type="hidden" name="author" value="@cheep.Author"/>
-                                            <button class="flwbtn follow"> Follow </button>
-                                        </form>
+                                                <button class="flwbtn follow"> Follow </button>
+                                            </form>
+                                        }
                                     }
                                 }
-                            }
                         </div>
                     </div>
                 </li>

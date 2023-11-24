@@ -63,7 +63,15 @@ public class PublicModel : PageModel
         return Redirect("/" + userName);
     }
 
-    
+    public async Task<bool> CheckIfFollowed(int userId, int authorId)
+    {
+        return await _userService.IsFollowing(userId, authorId);
+    }
+
+    public async Task<int> FindUserIDByName(string userName)
+    {
+        return await _userService.GetUserIDByName(userName);
+    }
 
     /* get method with pagination*/
     public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
@@ -83,7 +91,8 @@ public class PublicModel : PageModel
             (DisplayedCheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
             
             ViewData["CheepsCount"] = cheepsCount;
-        }
+            
+           }
         finally
         {
             padlock.Dispose();
@@ -133,7 +142,6 @@ public class PublicModel : PageModel
         return Redirect("/" + User.Identity.Name);
     }
 }
-
 
 public class NewCheep 
 {

@@ -74,6 +74,16 @@ public class UserTimelineModel : PageModel
         return Redirect("/" + User.Identity.Name);
     }
 
+    public async Task<bool> CheckIfFollowed(int userId, int authorId)
+    {
+        return await _userService.IsFollowing(userId, authorId);
+    }
+
+    public async Task<int> FindUserIDByName(string userName)
+    {
+        return await _userService.GetUserIDByName(userName);
+    }
+
     //get method with pagination
     public async Task<ActionResult> OnGetAsync(string author, [FromQuery(Name = "page")] int page = 1)
     {
@@ -117,8 +127,6 @@ public class UserTimelineModel : PageModel
             }
             Cheeps = Cheeps.OrderByDescending(c => c.Timestamp).ToList(); 
             
-            //ViewData["CheepsFollowed"] = FollowedUsers;
-            //ViewData["CheepsCount"] = cheepsCount + count;
         }
         finally
         {

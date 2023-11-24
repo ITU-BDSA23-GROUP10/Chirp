@@ -32,10 +32,10 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
-                //get the id of the logged in user                    
-                var userId = UserRepository.GetUserIDByName(User.Identity.Name).Result;
-                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result;
-                var isFollowing = UserRepository.IsFollowing(userId, authorId).Result;
+                //get the id's and whether or not the user is following                    
+                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                var authorId = Model.FindUserIDByName(@cheep.Author).Result;
+                var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
         
                 <li>
                     <div class="activity">
