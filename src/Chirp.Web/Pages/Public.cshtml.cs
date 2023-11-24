@@ -82,8 +82,7 @@ public class PublicModel : PageModel
         int offset = (page - 1) * limit;
 
         AsyncPadlock padlock = new();
-
-        
+         
         try
         {
             await padlock.Lock();
@@ -91,8 +90,7 @@ public class PublicModel : PageModel
             (DisplayedCheeps, int cheepsCount) = await _cheepService.GetSome(offset, limit);
             
             ViewData["CheepsCount"] = cheepsCount;
-            
-           }
+        }
         finally
         {
             padlock.Dispose();
