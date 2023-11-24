@@ -60,6 +60,33 @@ public class UserTimelineModel : PageModel
         return Redirect("/" + userName);
     }
 
+    //follow form button
+    public async Task<IActionResult> OnPostFollow() 
+    {
+        var LoggedInUserName = User.Identity.Name;
+        var FollowedUserName = NewFollow.Author;
+        
+        //Check if the user that is logged in exists
+        try {
+            var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
+            if (loggedInUser is null) {
+                throw new Exception("User does not exist");
+            }
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+            await _userService.CreateUser(LoggedInUserName);
+        }
+
+        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+
+        var followDTO = new FollowDTO(followerId, followingId);
+        
+        await _userService.FollowUser(followDTO);
+
+        return Redirect("/" + LoggedInUserName);
+    }
+
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
