@@ -4,6 +4,7 @@ using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
+using Chirp.Infrastructure.Models;
 
 namespace ChirpIntegraiton.Tests;
 
@@ -43,9 +44,11 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
+        var userService = new UserRepository(context);
 
         // Act
-        await authorService.CreateAuthor(authorName);
+        await userService.CreateUser(authorName);
+        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
         var cheep = new CheepCreateDTO(message, authorName);
 
         await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
@@ -65,12 +68,14 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
         var cheepService = new CheepRepository(context);
         var authorService = new AuthorRepository(context);
+        var userService = new UserRepository(context);
 
         // Act
         for (int i = 0; i < 100; i++)
         {
             var authorName = "Test author " + i;
-            await authorService.CreateAuthor(authorName);
+            await userService.CreateUser(authorName);
+            await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
             var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
             await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
         }
@@ -86,20 +91,20 @@ public class ChirpDatabaseTest : IAsyncLifetime
     [Theory]
     [InlineData("Obi-Wan", "obi-wan@jedi.com")]
     [InlineData("General Grievous", "xXjediSlayerXx@sith.co.uk")]
-    public async void CreateAuthorsWithEmail(string name, string email)
+    public async void CreateUserWithEmail(string name, string email)
     {
         // Arrange
         var context = SetupContext(_sqlServer.GetConnectionString());
     
-        var authorService = new AuthorRepository(context);
+        var userService = new UserRepository(context);
 
         // Act
-        await authorService.CreateAuthor(name, email);
+        await userService.CreateUser(name, email);
         
         // Assert
-        var authorByName = await authorService.GetAuthorByName(name);
-        Assert.Equal(name, authorByName.Name);
-        var authorByEmail = await authorService.GetAuthorByEmail(email);
-        Assert.Equal(email, authorByEmail.Email);
+        var userByName = await userService.GetUserByName(name);
+        Assert.Equal(name, userByName.Name);
+        var userByEmail = await userService.GetUserByEmail(email);
+        Assert.Equal(email, userByEmail.Email);
     }
 }
