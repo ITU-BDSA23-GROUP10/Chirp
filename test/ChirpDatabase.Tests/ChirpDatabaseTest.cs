@@ -124,8 +124,29 @@ public class ChirpDatabaseTest : IAsyncLifetime
         await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
         var cheep = new CheepCreateDTO("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", authorName);
 
+        // Assert
         await Assert.ThrowsAsync<ArgumentException>(async() => await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName) ));      
         var cheeps = cheepService.GetAll();
         Assert.Equal(0, cheeps.Item2);
+    }
+
+    [Fact]
+    public async void CreateAuthor()
+    {
+        // Arrage
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var userService = new UserRepository(context);
+        var authorService = new AuthorRepository(context);
+
+        var authorName = "Obi-Wan";
+        
+        // Act
+        await userService.CreateUser(authorName);
+        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+
+        // Assert
+        var author = await authorService.GetAuthorByName(authorName);
+        Assert.NotNull(author);
     }
 }
