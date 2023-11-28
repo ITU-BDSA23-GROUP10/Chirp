@@ -131,15 +131,28 @@ public class PublicModel : PageModel
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
+        var userName = User?.Identity?.Name;
+
+        if (string.IsNullOrEmpty(userName))
+        {
+            throw new ArgumentNullException(nameof(userName), "User name cannot be null or empty.");
+        }
+
         // Convert the username to Id
-        var followerId = await _userService.GetUserIDByName(User.Identity.Name);
+        var followerId = await _userService.GetUserIDByName(userName);
+
+        if (string.IsNullOrEmpty(NewFollow.Author))
+        {
+            throw new ArgumentNullException(nameof(NewFollow.Author), "Author cannot be null or empty.");
+        }
+
         var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
         var unfollowDTO = new FollowDTO(followerId, followingId);
             
         await _userService.UnfollowUser(unfollowDTO);
 
-        return Redirect("/" + User.Identity.Name);
+        return Redirect("/" + User?.Identity?.Name);
     }
 }
 

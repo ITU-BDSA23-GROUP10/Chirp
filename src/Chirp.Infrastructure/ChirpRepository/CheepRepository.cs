@@ -21,10 +21,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     #region ICheepRepository<Cheep, Author> Members
 
-    public void Insert(Cheep entity)
+    public async Task Insert(Cheep entity)
     {
         DbSet.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public void Delete(Cheep entity)
@@ -94,7 +94,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             }
 
             DateTime timestamp = DateTime.Now;
-            Insert(new Cheep()
+            await Insert(new Cheep()
             {
                 Author = author,
                 Text = newCheep.text,

@@ -127,7 +127,9 @@ public class UserTimelineModel : PageModel
         {
             await padlock.Lock();
             
-            var userId = await _userService.GetUserIDByName(User.Identity.Name);
+            var userName = User?.Identity?.Name;
+            var userId = await _userService.GetUserIDByName(userName);
+
             List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
@@ -138,7 +140,7 @@ public class UserTimelineModel : PageModel
                 count += await _authorService.GetCheepsCountsFromAuthorId(id);
             }
 
-            if (User.Identity.Name == author) // logged-in user's page
+            if (User?.Identity?.Name == author) // logged-in user's page
             {
                 (UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
                 Cheeps.Clear();

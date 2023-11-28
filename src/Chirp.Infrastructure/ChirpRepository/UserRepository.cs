@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-//using Chirp.Infrastructure.Migrations;
+using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;
@@ -22,28 +22,28 @@ public class UserRepository : IUserRepository<User>
 
     #region IUserRepository<User> Members
 
-    public void InsertUser(User entity)
+    public async Task InsertUser(User entity)
     {
         DbSetUser.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void DeleteUser(User entity)
+    public async Task DeleteUser(User entity)
     {
         DbSetUser.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void InsertFollow(Follows entity)
+    public async Task InsertFollow(Follows entity)
     {
         DbSetFollows.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void DeleteFollow(Follows entity)
+    public async Task DeleteFollow(Follows entity)
     {
         DbSetFollows.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
@@ -104,7 +104,7 @@ public class UserRepository : IUserRepository<User>
                 Name = name,
                 Email = email ?? null
             };
-            InsertUser(userEntity);
+            await InsertUser(userEntity);
         }
     }
 
@@ -119,7 +119,7 @@ public class UserRepository : IUserRepository<User>
                 FollowerId = followDTO.followerId,
                 FollowingId = followDTO.followingId
             };
-            InsertFollow(newFollow);
+            await InsertFollow(newFollow);
         }
         else
         {
@@ -144,7 +144,7 @@ public class UserRepository : IUserRepository<User>
 
         if (record != null)
         {
-            DeleteFollow(record);
+            await DeleteFollow(record);
         }
         else
         {
@@ -180,7 +180,7 @@ public class UserRepository : IUserRepository<User>
                 FollowerId = userId,
                 FollowingId = id
             };
-            DeleteFollow(follow);
+            await DeleteFollow(follow);
             }
         return;
     }

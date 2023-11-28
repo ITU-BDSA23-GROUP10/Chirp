@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-//using Chirp.Infrastructure.Migrations;
+using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;
@@ -20,16 +20,16 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     #region IAuthorRepository<Author, Cheep> Members
 
-    public void Insert(Author entity)
+    public async Task Insert(Author entity)
     {
         DbSetAuthor.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(Author entity)
+    public async Task Delete(Author entity)
     {
         DbSetAuthor.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
@@ -164,7 +164,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                 User = user,
                 Cheeps = new List<Cheep>()
             };
-            Insert(authorEntity);
+            await Insert(authorEntity);
         }
     }
 

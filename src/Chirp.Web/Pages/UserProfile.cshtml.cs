@@ -19,7 +19,7 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
 
     public async Task<ActionResult> OnGetAsync()
     {
-        if(!User.Identity.IsAuthenticated) {
+        if(User?.Identity?.IsAuthenticated == false) {
             return Redirect("/");
         }
         
@@ -38,11 +38,11 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
 
     public async Task<IActionResult> OnPostForgetMeAsync()
     {
-        if(!User.Identity.IsAuthenticated) {
+        if(User?.Identity?.IsAuthenticated == false) {
             return Redirect("/");
         }
 
-        var userName = User.Identity.Name;
+        var userName = User?.Identity?.Name;
         var user = await _userService.GetUserByName(userName);
         await _userService.DeleteAllFollowers(user.UserId);
         _userService.DeleteUser(user);
