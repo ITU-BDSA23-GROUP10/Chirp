@@ -89,7 +89,7 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         // This is the filepath where the file will be saved
         var folder = Path.Combine("userDataFolder");
         Directory.CreateDirectory(folder);
-        
+
         string filePathName = Path.Combine(folder, User.Identity.Name + "_UserData.json");
 
         // This is the data that will be saved
@@ -103,6 +103,13 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
             followers.Add((await _userService.GetUserById(id)).Name);
         }
 
+        var cheeps = await _authorService.GetAllCheepsByAuthorName(username);
+        var cheepFormated = new List<string>();
+
+        foreach(var cheep in cheeps) {
+            cheepFormated.Add("[" + cheep.Timestamp + "] - \"" + cheep.Message + "\"");
+        }
+
         // This saves the data to the file
         string[] userData;
         
@@ -110,7 +117,8 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
             "User ID: " + userID,
             "Username: " + username,
             "Email: " + email,
-            "Followers: " + string.Join(", ", followers)
+            "Followers: " + string.Join(", ", followers),
+            "Cheeps: " + string.Join(", ", cheepFormated)
         };
 
         // This writes the data to the file
