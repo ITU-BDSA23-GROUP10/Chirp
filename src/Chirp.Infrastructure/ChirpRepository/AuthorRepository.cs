@@ -127,7 +127,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep>
             var authorEnity = new Author()
             {
                 Name = name,
-                Email = email ?? null,
+                Email = email,
                 Cheeps = new List<Cheep>()
             };
             Insert(authorEnity);
