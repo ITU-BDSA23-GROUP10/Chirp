@@ -33,10 +33,11 @@
                             <small>&mdash; @cheep.Timestamp</small>
                             <p>@cheep.Message</p>
                  
-                            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                            @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
-                                //get the id of the logged in user                    
-                                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                                //get the id of the logged in user
+                                var userName = User?.Identity?.Name ?? "default";                
+                                var userId = Model.FindUserIDByName(userName).Result;
                                 var authorId = Model.FindUserIDByName(@cheep.Author).Result;
                                 var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
