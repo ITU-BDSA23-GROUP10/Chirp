@@ -206,6 +206,5 @@ public class UserRepository : IUserRepository<User>
 
         return;
     }
-    // Testing azure database
     #endregion
 }
