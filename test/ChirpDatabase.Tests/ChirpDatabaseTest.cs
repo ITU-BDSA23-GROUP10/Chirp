@@ -169,4 +169,25 @@ public class ChirpDatabaseTest : IAsyncLifetime
         Assert.Null( await userService.GetUserByName("Test1") );
         Assert.NotNull( await userService.GetUserByName("Test2"));
     }
+
+    [Fact]
+    public async void DeleteUserAlsoDeletesAuthor()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var userService = new UserRepository(context);
+        var authorService = new AuthorRepository(context);
+
+        var authorName = "Test1";
+        await userService.CreateUser(authorName);
+        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+
+        // Act
+        userService.DeleteUser( await userService.GetUserByName(authorName) );
+
+        // Assert
+        Assert.Null( await userService.GetUserByName(authorName) );
+        Assert.Null( await authorService.GetAuthorByName(authorName) );
+    }
 }
