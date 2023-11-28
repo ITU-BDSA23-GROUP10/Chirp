@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
+using Chirp.Web.ViewComponents;
 
 namespace Chirp.Web.Pages;
 
@@ -63,7 +64,15 @@ public class PublicModel : PageModel
         return Redirect("/" + userName);
     }
 
-    
+    public async Task<bool> CheckIfFollowed(int userId, int authorId)
+    {
+        return await _userService.IsFollowing(userId, authorId);
+    }
+
+    public async Task<int> FindUserIDByName(string userName)
+    {
+        return await _userService.GetUserIDByName(userName);
+    }
 
     /* get method with pagination*/
     public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
@@ -74,8 +83,7 @@ public class PublicModel : PageModel
         int offset = (page - 1) * limit;
 
         AsyncPadlock padlock = new();
-
-        
+         
         try
         {
             await padlock.Lock();
@@ -132,15 +140,6 @@ public class PublicModel : PageModel
 
         return Redirect("/" + User.Identity.Name);
     }
-}
-
-
-public class NewCheep 
-{
-    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
-    [MaxLength(160)]
-    [Display(Name = "text")]
-    public string? Message {get; set;} = string.Empty;
 }
 
 public class NewFollow 

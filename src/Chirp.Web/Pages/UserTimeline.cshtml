@@ -1,16 +1,11 @@
 ﻿@page "/{author}"
 @model Chirp.Web.Pages.UserTimelineModel
 @using System
-@using Chirp.Core
-@using Chirp.Infrastructure.Models;
-@inject IUserRepository<User> UserRepository
 @{
-
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
     ViewData["RouteName"] = routeName;
-
 }
 
 <div>
@@ -32,6 +27,11 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
+                //get the id's and whether or not the user is following                    
+                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                var authorId = Model.FindUserIDByName(@cheep.Author).Result;
+                var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
+        
                 <li>
                     <div class="activity">
                         <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
@@ -42,16 +42,12 @@
                  
                             @if (User.Identity is not null && User.Identity.IsAuthenticated)
                             {  
-                                //get the id of the logged in user                    
-                                var userId = UserRepository.GetUserIDByName(User.Identity.Name).Result; //HACK: This is a hack, should move this to the model
-                                var authorId = UserRepository.GetUserIDByName(@cheep.Author).Result; //HACK: This is a hack, should move this to the model;
-                                var isFollowing = UserRepository.IsFollowing(userId, authorId).Result; //HACK: This is a hack, should move this to the model
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
                                 {
-                                    //silence is golden (no form is shown since the logged in user shouldnt follow themselves)
-                                }
+                                    //no form is shown since the logged in user shouldnt follow themselves
+                                } 
                                 else if(userId != authorId)
                                 {   
                                     if(isFollowing)
@@ -59,6 +55,13 @@
                                         <form asp-page-handler="Unfollow" method="post">
                                             <input type="hidden" name="Author" value="@cheep.Author"/>
                                             <button class="flwbtn unfollow"> Unfollow </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-page-handler="Follow" method="post" >
+                                            <input type="hidden" name="author" value="@cheep.Author"/>
+                                            <button class="flwbtn follow"> Follow </button>
                                         </form>
                                     }
                                 }
@@ -75,5 +78,4 @@
     }
 
     @await Component.InvokeAsync("Pagination", ViewData["Author"])
-
 </div>

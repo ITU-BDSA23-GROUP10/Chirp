@@ -10,7 +10,6 @@ namespace Chirp.Infrastructure.ChirpRepository;
 public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 {
     protected DbSet<Author> DbSetAuthor;
-    protected DbSet<User> DbSetUser;
     protected ChirpDBContext context;
 
     public AuthorRepository(ChirpDBContext dbContext)
@@ -51,16 +50,16 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     public async Task<int> GetCheepsCountsFromAuthorId(int id) 
     {
-        var authorEntity = SearchFor(_author => _author.User.UserId == id).FirstOrDefault();
+        var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
 
         if (authorEntity == null) {
             return 0; // make this into an exception
         }
 
-        int cheepsCount = DbSetAuthor.Entry(authorEntity)
+        int cheepsCount = await DbSetAuthor.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query()
-                    .Count();
+                    .CountAsync();
         return cheepsCount;
     }
 
@@ -75,11 +74,9 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
     //GetCheepsByAuthor should be replaced with GetCheepsByAuthorId, we should search by id not name
     public async Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit)
     {
-        // Helge has said we're to assume Author.Name are unique for now.
-
         int cheepsCount = 0;
 
-        var authorEntity = SearchFor(_author => _author.User.Name == author).FirstOrDefault();
+        var authorEntity = await SearchFor(_author => _author.User.Name == author).FirstOrDefaultAsync();
 
         if (authorEntity is null)
         {
@@ -87,12 +84,12 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         }
         else
         {
-            cheepsCount = DbSetAuthor.Entry(authorEntity)
+            cheepsCount = await DbSetAuthor.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
-                    .Query().Count();
+                    .Query().CountAsync();
         }
 
-        List<CheepDTO> cheeps = DbSetAuthor.Entry(authorEntity)
+        List<CheepDTO> cheeps = await DbSetAuthor.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
@@ -103,7 +100,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                         _cheep.Text,
                         _cheep.TimeStamp
                     ))
-                    .ToList()
+                    .ToListAsync()
                     ?? new List<CheepDTO>();
 
         return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
@@ -113,14 +110,14 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
     {
         int cheepsCount = 0;
         
-        var authorEntity = SearchFor(_author => _author.User.UserId == id).FirstOrDefault();
+        var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
 
         if (authorEntity is null)
         {
             return new List<CheepDTO>();
         }
 
-        List<CheepDTO> cheeps = DbSetAuthor.Entry(authorEntity)
+        List<CheepDTO> cheeps = await DbSetAuthor.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
@@ -131,7 +128,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                         _cheep.Text,
                         _cheep.TimeStamp
                     ))
-                    .ToList()
+                    .ToListAsync()
                     ?? new List<CheepDTO>();
 
         return new List<CheepDTO>(cheeps);
