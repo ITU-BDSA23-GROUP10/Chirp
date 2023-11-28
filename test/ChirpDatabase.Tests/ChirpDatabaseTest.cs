@@ -107,10 +107,30 @@ public class ChirpDatabaseTest : IAsyncLifetime
         var userByEmail = await userService.GetUserByEmail(email);
         Assert.Equal(email, userByEmail.Email);
     }
-public record Follows { 
-    public required int FollowerId { get; set; }
-    public required int FollowingId { get; set; }
 
-    
-}    
+    [Fact]
+    public async void CreateInvalidCheep()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var userService = new UserRepository(context);
+        var authorService = new AuthorRepository(context);
+        var cheepService = new CheepRepository(context);
+
+        var authorName = "Obi-Wan";
+        // Act
+        await userService.CreateUser(authorName);
+        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+        var cheep = new CheepCreateDTO("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", authorName);
+        try {
+            await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName) );
+        }
+        catch (ArgumentException)
+        {
+            
+        }
+
+
+    }
 }

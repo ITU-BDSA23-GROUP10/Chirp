@@ -89,8 +89,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             if(!status)
             {
                 List<ValidationFailure> failures = validationResult.Errors;
-                throw new Exception(string.Join(", ", failures));
-                return;
+                throw new ArgumentException(string.Join(", ", failures));
             }
 
             DateTime timestamp = DateTime.Now;
@@ -101,7 +100,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                 TimeStamp = timestamp
             });
         }
-        catch (Exception e)
+        catch (ArgumentException e)
         {
             Console.WriteLine(e.Message, ", failed validation");
         }
