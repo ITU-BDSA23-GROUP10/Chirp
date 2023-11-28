@@ -71,5 +71,5 @@ public class ChirpDBContext : DbContext
             .HasForeignKey(ch => ch.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
         });
-    }
-}
+    });
+}}
