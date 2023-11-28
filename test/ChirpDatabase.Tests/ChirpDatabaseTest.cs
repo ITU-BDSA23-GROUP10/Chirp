@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
+using System.Diagnostics.Contracts;
 
 namespace ChirpIntegraiton.Tests;
 
@@ -148,5 +149,24 @@ public class ChirpDatabaseTest : IAsyncLifetime
         // Assert
         var author = await authorService.GetAuthorByName(authorName);
         Assert.NotNull(author);
+    }
+
+    [Fact]
+    public async void DeleteUser()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var userService = new UserRepository(context);
+
+        await userService.CreateUser("Test1");
+        await userService.CreateUser("Test2");
+        
+        // Act
+        userService.DeleteUser( await userService.GetUserByName("Test1") );
+
+        // Assert
+        Assert.Null( await userService.GetUserByName("Test1") );
+        Assert.NotNull( await userService.GetUserByName("Test2"));
     }
 }
