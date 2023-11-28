@@ -90,7 +90,6 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             {
                 List<ValidationFailure> failures = validationResult.Errors;
                 throw new Exception(string.Join(", ", failures));
-                return;
             }
 
             DateTime timestamp = DateTime.Now;

@@ -53,5 +53,6 @@ public class NewCheep
     //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
     [MaxLength(160)]
     [Display(Name = "text")]
+    [Required(ErrorMessage = "Cheep message cannot be empty.")]
     public string? Message {get; set;} = string.Empty;
 }
