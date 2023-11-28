@@ -32,7 +32,17 @@
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
-
+        <div>
+            @foreach (var UserFollow in Model.following)
+            {
+                <h3>Following: </h3>
+                <li>
+                    <p>
+                        @UserFollow.Name
+                    </p>
+                </li>
+            }
+        </div>
     }
     else
     {
@@ -40,3 +50,4 @@
     }
 
 </div>
+

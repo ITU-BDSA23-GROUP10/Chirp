@@ -12,6 +12,8 @@ public class UserProfileModel : PageModel
 {
     readonly IUserRepository<User> _userService;
 
+    public List<User> following { get; set; } = new List<User>();
+
 public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
 {
     _userService = userService;
@@ -26,6 +28,9 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         if(await _userService.GetUserByName(User.Identity.Name) == null) {
             await _userService.CreateUser(User.Identity.Name);
         }
+
+        var loggedInUserId = await FindUserIDByName(User.Identity.Name);
+        await findUserFollowingByUserID(loggedInUserId);
 
         var userName = User.Identity.Name;
         var user = await _userService.GetUserByName(userName);
@@ -54,5 +59,19 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return Redirect("/");
+    }
+
+    public async Task<int> FindUserIDByName(string userName)
+    {
+        return await _userService.GetUserIDByName(userName);
+    }
+
+    public async Task findUserFollowingByUserID(int userId)
+    {
+        var followingIDs = await _userService.GetFollowedUsersId(userId);
+        foreach (var id in followingIDs) {
+            // check if user/id is in the list
+            following.Add(_userService.GetUserById(id));
+        }
     }
 }
