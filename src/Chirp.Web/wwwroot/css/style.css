@@ -234,3 +234,26 @@ li.topic {
   -webkit-border-radius: 5px;
   min-height: 20px;
 }
+
+.flwbtn{
+  border-radius: 25px;
+  padding: 6px 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-transition: all .2s;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  font-weight: 500;
+  border: none;
+}
+.flwbtn:hover{
+  background-color: #cc6e6e;
+}
+.follow {
+  background-color: #26776F;
+  color: white;
+}
+.unfollow {
+  background-color: #53110c;
+  color: white;
+}

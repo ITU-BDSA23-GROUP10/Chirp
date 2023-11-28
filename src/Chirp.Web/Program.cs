@@ -38,7 +38,8 @@ var connectionString = $"Data Source={DbPath}";*/
 }, ServiceLifetime.Scoped);*/
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
-builder.Services.AddScoped<IAuthorRepository<Author, Cheep>, AuthorRepository>();
+builder.Services.AddScoped<IAuthorRepository<Author, Cheep, User>, AuthorRepository>();
+builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
 builder.Services.AddDbContext<ChirpDBContext>(
     options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
