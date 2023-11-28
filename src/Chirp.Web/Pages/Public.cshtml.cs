@@ -104,6 +104,7 @@ public class PublicModel : PageModel
     public async Task<IActionResult> OnPostFollow() 
     {
         var LoggedInUserName = User.Identity.Name;
+        //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         
         //Check if the user that is logged in exists

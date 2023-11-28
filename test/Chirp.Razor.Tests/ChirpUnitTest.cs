@@ -46,10 +46,11 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
+            UserRepository ur = new UserRepository(context);
 
             // Act
-            ar.CreateAuthor(authorName, authorEmail);
-            await context.SaveChangesAsync();
+            await ur.CreateUser(authorName, authorEmail);
+            ar.CreateAuthor( await ur.GetUserByName(authorName) );
 
             // Assert
             Author? retrievedAuthor = await (Task<Author>) ar.GetAuthorByName(authorName);
@@ -60,8 +61,8 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             }
             else 
             {
-                Assert.Equal(authorName, retrievedAuthor.Name);
-                Assert.Equal(authorEmail, retrievedAuthor.Email);
+                Assert.Equal(authorName, retrievedAuthor.User.Name);
+                Assert.Equal(authorEmail, retrievedAuthor.User.Email);
             }
         }
     }
@@ -80,13 +81,15 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
+            UserRepository ur = new UserRepository(context);
 
             // Act
-            ar.CreateAuthor(authorName, authorEmail);
-            await context.SaveChangesAsync();
+            await ur.CreateUser(authorName, authorEmail);
+            ar.CreateAuthor( await ur.GetUserByName(authorName) );
+            
 
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => await ar.CreateAuthor(authorName, authorEmail));
+            await Assert.ThrowsAsync<Exception>(async() => await ar.CreateAuthor( await ur.GetUserByName(authorName) ));
             //Assert.Equal(authorName, retrievedAuthor.Name);
         }
     }
@@ -107,14 +110,14 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
 
             // Act
-            await ar.CreateAuthor(authorName, authorEmail);
-            await context.SaveChangesAsync();
+            await ur.CreateUser(authorName, authorEmail);
+            await ar.CreateAuthor( await ur.GetUserByName(authorName) );
 
             var cheep = new CheepCreateDTO(message, authorName);
             await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
-            await context.SaveChangesAsync();
 
             // Assert
             var retrievedAuthor = await ar.GetAuthorByName(authorName);
@@ -125,7 +128,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             }
             else 
             {
-                Assert.Equal(authorName, retrievedAuthor.Name);
+                Assert.Equal(authorName, retrievedAuthor.User.Name);
                 Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
             }
         }
@@ -146,7 +149,7 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
-            await context.SaveChangesAsync();
+            
             var cheep = new CheepCreateDTO(message, authorName);
 
             // Assert
@@ -172,8 +175,8 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Assert
             Assert.NotNull(author);
-            Assert.Equal("Jacqualine Gilcoine", author.Name);
-            Assert.Equal("Jacqualine.Gilcoine@gmail.com", author.Email);
+            Assert.Equal("Jacqualine Gilcoine", author.User.Name);
+            Assert.Equal("Jacqualine.Gilcoine@gmail.com", author.User.Email);
             Assert.NotEmpty(author.Cheeps);
         }
     }
