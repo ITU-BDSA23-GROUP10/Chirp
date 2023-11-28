@@ -46,8 +46,19 @@ public class UserTimelineModel : PageModel
         {
             await _authorService.CreateAuthor(await _userService.GetUserByName(userName));
             author = await _authorService.GetAuthorByName(userName);
+            
+            // Check if author is null again after trying to fetch it (TODO:check if this is correct?)
+            if (author is null)
+            {
+                throw new InvalidOperationException("author could not be created.");
+            }
         }
 
+        if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
+        {
+            throw new ArgumentNullException(nameof(NewCheep.Message), "NewCheep.Message cannot be null or empty.");
+        }
+        
         var cheep = new CheepCreateDTO(NewCheep.Message, userName);
         
         await _cheepService.CreateCheep(cheep, author);
@@ -73,7 +84,6 @@ public class UserTimelineModel : PageModel
         }
         else
         {
-            
             //Check if the user that is logged in exists
             try {
                 var loggedInUser = await _userService.GetUserByName(LoggedInUserName);

@@ -29,6 +29,11 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         }
 
         var user = await _userService.GetUserByName(userName);
+
+        if (user is null)
+        {
+            throw new InvalidOperationException("User could not be created.");
+        }
         
         ViewData["UserName"] = user.Name;
         ViewData["UserEmail"] = user.Email;
@@ -44,6 +49,12 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
 
         var userName = User?.Identity?.Name ?? "default";
         var user = await _userService.GetUserByName(userName);
+        
+        if (user is null)
+        {
+            throw new InvalidOperationException("User could not be created.");
+        }
+        
         await _userService.DeleteAllFollowers(user.UserId);
         await _userService.DeleteUser(user);
 
