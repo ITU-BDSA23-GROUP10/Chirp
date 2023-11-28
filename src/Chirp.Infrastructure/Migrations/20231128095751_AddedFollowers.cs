@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialStartup : Migration
+    public partial class AddedFollowers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,6 +79,12 @@ namespace Chirp.Infrastructure.Migrations
                 name: "IX_Cheeps_AuthorId",
                 table: "Cheeps",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Follows_FollowerId_FollowingId",
+                table: "Follows",
+                columns: new[] { "FollowerId", "FollowingId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",

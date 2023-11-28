@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDBContext))]
-    [Migration("20231124145544_InitialStartup")]
-    partial class InitialStartup
+    [Migration("20231128095751_AddedFollowers")]
+    partial class AddedFollowers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,9 @@ namespace Chirp.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("FollowerId", "FollowingId");
+
+                    b.HasIndex("FollowerId", "FollowingId")
+                        .IsUnique();
 
                     b.ToTable("Follows");
                 });

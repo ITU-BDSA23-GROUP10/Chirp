@@ -107,4 +107,10 @@ public class ChirpDatabaseTest : IAsyncLifetime
         var userByEmail = await userService.GetUserByEmail(email);
         Assert.Equal(email, userByEmail.Email);
     }
+public record Follows { 
+    public required int FollowerId { get; set; }
+    public required int FollowingId { get; set; }
+
+    
+}    
 }

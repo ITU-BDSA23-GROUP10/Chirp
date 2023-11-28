@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure.Migrations;
+//using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;
@@ -44,6 +44,12 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         var author = await DbSetAuthor.Include(_author => _author.Cheeps
                     .OrderByDescending(_cheep => _cheep.TimeStamp))
                     .Where(_author => _author.User.Name == authorName)
+                    .Select(_author => new Author
+                    {
+                        AuthorId = _author.AuthorId,
+                        User = _author.User,
+                        Cheeps = _author.Cheeps
+                    })
                     .FirstOrDefaultAsync() ?? throw new Exception($"Author {authorName} not found");
         return author;
     }

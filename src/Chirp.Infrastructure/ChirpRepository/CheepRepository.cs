@@ -72,13 +72,12 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
 
-        /*author = newCheep.author;
-
+        
         if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
-        }*/
+        }
 
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
         
@@ -91,6 +90,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             {
                 List<ValidationFailure> failures = validationResult.Errors;
                 throw new Exception(string.Join(", ", failures));
+                return;
             }
 
             DateTime timestamp = DateTime.Now;
@@ -114,7 +114,7 @@ public class CheepCreateValidator : AbstractValidator<CheepCreateDTO>
 {
     public CheepCreateValidator()
     {
-        RuleFor(x => x.author).NotEmpty();
+        RuleFor(x => x.author).NotNull();
         RuleFor(x => x.text).NotEmpty().Length(0, 160);
     }
 }
