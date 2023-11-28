@@ -5,6 +5,7 @@ using Chirp.Infrastructure.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text;
 
 namespace Chirp.Web.Pages;
 
@@ -83,12 +84,13 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         }
     }
 
-    //TODO optional fun task by Helge =))))) 
+    // This downloads the user data as a JSON file
     public async Task<IActionResult> OnPostDownloadData() {
-
-        var folder = Path.Combine("wwwroot", "UserData");
+        // This is the filepath where the file will be saved
+        var folder = Path.Combine("userDataFolder");
         string filePathName = Path.Combine(folder, User.Identity.Name + "_UserData.json");
 
+        // This is the data that will be saved
         var userID = await _userService.GetUserIDByName(User.Identity.Name);
         var username = User.Identity.Name;
         var email = (await _userService.GetUserByName(username)).Email;
@@ -98,7 +100,8 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         foreach (var id in followersIDs) {
             followers.Add((await _userService.GetUserById(id)).Name);
         }
-        
+
+        // This saves the data to the file
         string[] userData;
         
         userData = new string[] {
@@ -107,16 +110,28 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
             "Email: " + email,
             "Followers: " + string.Join(", ", followers)
         };
+
+        // This writes the data to the file
         try
         {
             System.IO.File.WriteAllLines(filePathName, userData);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }
+
+        // This was taken from: https://stackoverflow.com/questions/72433767/return-json-file-from-api-endpoint
+        // This downloads the file
+        var bytes = Encoding.UTF8.GetBytes(System.IO.File.ReadAllText(filePathName));
+        MemoryStream ms = new MemoryStream(bytes);
         
+        Thread thread = new Thread(new ThreadStart(Worker));
+        thread.Start();
+        void Worker() {
+            Thread.Sleep(10000);
+            System.IO.File.Delete(filePathName);
+        }
 
-        byte[] filebytes = System.IO.File.ReadAllBytes(filePathName);
 
-        return File(filebytes, "application/json", User.Identity.Name + "_UserData.json");
+        return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
 }
