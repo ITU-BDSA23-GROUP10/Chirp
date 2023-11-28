@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
+using Chirp.Web.ViewComponents;
 
 namespace Chirp.Web.Pages;
 
@@ -139,14 +140,6 @@ public class PublicModel : PageModel
 
         return Redirect("/" + User.Identity.Name);
     }
-}
-
-public class NewCheep 
-{
-    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
-    [MaxLength(160)]
-    [Display(Name = "text")]
-    public string? Message {get; set;} = string.Empty;
 }
 
 public class NewFollow 

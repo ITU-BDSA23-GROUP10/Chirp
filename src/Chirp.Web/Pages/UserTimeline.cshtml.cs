@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
+using Chirp.Web.ViewComponents;
 
 namespace Chirp.Web.Pages;
 
