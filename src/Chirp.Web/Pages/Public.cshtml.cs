@@ -32,7 +32,7 @@ public class PublicModel : PageModel
     {
 
         AsyncPadlock padlock = new();
-        var userName = User.Identity.Name;
+        var userName = User?.Identity?.Name ?? "default";
 
         try
         {
@@ -103,7 +103,7 @@ public class PublicModel : PageModel
     //follow form button
     public async Task<IActionResult> OnPostFollow() 
     {
-        var LoggedInUserName = User.Identity.Name;
+        var LoggedInUserName = User?.Identity?.Name ?? "default";
         //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         

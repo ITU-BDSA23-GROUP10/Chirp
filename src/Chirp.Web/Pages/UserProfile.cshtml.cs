@@ -19,15 +19,15 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
 
     public async Task<ActionResult> OnGetAsync()
     {
+        var userName = User?.Identity?.Name ?? "default";
         if(User?.Identity?.IsAuthenticated == false) {
             return Redirect("/");
         }
         
-        if(await _userService.GetUserByName(User.Identity.Name) == null) {
-            await _userService.CreateUser(User.Identity.Name);
+        if(await _userService.GetUserByName(userName) == null) {
+            await _userService.CreateUser(userName);
         }
 
-        var userName = User.Identity.Name;
         var user = await _userService.GetUserByName(userName);
         
         ViewData["UserName"] = user.Name;
@@ -45,7 +45,7 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         var userName = User?.Identity?.Name ?? "default";
         var user = await _userService.GetUserByName(userName);
         await _userService.DeleteAllFollowers(user.UserId);
-        _userService.DeleteUser(user);
+        await _userService.DeleteUser(user);
 
         return await Logout();
     }
