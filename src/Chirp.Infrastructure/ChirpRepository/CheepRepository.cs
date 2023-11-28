@@ -100,9 +100,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                 TimeStamp = timestamp
             });
         }
-        catch (ArgumentException e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message, ", failed validation");
+            throw e;
         }
     }
     
