@@ -11,7 +11,7 @@
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("profile");
     ViewData["RouteName"] = routeName;
-
+    string email = Model.NewEmail.Email;
 }
 
 <div>
@@ -27,6 +27,10 @@
                 @*//TODO Add ability to update email *@
             } else {  
             @*//TODO Add ability to add email *@
+            <form asp-page-handler="AddUpdateEmail" method="post">
+                <input style="float: left" type="text" name="email" value="@email" />
+                <input type="submit" value="AddEmail">
+            </form>
             }
         </div>
 

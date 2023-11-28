@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.Pages;
 
@@ -13,6 +14,8 @@ public class UserProfileModel : PageModel
 {
     readonly IUserRepository<User> _userService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
+
+    public NewEmail NewEmail {get; set;} = new();
 
     public List<User> following { get; set; } = new List<User>();
 
@@ -144,4 +147,20 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
 
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
+
+    public async Task<IActionResult> OnPostAddUpdateEmail() {
+        var user = await _userService.GetUserByName(User.Identity.Name);
+
+        user.Email = NewEmail.Email;
+        await _userService.UpdateUserEmail(user.Name, user.Email);
+
+        return Redirect("/profile");
+    }
+
 }
+    public class NewEmail 
+    {
+    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
+    [Display(Name = "email")]
+    public string? Email {get; set;} = string.Empty;
+    }

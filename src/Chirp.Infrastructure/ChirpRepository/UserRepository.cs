@@ -108,6 +108,23 @@ public class UserRepository : IUserRepository<User>
         }
     }
 
+    public async Task UpdateUserEmail(string name, string email)
+    {
+        var user = await GetUserByName(name);
+
+        // checks if user exists and if email is null or empty
+        if (user is null)
+        {
+            throw new Exception("User does not exist");
+        } else if (email is not null && email != "")
+        {
+            throw new Exception("Email is null or empty");
+        }
+
+        user.Email = email;
+        context.SaveChanges();
+    }
+
     public async Task FollowUser(FollowDTO followDTO)
     {
         var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
