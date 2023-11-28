@@ -153,8 +153,7 @@ public class UserTimelineModel : PageModel
                 Cheeps.AddRange(UserCheeps);
                 ViewData["CheepsCount"] = cheepsCount;
             }
-            Cheeps = Cheeps.OrderByDescending(c => c.Timestamp).ToList(); 
-            
+            Cheeps = Cheeps.OrderByDescending(c => c.Timestamp).ToList();    
         }
         finally
         {
