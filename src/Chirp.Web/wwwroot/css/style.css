@@ -257,3 +257,7 @@ li.topic {
   background-color: #53110c;
   color: white;
 }
+.appTitle{
+  text-decoration: none;
+  color: white;
+}

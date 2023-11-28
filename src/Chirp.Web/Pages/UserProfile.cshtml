@@ -1,0 +1,42 @@
+@page "/Profile"
+@model Chirp.Web.Pages.UserProfileModel
+@using System
+@using Chirp.Core
+@using Chirp.Infrastructure.Models;
+@inject IUserRepository<User> UserRepository
+@{
+
+    ViewData["Title"] = "Chirp!";
+    
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("profile");
+    ViewData["RouteName"] = routeName;
+
+}
+
+<div>
+
+    @if (User.Identity is not null && User.Identity.IsAuthenticated)
+    {
+        
+    <h2> @User.Identity.Name's profile </h2>
+        <div>
+            <h3> Username: @ViewData["UserName"].</h3>
+            @* Add ability to add / change email here *@
+            <h3> Email: @ViewData["UserEmail"]</h3> 
+        </div>
+
+        <div>
+            <form asp-page-handler="ForgetMe" method="post">
+                <input type="hidden" name="User" value="@User.Identity.Name"/>
+                <button class="frgtbttn forgetme"> Forget Me </button>
+            </form>
+        </div>
+
+    }
+    else
+    {
+        <em>You need to be logged in to view the profile page</em>
+    }
+
+</div>

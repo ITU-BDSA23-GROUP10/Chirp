@@ -21,7 +21,7 @@
     @* Snippet from tutorialspoint: https://www.tutorialspoint.com/How-to-use-an-image-as-a-link-in-HTML *@
     <h1><a href="/"><img src="/images/icon1.png" alt="Icon1"/></a>
     @* Snippet from W3Schools: https://www.w3schools.com/tags/att_style.asp *@
-        <a href="/" style="text-decoration: none; color: white;">Chirp!</a>
+        <a href="/" class="appTitle">Chirp!</a>
     </h1>
         <div class=navigation>
         @if (User.Identity is not null && User.Identity.IsAuthenticated)
@@ -29,7 +29,8 @@
             <div>
                 <a href="/@(User.Identity.Name)">my timeline</a> |
                 <a href="/">public timeline</a> |
-                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(User.Identity.Name)]</a>
+                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout</a> |
+                <a href= "/profile">[@User.Identity.Name] profile</a>
             </div>
         }
         else
