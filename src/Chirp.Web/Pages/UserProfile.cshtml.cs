@@ -88,6 +88,8 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
     public async Task<IActionResult> OnPostDownloadData() {
         // This is the filepath where the file will be saved
         var folder = Path.Combine("userDataFolder");
+        Directory.CreateDirectory(folder);
+        
         string filePathName = Path.Combine(folder, User.Identity.Name + "_UserData.json");
 
         // This is the data that will be saved
