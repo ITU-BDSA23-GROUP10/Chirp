@@ -110,7 +110,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
     [Theory]
     [InlineData("Anakin", "skywalker@jedi.com")]
-    public async void DeleteUser(string name, string email)
+    public async Task DeleteUser(string name, string email)
     {
         // Arrange
         var context = SetupContext(_sqlServer.GetConnectionString());
@@ -122,7 +122,9 @@ public class ChirpDatabaseTest : IAsyncLifetime
         var userToBeDeleted = await userService.GetUserByName(name);
         if (userToBeDeleted is null) {
             throw new Exception("User not found");
-        } else {
+        }
+        else
+        {
             // Act part II
             userService.DeleteUser(userToBeDeleted);
 
