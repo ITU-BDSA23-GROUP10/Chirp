@@ -35,7 +35,7 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Install EF Tools
-      run: dotnet tool install --global dotnet-ef --version 7.0.14
+      run: dotnet tool install --global dotnet-ef --version 7.0.13
 
     - name: install Azure CLI
       run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
