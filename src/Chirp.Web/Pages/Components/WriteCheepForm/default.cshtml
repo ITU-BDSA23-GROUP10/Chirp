@@ -1,0 +1,12 @@
+﻿@using Chirp.Web.ViewComponents;
+@{
+    string message = Model.Message;
+}
+
+<div class="cheepbox">
+        <h3>What's on your mind?</h3>
+        <form method="post">
+                <input style="float: left" type="text" name="message" value="@message" />
+                <input type="submit" value="Share">
+        </form>
+</div>

@@ -65,7 +65,9 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            context.Authors.Add(new Author { Name = author, Email = $"test@gmail.com" });
+            var newUser = new User { Name = author, Email = $"test@gmail.com" };
+            context.Users.Add(newUser);
+            context.Authors.Add(new Author { User = newUser });
             await context.SaveChangesAsync();
             
             var response = await _client.GetAsync($"/{author}");
@@ -128,8 +130,12 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            context.Authors.Add(new Author { Name = "nayhlalolk", Email = "oiw33e@gmail.com" });
-            context.Authors.Add(new Author { Name = "testtesttesttesttest", Email = "testtest@hotmail.com" });
+            var newUser1 = new User(){ Name = "nayhlalolk", Email = "oiw33e@gmail.com" };
+            var newUser2 = new User(){ Name = "testtesttesttesttest", Email = "testtest@hotmail.com" };
+            context.Users.Add(newUser1);
+            context.Users.Add(newUser2);
+            context.Authors.Add(new Author { User = newUser1 });
+            context.Authors.Add(new Author { User = newUser2 });
             await context.SaveChangesAsync();
         }
 
@@ -138,8 +144,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
 
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com");
-            var nonauthor = context.Authors.FirstOrDefault(a => a.Name == "check" && a.Email == "check");
+            var author = context.Authors.FirstOrDefault(a => a.User.Name == "nayhlalolk" && a.User.Email == "oiw33e@gmail.com");
+            var nonauthor = context.Authors.FirstOrDefault(a => a.User.Name == "check" && a.User.Email == "check");
 
             Assert.NotNull(author);
             Assert.Null(nonauthor);
@@ -158,7 +164,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         using (var scope = factory.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            var author = context.Authors.FirstOrDefault(a => a.Name == "nayhlalolk" && a.Email == "oiw33e@gmail.com");
+            var author = context.Authors.FirstOrDefault(a => a.User.Name == "nayhlalolk" && a.User.Email == "oiw33e@gmail.com");
 
             Assert.Null(author);
         }
@@ -179,34 +185,26 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
 
             var cheep = new CheepCreateDTO(message, authorName);
             // Act            
             try 
             {
                 await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
-            } catch 
+            }
+            catch 
             {
-                await ar.CreateAuthor(authorName, authorEmail);
-                await context.SaveChangesAsync();
+                await ur.CreateUser(authorName, authorEmail);
+                await ar.CreateAuthor( await ur.GetUserByName(authorName) );
                 await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
-            } finally 
-            {
-                await context.SaveChangesAsync();
             }
 
             // Assert
             var retrievedAuthor = await ar.GetAuthorByName(authorName);
 
-            if (retrievedAuthor is null) 
-            {
-                Assert.Fail("Retrieved Author was null.");
+            Assert.Equal(authorName, retrievedAuthor.User.Name);
+            Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
             }
-            else 
-            {
-                Assert.Equal(authorName, retrievedAuthor.Name);
-                Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
-            }
-        }
     }
 }

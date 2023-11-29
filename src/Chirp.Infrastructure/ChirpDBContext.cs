@@ -9,6 +9,8 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Follows> Follows { get; set; }
     // public string DbPath { get; }
 
     /*public ChirpDBContext()
@@ -35,14 +37,33 @@ public class ChirpDBContext : DbContext
             cheep.Property(ch => ch.Text).HasMaxLength(160);
         });
 
+        // Users
+        modelBuilder.Entity<User>( user =>
+        {
+            user.Property(us => us.UserId).ValueGeneratedOnAdd();
+            user.HasKey(us => us.UserId);
+            user.HasIndex(us => us.Name).IsUnique();
+            user.Property(us => us.Email).HasMaxLength(50);
+
+            // user.HasMany(us => us.Following)
+            // .WithMany(us => us.Followers)
+            // .HasForeignKey(us => us.UserId)
+            // .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Follows
+        modelBuilder.Entity<Follows>( follows => 
+        {
+            // code from https://stackoverflow.com/a/2912896
+            follows.HasKey(_follow => new { _follow.FollowerId, _follow.FollowingId });
+            follows.HasIndex(_follow => new { _follow.FollowerId, _follow.FollowingId }).IsUnique();
+
         // Authors
         modelBuilder.Entity<Author>( author =>
         {
             // General Author properties
-            author.Property(au => au.AuthorId).ValueGeneratedOnAdd();
+            // author.Property(au => au.AuthorId).ValueGeneratedOnAdd();
             author.HasKey(au => au.AuthorId);
-            author.HasIndex(au => au.Name).IsUnique();
-            author.Property(au => au.Email).HasMaxLength(50);
 
             // Establish relationship between Author and Cheeps
             author.HasMany(au => au.Cheeps)
@@ -50,5 +71,5 @@ public class ChirpDBContext : DbContext
             .HasForeignKey(ch => ch.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
         });
-    }
-}
+    });
+}}
