@@ -24,9 +24,62 @@
             <h3> Username: @ViewData["UserName"]</h3>
             @if(ViewData["UserEmail"] != null) {
                 <h3> Email: @ViewData["UserEmail"]</h3> 
-                @*//TODO Add ability to update email *@
+                <h3> Update your email:</h3>
+                @if(ViewData["EmailError"] == "formatting")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email formatting is incorrect
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "duplicate")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email already exists
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "success")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Email successfully updated
+                        ViewData["EmailError"] = null;
+                    </div>
+                } else if (ViewData["EmailError"] == "error")
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Error updating email
+                    </div>
+                    ViewData["EmailError"] = null;
+                }
+                <form asp-page-handler="AddUpdateEmail" method="post">
+                    <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
+                    <input type="submit" value="Add Email">
+                </form>
             } else {  
-            @*//TODO Add ability to add email *@
+            @if(ViewData["EmailError"] == "formatting")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email formatting is incorrect
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "duplicate")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email already exists
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "success")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Email successfully updated
+                        ViewData["EmailError"] = null;
+                    </div>
+                } else if (ViewData["EmailError"] == "error")
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Error updating email
+                    </div>
+                    ViewData["EmailError"] = null;
+                }
             <form asp-page-handler="AddUpdateEmail" method="post">
                 <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
                 <input type="submit" value="Add Email">

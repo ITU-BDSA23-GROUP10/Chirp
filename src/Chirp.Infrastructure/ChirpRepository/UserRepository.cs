@@ -107,7 +107,7 @@ public class UserRepository : IUserRepository<User>
             InsertUser(userEntity);
         }
     }
-    // checks if user exists and if email is null or empty before updating email
+    // checks if user exists and if email is null or empty 
     public async Task UpdateUserEmail(string name, string email)
     {
         var user = await GetUserByName(name);
@@ -133,7 +133,6 @@ public class UserRepository : IUserRepository<User>
         context.SaveChanges();
     }
 
-    }
 
     public async Task FollowUser(FollowDTO followDTO)
     {
