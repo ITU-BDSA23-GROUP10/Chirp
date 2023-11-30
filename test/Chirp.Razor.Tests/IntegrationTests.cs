@@ -225,5 +225,4 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
             }
     }
-    
 }
