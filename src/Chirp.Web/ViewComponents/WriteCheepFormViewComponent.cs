@@ -28,7 +28,7 @@ public class WriteCheepFormViewComponent : ViewComponent
             await padlock.Lock();
             author = await _authorService.GetAuthorByName(userName);
 
-            if (author is null) 
+            if (author is null)
             {
                 //await _authorService.CreateAuthor(userName);
                 author = await _authorService.GetAuthorByName(userName);

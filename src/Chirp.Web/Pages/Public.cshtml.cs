@@ -30,35 +30,42 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-
         AsyncPadlock padlock = new();
         var userName = User?.Identity?.Name ?? "default";
 
         try
         {
-        await padlock.Lock();
-        var author = await _authorService.GetAuthorByName(userName);
+            await padlock.Lock();
+            var author = await _authorService.GetAuthorByName(userName);
 
-        // Create new auther if does not exist in database ready
-        if (author is null) 
-        {
-            var user = await _userService.GetUserByName(userName);
-            if (user is null) {
-                await _userService.CreateUser(userName);
-                user = await _userService.GetUserByName(userName)
-                    ?? throw new InvalidOperationException("author could not be created.");
+            // Create new auther if does not exist in database ready
+            if (author is null) 
+            {
+                var user = await _userService.GetUserByName(userName);
+                
+                if (user is null) {
+                    await _userService.CreateUser(userName);
+                    user = await _userService.GetUserByName(userName)
+                        ?? throw new InvalidOperationException("author could not be created.");
+                }
+
+                await _authorService.CreateAuthor(user);
+                author = await _authorService.GetAuthorByName(userName);
             }
-            await _authorService.CreateAuthor(user);
-            author = await _authorService.GetAuthorByName(userName);
-        }
 
-        if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
-        {
-            throw new ArgumentNullException(nameof(NewCheep.Message), "NewCheep.Message cannot be null or empty.");
-        }
-        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-        
-        await _cheepService.CreateCheep(cheep, author);
+            if (author is null) 
+            {
+                throw new InvalidOperationException("author could not be created.");
+            }
+
+            if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
+            {
+                throw new ArgumentNullException(nameof(NewCheep.Message), "Cheep cannot be null or empty.");
+            }
+
+            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+            
+            await _cheepService.CreateCheep(cheep, author);
 
         }
         finally
@@ -112,12 +119,19 @@ public class PublicModel : PageModel
         //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         
+        // Check if followedUserName is null
+        if (FollowedUserName == null)
+        {
+            throw new ArgumentNullException("Followed user does not exist.");
+        }
+        
         //Check if the user that is logged in exists
         try {
             var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
             if (loggedInUser is null) {
                 throw new Exception("User does not exist");
             }
+            
         } catch (Exception e) {
             Console.WriteLine(e.Message);
             await _userService.CreateUser(LoggedInUserName);
