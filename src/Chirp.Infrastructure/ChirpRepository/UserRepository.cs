@@ -121,7 +121,10 @@ public class UserRepository : IUserRepository<User>
             throw new Exception("Email is null or empty");
         }
 
-        user.Email = email;
+        // move this into a seperate function
+        DbSetUser
+        .Where(t => t.UserId == user.UserId)
+        .ExecuteUpdate(t => t.SetProperty(e => e.Email, e => email));
         context.SaveChanges();
     }
 

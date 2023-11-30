@@ -28,8 +28,8 @@
             } else {  
             @*//TODO Add ability to add email *@
             <form asp-page-handler="AddUpdateEmail" method="post">
-                <input style="float: left" type="text" name="email" value="@email" />
-                <input type="submit" value="AddEmail">
+                <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
+                <input type="submit" value="Add Email">
             </form>
             }
         </div>
