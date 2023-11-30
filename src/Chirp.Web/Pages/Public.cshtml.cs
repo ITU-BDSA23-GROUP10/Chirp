@@ -28,9 +28,9 @@ public class PublicModel : PageModel
         _userService = userService;
     }
 
-    // take a look at this again together with usertimeline.cshtml.cs OnPost() method
     public async Task<IActionResult> OnPost()
     {
+
         AsyncPadlock padlock = new();
         var userName = User?.Identity?.Name ?? "default";
 
@@ -46,30 +46,21 @@ public class PublicModel : PageModel
             if (user is null) {
                 await _userService.CreateUser(userName);
                 user = await _userService.GetUserByName(userName);
-
-                // Check if user is null again after trying to fetch it (TODO:check if this is correct?)
-                if (user is null)
-                {
-                    throw new InvalidOperationException("User could not be created.");
-                }
+            }
+            // Check if author is null again after trying to fetch it (TODO:check if this is correct?)
+            if (user is null)
+            {
+                throw new InvalidOperationException("author could not be created.");
             }
             await _authorService.CreateAuthor(user);
             author = await _authorService.GetAuthorByName(userName);
         }
 
-        /*
         if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
         {
             throw new ArgumentNullException(nameof(NewCheep.Message), "NewCheep.Message cannot be null or empty.");
-        }*/
-
-        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-        
-        // Check if author is null again after trying to fetch it (TODO:check if this is correct?)
-        if (author is null)
-        {
-            throw new InvalidOperationException("author could not be created.");
         }
+        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
         
         await _cheepService.CreateCheep(cheep, author);
 
@@ -125,59 +116,47 @@ public class PublicModel : PageModel
         //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         
-        if (string.IsNullOrEmpty(FollowedUserName))
-        {
-            throw new ArgumentException("FollowedUserName cannot be null or empty");
-        }
-        else
-        {
-            //Check if the user that is logged in exists
-            try {
-                var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
-                if (loggedInUser is null) {
-                    throw new Exception("User does not exist");
-                }
-            } catch (Exception e) {
-                Console.WriteLine(e.Message);
-                await _userService.CreateUser(LoggedInUserName);
+        //Check if the user that is logged in exists
+        try {
+            var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
+            if (loggedInUser is null) {
+                throw new Exception("User does not exist");
             }
-
-            var followerId = await _userService.GetUserIDByName(LoggedInUserName);
-            var followingId = await _userService.GetUserIDByName(FollowedUserName);
-
-            var followDTO = new FollowDTO(followerId, followingId);
-            
-            await _userService.FollowUser(followDTO);
-
-            return Redirect("/" + LoggedInUserName);
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+            await _userService.CreateUser(LoggedInUserName);
         }
+
+        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+
+        var followDTO = new FollowDTO(followerId, followingId);
+        
+        await _userService.FollowUser(followDTO);
+
+        return Redirect("/" + LoggedInUserName);
     }
 
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
-        var userName = User?.Identity?.Name;
-
-        if (string.IsNullOrEmpty(userName))
-        {
-            throw new ArgumentNullException(nameof(userName), "User name cannot be null or empty.");
-        }
-
+        var userName = User?.Identity?.Name ?? "default";
         // Convert the username to Id
-        var followerId = await _userService.GetUserIDByName(userName);
-
         if (string.IsNullOrEmpty(NewFollow.Author))
         {
-            throw new ArgumentNullException(nameof(NewFollow.Author), "Author cannot be null or empty.");
+            throw new ArgumentException("NewFollow.Author cannot be null or empty");
         }
+        else
+        {
+            var followerId = await _userService.GetUserIDByName(userName);
+            var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
-        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+            var unfollowDTO = new FollowDTO(followerId, followingId);
+                
+            await _userService.UnfollowUser(unfollowDTO);
 
-        var unfollowDTO = new FollowDTO(followerId, followingId);
-            
-        await _userService.UnfollowUser(unfollowDTO);
-
-        return Redirect("/" + User?.Identity?.Name);
+            return Redirect("/" + userName);
+        }
     }
 }
 

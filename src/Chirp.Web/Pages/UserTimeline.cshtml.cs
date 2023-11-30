@@ -54,11 +54,11 @@ public class UserTimelineModel : PageModel
             }
         }
 
-        /*
+        
         if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
         {
             throw new ArgumentNullException(nameof(NewCheep.Message), "NewCheep.Message cannot be null or empty.");
-        }*/
+        }
         
         var cheep = new CheepCreateDTO(NewCheep.Message, userName);
         
@@ -169,7 +169,7 @@ public class UserTimelineModel : PageModel
                 count += await _authorService.GetCheepsCountsFromAuthorId(id);
             }
 
-            if (User?.Identity?.Name == author) // logged-in user's page
+            if (userName == author) // logged-in user's page
             {
                 (UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
                 Cheeps.Clear();
