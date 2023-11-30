@@ -116,7 +116,7 @@ public class UserRepository : IUserRepository<User>
         if (user is null)
         {
             throw new Exception("User does not exist");
-        } else if (email is not null && email != "")
+        } else if (email is null || email == "")
         {
             throw new Exception("Email is null or empty");
         }

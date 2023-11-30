@@ -22,11 +22,11 @@ public class UserProfileModel : PageModel
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService)
-{
-    _userService = userService;
-    _authorService = authorService;
-}    
+    public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService)
+    {
+        _userService = userService;
+        _authorService = authorService;
+    }    
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -149,19 +149,16 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
 
-    public async Task<IActionResult> OnPostAddUpdateEmail(string email) {
-        var user = await _userService.GetUserByName(User.Identity.Name);
-
-        user.Email = NewEmail.Email;
-        await _userService.UpdateUserEmail(user.Name, NewEmail.Email);
+    public async Task<IActionResult> OnPostAddUpdateEmail() {
+        await _userService.UpdateUserEmail(User.Identity.Name, NewEmail.Email);
 
         return Redirect("/profile");
     }
 
 }
-    public class NewEmail 
-    {
+public class NewEmail 
+{
     //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
     [Display(Name = "email")]
     public string Email {get; set;}
-    }
+}
