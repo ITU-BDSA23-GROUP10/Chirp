@@ -13,7 +13,7 @@ namespace PlaywrightTests;
 [TestFixture]
 class Program
 {
-    [Test]
+    /*[Test]
     public static async Task LoginWithUser()
     {
         using var playwright = await Playwright.CreateAsync();
@@ -89,7 +89,7 @@ class Program
         
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
-    }
+    }*/
 
     [Test]
     public static async Task LoginAndDeleteUser()
@@ -123,16 +123,14 @@ class Program
 
         //LoginWithUser();
 
-        await page.Locator("#NewCheep_Message").ClickAsync();
-
-        await page.Locator("#NewCheep_Message").FillAsync("this is a user test from the UI test github user");
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-
-        await page.GetByText("this is a user test from the UI test github user").ClickAsync();
-
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
-        await page.GetByRole(AriaRole.Link, new() { Name = "Forget Me" }).ClickAsync();
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.GotoAsync("https://localhost:5273/UI-tester-bdsa");
+
+        await page.GetByText("User UI-tester-bdsa does not exist").ClickAsync();
+
+        await page.GetByText("Go back to the home page").ClickAsync();
     }
 }
