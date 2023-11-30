@@ -48,9 +48,17 @@ public class UserTimelineModel : PageModel
             author = await _authorService.GetAuthorByName(userName);
         }
 
-        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-        
-        await _cheepService.CreateCheep(cheep, author);
+        if(NewCheep.Message is null || NewCheep.Message.Length < 1)
+        {
+            ViewData["CheepTooShort"] = "true";
+            return Page();
+        } else 
+        {
+            ViewData["CheepTooShort"] = "false";
+            
+            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+            await _cheepService.CreateCheep(cheep, author);
+        }
 
         }
         finally
