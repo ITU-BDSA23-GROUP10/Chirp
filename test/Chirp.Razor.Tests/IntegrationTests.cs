@@ -235,9 +235,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             {
                 Assert.Fail("Failed to create follow_User");
             }
-
-            
-
             // Act            
             try 
             {
