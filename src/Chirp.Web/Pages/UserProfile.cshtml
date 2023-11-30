@@ -21,10 +21,10 @@
         
     <h2> @User.Identity.Name's profile </h2>
         <div>
-            <h3> Username: @ViewData["UserName"]</h3>
+            <p> Username: @User.Identity.Name</p>
             @if(ViewData["UserEmail"] != null) {
-                <h3> Email: @ViewData["UserEmail"]</h3> 
-                <h3> Update your email:</h3>
+                <p> Email: @ViewData["UserEmail"]</p> 
+                <h4> Update your email:</h4>
                 @if(ViewData["EmailError"] == "formatting")
                 {
                     <div class="alert alert-warning" role="alert">
@@ -41,8 +41,8 @@
                 {
                     <div class="alert alert-success" role="alert">
                         Email successfully updated
-                        ViewData["EmailError"] = null;
                     </div>
+                        ViewData["EmailError"] = null;
                 } else if (ViewData["EmailError"] == "error")
                 {
                     <div class="alert alert-danger" role="alert">
@@ -88,21 +88,21 @@
         </div>
 
         <div>
-            <h3> Download user data: </h3>
+            <h4> Download user data: </h4>
             <form class="dwnlbttn" asp-page-handler="DownloadData" method="post"> 
                 <button class="dwnlbttn"> Download Data </button>
             </form>
         </div>
 
         <div> 
-            <h3> Delete user data: </h3>
+            <h4> Delete user data: </h4>
             <form asp-page-handler="ForgetMe" method="post">
                 <input type="hidden" name="User" value="@User.Identity.Name"/>
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
         <div>
-            <h3>Following: </h3>
+            <h4>Following: </h4>
             @foreach (var UserFollow in Model.following)
             {
                 <li>
@@ -111,7 +111,7 @@
             }
         </div>
         <div>
-            <h3>@User.Identity.Name's Cheeps:</h3>
+            <h4>@User.Identity.Name's Cheeps:</h4>
             @if (Model.cheeps?.Any() == true)
             {
                 <ul id="messagelist" class="cheeps">

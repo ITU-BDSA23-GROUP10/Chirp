@@ -152,6 +152,13 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostAddUpdateEmail() {
 
+        if(User.Identity.IsAuthenticated) {
+            var email = (await _userService.GetUserByName(User.Identity.Name)).Email;
+            if(email != null) {
+                ViewData["UserEmail"] = email;
+            }
+        }
+
         var validator = new EmailValidator();
         var result = validator.Validate(NewEmail);
 
