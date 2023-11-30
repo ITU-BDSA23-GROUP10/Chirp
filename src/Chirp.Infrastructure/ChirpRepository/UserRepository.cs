@@ -9,8 +9,8 @@ namespace Chirp.Infrastructure.ChirpRepository;
 
 public class UserRepository : IUserRepository<User>
 {
-    protected DbSet<User> DbSetUser; 
-    protected DbSet<Follows> DbSetFollows;   
+    protected DbSet<User> DbSetUser;
+    protected DbSet<Follows> DbSetFollows;
     protected ChirpDBContext context;
 
     public UserRepository(ChirpDBContext dbContext)
@@ -152,8 +152,9 @@ public class UserRepository : IUserRepository<User>
             throw new Exception("Follow record already exists");
         }
     }
-    
-    public async Task<int> getUserFollowingCountById(int userId) {
+
+    public async Task<int> getUserFollowingCountById(int userId)
+    {
         return await DbSetFollows.CountAsync(f => f.FollowingId == userId);
     }
 
@@ -190,28 +191,33 @@ public class UserRepository : IUserRepository<User>
     }
 
     //Returns all ids of users following a user
-    public async Task<List<int>> GetIdsFollowingUser(int userId) {
+    public async Task<List<int>> GetIdsFollowingUser(int userId)
+    {
         var IdsFollowingUser = await DbSetFollows
             .Where(f => f.FollowingId == userId)
             .Select(f => f.FollowerId)
-            .ToListAsync();    
+            .ToListAsync();
 
-        return IdsFollowingUser;       
+        return IdsFollowingUser;
     }
 
     //deletes all followers of a user
-    public async Task LoopDeleteFollowers(List<int> followedUsers, int userId) {
-        foreach(int id in followedUsers) {
-            var follow = new Follows() {
+    public async Task LoopDeleteFollowers(List<int> followedUsers, int userId)
+    {
+        foreach (int id in followedUsers)
+        {
+            var follow = new Follows()
+            {
                 FollowerId = userId,
                 FollowingId = id
             };
             DeleteFollow(follow);
-            }
+        }
         return;
     }
-    
-    public async Task DeleteAllFollowers(int userId) {
+
+    public async Task DeleteAllFollowers(int userId)
+    {
         //gets all users the user is following
         List<int> followedUsers = await GetFollowedUsersId(userId);
 
@@ -225,6 +231,6 @@ public class UserRepository : IUserRepository<User>
         await LoopDeleteFollowers(followedUsers, userId);
 
         return;
-        }
+    }
     #endregion
 }
