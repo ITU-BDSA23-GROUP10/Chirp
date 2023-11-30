@@ -20,10 +20,6 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       WEB_APP_NAME: ${{ secrets.WEB_APP_NAME }}
       RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
-      # AZURE_DB_URL: ${{ secrets.AZURE_DB_URL }}
-      # USER_NAME: ${{ secrets.USER_NAME }}
-      # PASSWORD: ${{ secrets.PASSWORD }}
-      # DB_NAME: ${{ secrets.DB_NAME }}
 
     steps:
     - name: Checkout Code
@@ -52,11 +48,10 @@ jobs:
 
     - name: Apply EF migrations
       run: |
-        # the --output tsv is just formatting (tab-seperated values), json is the default (might change this to json?)
+        # the --output tsv is just formatting (tab-seperated values), json is the default)
         # the az command gets the password and other details directly from azure
         # --query "[0].value" --output tsv
         CONNECTION_STRING=$(az webapp config connection-string list --name $WEB_APP_NAME --resource-group $RESOURCE_GROUP --query "[0].value" --output tsv)
-        # Rasmus used efbundle in his code
         # https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#bundles
         chmod +x efbundle
         ./efbundle --connection "$CONNECTION_STRING"
