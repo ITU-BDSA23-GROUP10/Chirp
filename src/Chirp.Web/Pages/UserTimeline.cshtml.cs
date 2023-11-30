@@ -9,10 +9,10 @@ namespace Chirp.Web.Pages;
 public class UserTimelineModel : PageModel
 {
     [BindProperty]
-    public NewCheep NewCheep {get; set;} = new();
+    public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty};
     
     [BindProperty]
-    public NewFollow NewFollow {get; set;} = new();
+    public NewFollow NewFollow { get; set; } = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
