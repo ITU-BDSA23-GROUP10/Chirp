@@ -141,7 +141,6 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
             System.IO.File.Delete(filePathName);
         }
 
-
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
 }
