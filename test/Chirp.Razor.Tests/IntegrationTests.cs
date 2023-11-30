@@ -51,6 +51,24 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Contains($"{author}'s Timeline", content);
     }
 
+    [Theory]
+    //Do not put test2 as a inline data the test will fail cause microsoft hates me
+    [InlineData("test1")]
+    [InlineData("test3")]
+    public async Task UserDoesntExistPageErrorTest(string authorName) 
+    {
+        var response = await _client.GetAsync("/" + authorName);
+        response.EnsureSuccessStatusCode();
+
+        var contentPage = await response.Content.ReadAsStringAsync();
+
+        string UserDoesntExist = "User " + authorName + " does not exist";
+        string GoBackHome = "Go back to the home page";
+
+        Assert.Contains(UserDoesntExist, contentPage);
+        Assert.Contains(GoBackHome, contentPage);
+    }
+
     // Checks if author, with no cheeps, has no cheeps.
     [Theory]
     [InlineData("Vobiscum")]
