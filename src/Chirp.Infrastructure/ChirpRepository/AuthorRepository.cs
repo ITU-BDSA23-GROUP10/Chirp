@@ -114,7 +114,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     public async Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit)
     {
-        
         var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
 
         if (authorEntity is null)

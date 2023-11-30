@@ -126,13 +126,15 @@ public class PublicModel : PageModel
         }
         
         //Check if the user that is logged in exists
-        try {
+        try
+        {
             var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
             if (loggedInUser is null) {
                 throw new Exception("User does not exist");
             }
-            
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             await _userService.CreateUser(LoggedInUserName);
         }

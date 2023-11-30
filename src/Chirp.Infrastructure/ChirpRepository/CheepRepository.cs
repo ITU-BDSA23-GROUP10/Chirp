@@ -71,16 +71,12 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
-
-        
         if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
         }
-
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
-        
         try
         {
             var validationResult = validator.Validate(newCheep);

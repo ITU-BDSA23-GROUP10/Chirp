@@ -181,7 +181,7 @@ public class UserRepository : IUserRepository<User>
                 FollowingId = id
             };
             await DeleteFollow(follow);
-            }
+        }
         return;
     }
     

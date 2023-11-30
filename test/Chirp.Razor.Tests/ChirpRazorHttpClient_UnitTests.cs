@@ -55,6 +55,5 @@ public class ChirpCliHttpClient_UnitTests
         
         //assert
         Assert.NotEmpty(cheeps);
-        
     }
 }

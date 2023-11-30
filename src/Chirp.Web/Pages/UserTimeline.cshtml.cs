@@ -131,7 +131,6 @@ public class UserTimelineModel : PageModel
         await _userService.UnfollowUser(unfollowDTO);
 
         return Redirect("/" + userName);
-            
         }    
     }
 
