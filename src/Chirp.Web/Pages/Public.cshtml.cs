@@ -45,12 +45,8 @@ public class PublicModel : PageModel
             var user = await _userService.GetUserByName(userName);
             if (user is null) {
                 await _userService.CreateUser(userName);
-                user = await _userService.GetUserByName(userName);
-            }
-            // Check if author is null again after trying to fetch it (TODO:check if this is correct?)
-            if (user is null)
-            {
-                throw new InvalidOperationException("author could not be created.");
+                user = await _userService.GetUserByName(userName)
+                    ?? throw new InvalidOperationException("author could not be created.");
             }
             await _authorService.CreateAuthor(user);
             author = await _authorService.GetAuthorByName(userName);

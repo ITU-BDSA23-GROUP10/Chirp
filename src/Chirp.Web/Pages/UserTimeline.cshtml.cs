@@ -44,22 +44,20 @@ public class UserTimelineModel : PageModel
         // Create new auther if does not exist in database ready
         if (author is null) 
         {
-            await _authorService.CreateAuthor(await _userService.GetUserByName(userName));
-            author = await _authorService.GetAuthorByName(userName);
-            
-            // Check if author is null again after trying to fetch it (TODO:check if this is correct?)
-            if (author is null)
-            {
-                throw new InvalidOperationException("author could not be created.");
+            var user = await _userService.GetUserByName(userName);
+            if (user is null) {
+                await _userService.CreateUser(userName);
+                user = await _userService.GetUserByName(userName)
+                    ?? throw new InvalidOperationException("author could not be created.");
             }
+            await _authorService.CreateAuthor(user);
+            author = await _authorService.GetAuthorByName(userName);
         }
 
-        
         if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
         {
             throw new ArgumentNullException(nameof(NewCheep.Message), "NewCheep.Message cannot be null or empty.");
         }
-        
         var cheep = new CheepCreateDTO(NewCheep.Message, userName);
         
         await _cheepService.CreateCheep(cheep, author);
