@@ -231,6 +231,10 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
                 await ur.CreateUser(followName, followEmail);
                 await ar.CreateAuthor( await ur.GetUserByName(followName) );
             }
+            catch
+            {
+                Assert.Fail("Failed to create follow_User");
+            }
 
             
 
@@ -263,7 +267,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(authorName, retrievedUser.Name);
             Assert.Equal(followName, retrievedFollow.Name);
             Assert.True(UserFollows);
-            }
             Assert.False(FollowDoesntFollowUser);
+            }
     }
 }
