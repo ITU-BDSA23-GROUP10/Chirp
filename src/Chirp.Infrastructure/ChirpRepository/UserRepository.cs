@@ -121,11 +121,18 @@ public class UserRepository : IUserRepository<User>
             throw new Exception("Email is null or empty");
         }
 
-        // move this into a seperate function
+        await UpdateEmail(user.UserId, email);
+    }
+
+    public async Task UpdateEmail(int userId, string email) 
+    {
         DbSetUser
-        .Where(t => t.UserId == user.UserId)
-        .ExecuteUpdate(t => t.SetProperty(e => e.Email, e => email));
+        .Where(user => user.UserId == user.UserId)
+        .ExecuteUpdate(user => user.SetProperty(e => e.Email, e => email));
+        
         context.SaveChanges();
+    }
+
     }
 
     public async Task FollowUser(FollowDTO followDTO)
