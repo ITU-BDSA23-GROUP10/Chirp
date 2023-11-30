@@ -21,7 +21,6 @@ public interface IUserRepository<User>
 
     Task CreateUser(string name, string? email = null);
     Task UpdateUserEmail(string name, string email);
-    Task UpdateEmail(int userId, string email);
 
     //follower
     Task FollowUser(FollowDTO followDTO);

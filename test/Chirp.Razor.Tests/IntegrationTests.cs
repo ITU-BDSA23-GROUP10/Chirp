@@ -173,7 +173,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     //Tests if the program can create a cheep using a try catch to ensure the author exists
     [Theory]
     [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
-    [InlineData("test2", "test2@test.de", "This is a test cheep2")]
+    [InlineData("test3", "test3@test.de", "This is a test cheep2")]
     public async Task CreateCheepInDatabase_CreateAuthorAfterException(string authorName, string authorEmail, string message) 
     {
         // Arrange
@@ -206,5 +206,62 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(authorName, retrievedAuthor.User.Name);
             Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
             }
+    }
+
+    //Tests if the program adds the email of a user
+    [Theory]
+    [InlineData("test1", "test1@itu.dk")]
+    [InlineData("test3", "test3@gmail.com")]
+    public async Task AddEmailInDatabase(string authorName, string authorEmail) 
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
+
+            // sets the email of the user  
+            await ur.CreateUser(authorName);
+            await ur.UpdateUserEmail(authorName, authorEmail);
+
+            var userEmail = (await ur.GetUserByName(authorName)).Email;
+
+            Assert.Equal(authorEmail, userEmail);
+        }
+    }
+
+    //Tests if the program changes the email of a user
+    [Theory]
+    [InlineData("test1", "test1@itu.dk", "test1@changed.dk")]
+    [InlineData("test3", "test3@gmail.com", "test3@changed.com")]
+    public async Task ChangeEmailInDatabase(string authorName, string authorEmail, string changedEmail) 
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
+
+            // sets the email of the user
+            await ur.CreateUser(authorName);
+            await ur.UpdateUserEmail(authorName, authorEmail);
+
+            // changes the email of the user
+            await ur.UpdateUserEmail(authorName, changedEmail);
+
+            var userEmail = (await ur.GetUserByName(authorName)).Email;
+            
+            Assert.Equal(changedEmail, userEmail);
+        }
     }
 }
