@@ -9,6 +9,9 @@
 }
 
 <div>
+    @if(ViewData["UserExists"] == "true") 
+    {
+
     <h2> @routeName's Timeline </h2>
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
@@ -78,4 +81,8 @@
     }
 
     @await Component.InvokeAsync("Pagination", ViewData["Author"])
+    } else 
+    {
+        <h2> User @routeName does not exist </h2>
+    }
 </div>
