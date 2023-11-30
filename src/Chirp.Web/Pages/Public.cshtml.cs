@@ -38,7 +38,7 @@ public class PublicModel : PageModel
             await padlock.Lock();
             var author = await _authorService.GetAuthorByName(userName);
 
-            // Create new auther if does not exist in database ready
+            // Create new author if it doesn't exist in database allready
             if (author is null) 
             {
                 var user = await _userService.GetUserByName(userName);
