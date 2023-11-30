@@ -135,7 +135,7 @@ public class UserRepository : IUserRepository<User>
     //is the author following or not?
     public async Task<bool> IsFollowing(int followerId, int followingId)
     {
-        return await DbSetFollows.AnyAsync(f => f.FollowerId == followerId && f.FollowingId == followingId);
+        return await DbSetFollows.AnyAsync(f => f.FollowerId == followerId && f.FollowingId == followingId) ?? false;
     }
 
     //unfollowing an author
