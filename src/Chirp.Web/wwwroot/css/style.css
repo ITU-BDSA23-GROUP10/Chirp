@@ -124,10 +124,8 @@ div.page ul.cheeps p {
   padding: 5px 0;
 }
 
-
 div.page ul.cheeps li img {
-  padding: 0 5px;
-  margin-right:10px;
+  margin-right:15px;
   width:50px;
   height:50px;
   border-radius:50%;
@@ -235,7 +233,9 @@ li.topic {
   min-height: 20px;
 }
 
-.flwbtn{
+.flwbtn,
+.dwnlbttn,
+.frgtbttn{
   border-radius: 25px;
   padding: 6px 20px;
   -webkit-font-smoothing: antialiased;
@@ -246,18 +246,45 @@ li.topic {
   font-weight: 500;
   border: none;
 }
-.flwbtn:hover{
+.flwbtn:hover,
+.download:hover,
+.forgetme:hover {
   background-color: #cc6e6e;
 }
 .follow {
   background-color: #26776F;
   color: white;
 }
-.unfollow {
+.unfollow,
+.download,
+.forgetme {
   background-color: #53110c;
   color: white;
 }
 .appTitle{
   text-decoration: none;
   color: white;
+}
+
+/*bootstrap annoyances corrected*/
+.profile-page h4{
+  margin-block-start: 0;
+  margin-block-end: 0;
+  font-size: 1.4em;
+}
+
+.profile-user,
+.profile-download,
+.profile-delete,
+.profile-follow,
+.profile-cheeps{
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+a {
+  text-decoration: none;
 }
