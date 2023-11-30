@@ -9,7 +9,7 @@ public record Cheep
     public required string Text { get; set; }
     public DateTime TimeStamp { get; set; }
 
-    public ICollection<Reaction> Reactions { get; } = new List<Reaction>();
+    //public ICollection<Reaction> Reactions { get; } = new List<Reaction>();
 
     [ForeignKey("Author")]
     public int AuthorId { get; set; }
