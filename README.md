@@ -10,7 +10,9 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 You can also download the latest release build for your platform and use the included executables (e.g Chirp-vX.X.X-linux-x64 for linux based systems). You can run these through your terminal or CommandLine tools depending on your OS or by double clicking the executables in the folder if your OS allows for that.
 
 ### Linux Example:
-First you have to allow the executable to run by running this command in your terminal in the unzipped directory:
+First you must unzip the directory using your unzipper of choice and go into that directory using
+cd Chirp-vX.X.X-linux-x64
+Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:
 chmod +x ./Chirp.Web
 then you can run the program using:
 ./Chirp.Web
