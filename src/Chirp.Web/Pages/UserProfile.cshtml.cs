@@ -6,23 +6,28 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace Chirp.Web.Pages;
 
 public class UserProfileModel : PageModel
 {
+    
     readonly IUserRepository<User> _userService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
+    [BindProperty]
+    public NewEmail NewEmail { get; set; } = new NewEmail { Email = string.Empty};
 
     public List<User> following { get; set; } = new List<User>();
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService)
-{
-    _userService = userService;
-    _authorService = authorService;
-}    
+    public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService)
+    {
+        _userService = userService;
+        _authorService = authorService;
+    }    
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -140,7 +145,57 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
             Thread.Sleep(10000);
             System.IO.File.Delete(filePathName);
         }
-
+        
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
+    }
+
+    public async Task<IActionResult> OnPostAddUpdateEmail() {
+
+        if(User.Identity.IsAuthenticated) {
+            var email = (await _userService.GetUserByName(User.Identity.Name)).Email;
+            if(email != null) {
+                ViewData["UserEmail"] = email;
+            }
+        }
+
+        var validator = new EmailValidator();
+        var result = validator.Validate(NewEmail);
+
+        var duplicateEmail = await _userService.GetUserByEmail(NewEmail.Email);
+        if(!result.IsValid) {
+            ViewData["EmailError"] = "formatting";
+            return Page();
+        } else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email) {
+            ViewData["EmailError"] = "duplicate";
+            return Page();
+        }
+
+        try
+        {
+            await _userService.UpdateUserEmail(User.Identity.Name, NewEmail.Email);
+            ViewData["EmailError"] = "success";
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+            ViewData["EmailError"] = "error";
+        }
+
+
+        return Page();
+    }
+
+}
+public class NewEmail 
+{
+    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
+    [Required]
+    [Display(Name = "email")]
+    public required string Email {get; set;}
+}
+
+public class EmailValidator : AbstractValidator<NewEmail>
+{
+    public EmailValidator()
+    {
+        RuleFor(x => x.Email).EmailAddress();
     }
 }
