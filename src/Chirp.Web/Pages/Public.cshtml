@@ -62,6 +62,17 @@
                                         </form>
                                     }
                                 }
+
+                                // reaction part
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="author" value="Upvote"/>
+                                    <button class=""> Upvote </button>
+                                </form>
+
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="reaction" value="Downvote"/>
+                                    <button class=""> Downvote </button>
+                                </form>
                             }
                         </div>
                     </div>

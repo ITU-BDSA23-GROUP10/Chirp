@@ -7,5 +7,13 @@ namespace Chirp.Core;
 
 public interface IReactionRepository<Reaction, Cheep, User>
 {
-    
+    void InsertReaction(Reaction entity);
+    void DeleteReaction(Reaction entity);
+    void UpdateReaction(Reaction entity);
+    IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate);
+    Task<int> GetCheepsUpvoteCountsFromCheepID(int id);
+    Task<int> GetCheepsDownvoteCountsFromCheepID(int id);
+    Task ReactToCheep(ReactionDTO reactionDTO);
+    Task<bool> checkUserReacted(int userid, int cheepid);
+    Task<string> checkUserReactionType(int userid, int cheepid);
 }

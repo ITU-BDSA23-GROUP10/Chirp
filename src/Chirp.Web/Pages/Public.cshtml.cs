@@ -155,26 +155,33 @@ public class PublicModel : PageModel
         return await _reactionService.GetCheepsUpdownCountsFromCheepID(id);
     }
 
-    public async Task<IActionResult> OnPostUpvote()
+    public async Task<IActionResult> OnPostReaction()
     {
-        // User is the reacting
+        // the id for the user who is reacting
         var userId = await _userService.GetUserIDByName(User.Identity.Name);
         var cheepId = NewCheep.id;
 
-        
+        var newreact = new ReactionDTO()
+        {
+            cheepId = cheepId,
+            userId = userId, 
+            reactionType = "PLACEHOLDER"
+        };
 
-        //var unfollowDTO = new FollowDTO(followerId, followingId);
-        //await _userService.UnfollowUser(unfollowDTO);
+        await _reactionService.ReactToCheep(newreact);
 
         return Redirect("/" + User.Identity.Name);
     }
-
-    
-
 }
 
 public class NewFollow 
 {
     [Display(Name = "author")]
     public string? Author {get; set;} = string.Empty;
+}
+
+public class newReaction
+{
+    [Display(Name = "reaction")]
+    public string? Reaction {get; set;} = string.Empty;
 }

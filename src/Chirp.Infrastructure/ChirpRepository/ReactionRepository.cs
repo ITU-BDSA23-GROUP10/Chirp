@@ -55,7 +55,6 @@ public class ReactionRepository : IReactionRepository<Reaction, Cheep, User>
         return await DbSetReaction.CountAsync(r => r.cheepId == id && r.downVote == true);
     }
 
-    //Make DTO
     public async Task ReactToCheep(ReactionDTO reactionDTO)
     {
         var exists = await checkUserReacted(reactionDTO.userId, reactionDTO.cheepId);
