@@ -27,7 +27,6 @@ then you can run the program using:
 To run the program from source you can build it using the source code on the repo and use dotnet run to run the program locally on your machine. This should be done from the ./Chirp/src/Chirp.Web directory 
 
 If you would like to run the tests you can do so from the ./Chirp directory using dotnet test or you can run some of the tests from their respective test directories
-*Instructions for this will come later*
 
 # Legacy versions of the Chirp app
 There are currently two major versions of the chirp application. There is the current Chirp Razor version of the app which can be found in the majority of the latest releases and then the old Chirp CLI version which starts from version 1.0.0 and going back. The source code for Chirp CLI can be found on the Chirp_CLI branch inside the github repo.
