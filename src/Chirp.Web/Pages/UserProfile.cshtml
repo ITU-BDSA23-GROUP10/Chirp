@@ -88,21 +88,21 @@
         </div>
 
         <div>
-            <h4> Download user data: </h4>
+            <h3> Download user data: </h3>
             <form class="dwnlbttn" asp-page-handler="DownloadData" method="post"> 
                 <button class="dwnlbttn"> Download Data </button>
             </form>
         </div>
 
         <div> 
-            <h4> Delete user data: </h4>
+            <h3> Delete user data: </h3>
             <form asp-page-handler="ForgetMe" method="post">
                 <input type="hidden" name="User" value="@User.Identity.Name"/>
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
         <div>
-            <h4>Following: </h4>
+            <h3>Following: </h3>
             @foreach (var UserFollow in Model.following)
             {
                 <li>
@@ -111,7 +111,7 @@
             }
         </div>
         <div>
-            <h4>@User.Identity.Name's Cheeps:</h4>
+            <h3>@User.Identity.Name's Cheeps:</h3>
             @if (Model.cheeps?.Any() == true)
             {
                 <ul id="messagelist" class="cheeps">
