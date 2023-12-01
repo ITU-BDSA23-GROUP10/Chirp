@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation;
+
 
 namespace Chirp.Web.Pages;
 
@@ -145,8 +145,7 @@ public class UserProfileModel : PageModel
             Thread.Sleep(10000);
             System.IO.File.Delete(filePathName);
         }
-
-
+        
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
 
