@@ -15,9 +15,12 @@ public class PublicModel : PageModel
     [BindProperty]
     public NewFollow NewFollow {get; set;} = new();
 
+
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction, Cheep, User> _reactionService;
+
 
     public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();
 
@@ -141,6 +144,33 @@ public class PublicModel : PageModel
 
         return Redirect("/" + User.Identity.Name);
     }
+
+    public async Task<int> FindUpvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+    }
+
+    public async Task<int> FindUpdownCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpdownCountsFromCheepID(id);
+    }
+
+    public async Task<IActionResult> OnPostUpvote()
+    {
+        // User is the reacting
+        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        var cheepId = NewCheep.id;
+
+        
+
+        //var unfollowDTO = new FollowDTO(followerId, followingId);
+        //await _userService.UnfollowUser(unfollowDTO);
+
+        return Redirect("/" + User.Identity.Name);
+    }
+
+    
+
 }
 
 public class NewFollow 

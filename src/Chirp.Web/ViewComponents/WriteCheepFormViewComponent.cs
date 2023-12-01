@@ -54,4 +54,6 @@ public class NewCheep
     [MaxLength(160)]
     [Display(Name = "text")]
     public string? Message {get; set;} = string.Empty;
+
+    public int? id {get; set;} = -1;
 }
