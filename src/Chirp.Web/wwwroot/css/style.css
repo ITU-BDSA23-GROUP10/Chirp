@@ -261,3 +261,8 @@ li.topic {
   text-decoration: none;
   color: white;
 }
+/*embedded cheep videos*/
+.cheeps iframe{
+  width: 100%;
+  height: 280px;
+}
