@@ -31,7 +31,18 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
-                            <p>@cheep.Message</p>
+                            <!-- YouTube Link Check and Embed -->
+                            @{
+                                string Message;
+                                var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
+                                
+                                if (embedUrl != null)
+                                {
+                                    <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                }
+
+                                <p>@Message</p>
+                            }
                  
                             @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
