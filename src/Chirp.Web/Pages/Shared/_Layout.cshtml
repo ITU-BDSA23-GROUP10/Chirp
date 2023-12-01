@@ -13,8 +13,10 @@
 <html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
-    <link href="/css/style.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="bootstrap-5.3.2-dist/css/bootstrap.css" />
+    <script src="bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class=page>
@@ -29,7 +31,8 @@
             <div>
                 <a href="/@(User.Identity.Name)">my timeline</a> |
                 <a href="/">public timeline</a> |
-                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout</a> |
+                @* nav-link text-dark *@
+                <a class="" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout</a> |
                 <a href= "/profile">[@User.Identity.Name] profile</a>
             </div>
         }
@@ -38,7 +41,8 @@
             <div>
                 <a href="/">public timeline</a> |
                 <a ... >register</a>
-                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">login</a>
+                @* nav-link text-dark *@
+                <a class="" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">login</a>
             </div>
         }
     </div>
