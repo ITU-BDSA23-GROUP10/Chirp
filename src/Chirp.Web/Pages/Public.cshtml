@@ -11,7 +11,7 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-    @if (ViewData["CheepTooShort"] == "true")
+    @if((ViewData["CheepTooShort"] as string) == "true")//(ViewData["CheepTooShort"] == "true")
     {
         <div class="alert alert-warning" role="alert">
             Your cheep is too short!

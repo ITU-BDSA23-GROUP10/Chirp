@@ -9,14 +9,14 @@
 }
 
 <div>
-    @if(ViewData["UserExists"] == "true") 
+    @if((ViewData["UserExists"] as string) == "true")//(ViewData["UserExists"] == "true") 
     {
 
     <h2> @routeName's Timeline </h2>
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-        @if(ViewData["CheepTooShort"] == "true") 
+        @if((ViewData["CheepTooShort"] as string) == "true")//(ViewData["CheepTooShort"] == "true") 
         {
             <div class="alert alert-warning" role="alert">
                 Your cheep is too short!

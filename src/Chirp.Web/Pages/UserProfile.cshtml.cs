@@ -34,11 +34,13 @@ public class UserProfileModel : PageModel
     {
         var userName = User?.Identity?.Name ?? "default";
         
-        if(User?.Identity?.IsAuthenticated == false) {
+        if(User?.Identity?.IsAuthenticated == false)
+        {
             return Redirect("/");
         }
         
-        if(await _userService.GetUserByName(userName) == null) {
+        if(await _userService.GetUserByName(userName) == null)
+        {
             await _userService.CreateUser(userName);
         }
 
@@ -64,7 +66,8 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostForgetMeAsync()
     {
-        if(User?.Identity?.IsAuthenticated == false) {
+        if(User?.Identity?.IsAuthenticated == false)
+        {
             return Redirect("/");
         }
 
@@ -96,15 +99,20 @@ public class UserProfileModel : PageModel
     public async Task findUserFollowingByUserID(int userId)
     {
         var followingIDs = await _userService.GetFollowedUsersId(userId);
-        foreach (var id in followingIDs) {
-            // check if user/id is in the list
-            following.Add(await _userService.GetUserById(id));
+        foreach (var id in followingIDs)
+        {
+            var fetchedUser = await _userService.GetUserById(id);
+            if(fetchedUser != null)
+            {
+                // check if user/id is in the list
+                following.Add(fetchedUser);
+            }
         }
     }
 
     // This downloads the user data as a JSON file
-    public async Task<IActionResult> OnPostDownloadData() {
-        
+    public async Task<IActionResult> OnPostDownloadData()
+    {
         var userName = User?.Identity?.Name ?? "default";
 
         // This is the filepath where the file will be saved
@@ -115,26 +123,34 @@ public class UserProfileModel : PageModel
 
         // This is the data that will be saved
         var userID = await _userService.GetUserIDByName(userName);
-        
-        var email = (await _userService.GetUserByName(userName)).Email;
-
+        var user = await _userService.GetUserByName(userName);
+        var email = user?.Email;
         var followersIDs = await _userService.GetFollowedUsersId(userID);
         var followers = new List<string>();
-        foreach (var id in followersIDs) {
-            followers.Add((await _userService.GetUserById(id)).Name);
+        
+        foreach (var id in followersIDs)
+        {
+            var fetchedUser = await _userService.GetUserById(id);
+            
+            if(fetchedUser != null)
+            {
+                followers.Add(fetchedUser.Name);
+            }
         }
 
         var cheeps = await _authorService.GetAllCheepsByAuthorName(userName);
         var cheepFormated = new List<string>();
 
-        foreach(var cheep in cheeps) {
+        foreach(var cheep in cheeps)
+        {
             cheepFormated.Add("[" + cheep.Timestamp + "] - \"" + cheep.Message + "\"");
         }
 
         // This saves the data to the file
         string[] userData;
         
-        userData = new string[] {
+        userData = new string[]
+        {
             "User ID: " + userID,
             "Username: " + userName,
             "Email: " + email,
@@ -165,11 +181,16 @@ public class UserProfileModel : PageModel
         return File(fileStream: ms, "application/json", userName + "_UserData.json");
     }
 
-    public async Task<IActionResult> OnPostAddUpdateEmail() {
+    public async Task<IActionResult> OnPostAddUpdateEmail()
+    {
+        if(User?.Identity?.IsAuthenticated ?? false)
+        {
+            var userName = User?.Identity?.Name ?? "default";
+            var user = await _userService.GetUserByName(userName);
+            var email = user?.Email;
 
-        if(User.Identity.IsAuthenticated) {
-            var email = (await _userService.GetUserByName(User.Identity.Name)).Email;
-            if(email != null) {
+            if(email != null)
+            {
                 ViewData["UserEmail"] = email;
             }
         }
@@ -178,27 +199,32 @@ public class UserProfileModel : PageModel
         var result = validator.Validate(NewEmail);
 
         var duplicateEmail = await _userService.GetUserByEmail(NewEmail.Email);
-        if(!result.IsValid) {
+        
+        if(!result.IsValid)
+        {
             ViewData["EmailError"] = "formatting";
             return Page();
-        } else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email) {
+        }
+        else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email)
+        {
             ViewData["EmailError"] = "duplicate";
             return Page();
         }
 
         try
         {
-            await _userService.UpdateUserEmail(User.Identity.Name, NewEmail.Email);
+            var userName = User?.Identity?.Name ?? "default";
+            await _userService.UpdateUserEmail(userName, NewEmail.Email);
             ViewData["EmailError"] = "success";
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             ViewData["EmailError"] = "error";
         }
 
-
         return Page();
     }
-
 }
 public class NewEmail 
 {
