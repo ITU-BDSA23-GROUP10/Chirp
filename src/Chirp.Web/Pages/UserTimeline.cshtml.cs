@@ -159,8 +159,9 @@ public class UserTimelineModel : PageModel
         try
         {
             await padlock.Lock();
-            
+            string userName = User?.Identity?.Name ?? "default";
             var userId = await _userService.GetUserIDByName(author);
+            
             if(userId != -1) 
             {
                 ViewData["UserExists"] = "true";
