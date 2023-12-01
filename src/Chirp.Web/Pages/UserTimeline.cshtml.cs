@@ -160,9 +160,14 @@ public class UserTimelineModel : PageModel
         {
             await padlock.Lock();
             
-            var userName = User?.Identity?.Name ?? "default";
-            var userId = await _userService.GetUserIDByName(userName);
-
+            var userId = await _userService.GetUserIDByName(author);
+            if(userId != -1) 
+            {
+                ViewData["UserExists"] = "true";
+            } else 
+            {   
+                ViewData["UserExists"] = "false";
+            }
             List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
