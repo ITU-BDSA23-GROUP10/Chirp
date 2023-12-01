@@ -6,6 +6,11 @@ You can access it by using this link:
 https://bdsagroup10chirprazor.azurewebsites.net/
 
 # How to run
+## Run using VS code dev containers
+This is by far the easiest option. First ensure you have the docker and dev container extension installed on your VS code installation. Afterwards you may get a small popup in the bottom right corner telling you that you can open the project as a dev container. Press that button. If this is not the case open the VS code command pallete (Ctrl + shift + p or cmd + shift + p) and dev containers and select either "Rebuild and reopen in Container" or "Reopen in a Container" 
+
+After VS code is done opening the container you should be able to go to the left hand sidebar in VS code and select the run and debug option and press the small green play button.
+
 ## For all of the below you must have a dockerized container with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 
