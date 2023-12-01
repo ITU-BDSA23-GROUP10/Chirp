@@ -6,6 +6,14 @@ You can access it by using this link:
 https://bdsagroup10chirprazor.azurewebsites.net/
 
 # How to run
+## For all of the below you must have a dockerized container with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+You can check if the docker container is running by using this in a terminal. Look for wether it shows a container running:
+docker ps
+
+If the container is not running it may because the password is too weak so try to run the above command again with a different password
+
 ## Run from release
 You can also download the latest release build for your platform and use the included executables (e.g Chirp-vX.X.X-linux-x64 for linux based systems). You can run these through your terminal or CommandLine tools depending on your OS or by double clicking the executables in the folder if your OS allows for that.
 
@@ -18,7 +26,15 @@ then you can run the program using:
 ./Chirp.Web
 
 ### MacOS Example:
-*Coming soon*
+Unzip the folder using your unzipper of choice then enter the directory using
+cd ./Chirp-vX.X.X-osx-x64
+Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:
+chmod +x ./Chirp.Web
+Since the app is unsigned you have to strip the xattr attribute from it using this command
+xattr -dr com.apple.quarantine "Chirp.Web"
+(Read more about this here https://apple.stackexchange.com/questions/202169/how-can-i-open-an-app-from-an-unidentified-developer-without-using-the-gui)
+Now you can run the application using:
+./Chirp.Web
 
 ### Windows Example:
 *Coming soon*
