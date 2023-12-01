@@ -104,16 +104,19 @@ public class UserProfileModel : PageModel
 
     // This downloads the user data as a JSON file
     public async Task<IActionResult> OnPostDownloadData() {
+        
+        var userName = User?.Identity?.Name ?? "default";
+
         // This is the filepath where the file will be saved
         var folder = Path.Combine("userDataFolder");
         Directory.CreateDirectory(folder);
 
-        string filePathName = Path.Combine(folder, User.Identity.Name + "_UserData.json");
+        string filePathName = Path.Combine(folder, userName + "_UserData.json");
 
         // This is the data that will be saved
-        var userID = await _userService.GetUserIDByName(User.Identity.Name);
-        var username = User.Identity.Name;
-        var email = (await _userService.GetUserByName(username)).Email;
+        var userID = await _userService.GetUserIDByName(userName);
+        
+        var email = (await _userService.GetUserByName(userName)).Email;
 
         var followersIDs = await _userService.GetFollowedUsersId(userID);
         var followers = new List<string>();
@@ -121,7 +124,7 @@ public class UserProfileModel : PageModel
             followers.Add((await _userService.GetUserById(id)).Name);
         }
 
-        var cheeps = await _authorService.GetAllCheepsByAuthorName(username);
+        var cheeps = await _authorService.GetAllCheepsByAuthorName(userName);
         var cheepFormated = new List<string>();
 
         foreach(var cheep in cheeps) {
@@ -133,7 +136,7 @@ public class UserProfileModel : PageModel
         
         userData = new string[] {
             "User ID: " + userID,
-            "Username: " + username,
+            "Username: " + userName,
             "Email: " + email,
             "Followers: " + string.Join(", ", followers),
             "Cheeps: " + string.Join(", ", cheepFormated)
@@ -159,7 +162,7 @@ public class UserProfileModel : PageModel
             System.IO.File.Delete(filePathName);
         }
         
-        return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
+        return File(fileStream: ms, "application/json", userName + "_UserData.json");
     }
 
     public async Task<IActionResult> OnPostAddUpdateEmail() {
