@@ -33,6 +33,7 @@ public class UserProfileModel : PageModel
     public async Task<ActionResult> OnGetAsync()
     {
         var userName = User?.Identity?.Name ?? "default";
+        
         if(User?.Identity?.IsAuthenticated == false) {
             return Redirect("/");
         }
@@ -41,7 +42,7 @@ public class UserProfileModel : PageModel
             await _userService.CreateUser(userName);
         }
 
-        var loggedInUserId = await FindUserIDByName(User.Identity.Name);
+        var loggedInUserId = await FindUserIDByName(userName);
         await findUserFollowingByUserID(loggedInUserId);
 
         var user = await _userService.GetUserByName(userName);
