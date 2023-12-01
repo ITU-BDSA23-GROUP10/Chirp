@@ -10,10 +10,10 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
     [BindProperty]
-    public NewCheep NewCheep {get; set;} = new();
+    public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty };
 
     [BindProperty]
-    public NewFollow NewFollow {get; set;} = new();
+    public NewFollow NewFollow { get; set; } = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
@@ -57,15 +57,19 @@ public class PublicModel : PageModel
             {
                 throw new InvalidOperationException("author could not be created.");
             }
-
-            if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
-            {
-                throw new ArgumentNullException(nameof(NewCheep.Message), "Cheep cannot be null or empty.");
-            }
-
-            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+ 
+        if(NewCheep.Message is null || NewCheep.Message.Length < 1)
+        {
+            ViewData["CheepTooShort"] = "true";
+            return Page();
+        }
+        else 
+        {
+            ViewData["CheepTooShort"] = "false";
             
+            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
             await _cheepService.CreateCheep(cheep, author);
+        }
 
         }
         finally

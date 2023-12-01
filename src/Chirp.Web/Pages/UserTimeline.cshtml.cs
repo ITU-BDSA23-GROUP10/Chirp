@@ -9,10 +9,10 @@ namespace Chirp.Web.Pages;
 public class UserTimelineModel : PageModel
 {
     [BindProperty]
-    public NewCheep NewCheep {get; set;} = new();
+    public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty};
     
     [BindProperty]
-    public NewFollow NewFollow {get; set;} = new();
+    public NewFollow NewFollow { get; set; } = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
@@ -60,13 +60,18 @@ public class UserTimelineModel : PageModel
                 throw new InvalidOperationException("author could not be created.");
             }
 
-            if (NewCheep == null || string.IsNullOrEmpty(NewCheep.Message))
-            {
-                throw new ArgumentNullException(nameof(NewCheep.Message), "Cheep cannot be null or empty.");
-            }
-            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+        if(NewCheep.Message is null || NewCheep.Message.Length < 1)
+        {
+            ViewData["CheepTooShort"] = "true";
+            return Page();
+        }
+        else 
+        {
+            ViewData["CheepTooShort"] = "false";
             
+            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
             await _cheepService.CreateCheep(cheep, author);
+        }
 
         }
         finally
@@ -159,9 +164,15 @@ public class UserTimelineModel : PageModel
         {
             await padlock.Lock();
             
-            var userName = User?.Identity?.Name ?? "default";
-            var userId = await _userService.GetUserIDByName(userName);
-
+            var userId = await _userService.GetUserIDByName(author);
+            if(userId != -1) 
+            {
+                ViewData["UserExists"] = "true";
+            } else 
+            {   
+                ViewData["UserExists"] = "false";
+            }
+            
             List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
