@@ -10,10 +10,10 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 You can also download the latest release build for your platform and use the included executables (e.g Chirp-vX.X.X-linux-x64 for linux based systems). You can run these through your terminal or CommandLine tools depending on your OS or by double clicking the executables in the folder if your OS allows for that.
 
 ### Linux Example:
-First you have to allow the executable to run by running:
-chmod +x *executable name* 
+First you have to allow the executable to run by running this command in your terminal in the unzipped directory:
+chmod +x ./Chirp.Web
 then you can run the program using:
-./*executable name*
+./Chirp.Web
 
 ### MacOS Example:
 *Coming soon*
@@ -28,4 +28,4 @@ If you would like to run the tests you can do so from the ./Chirp directory usin
 *Instructions for this will come later*
 
 # Legacy versions of the Chirp app
-There are currently two major versions of the chirp application. There is the current Chirp Razor version of the app which can be found in the majority of the latest releases and then the old Chirp CLI version which starts from version *Find version* and going back. The source code for Chirp CLI can be found on the Chirp_CLI branch inside the github repo.
+There are currently two major versions of the chirp application. There is the current Chirp Razor version of the app which can be found in the majority of the latest releases and then the old Chirp CLI version which starts from version 1.0.0 and going back. The source code for Chirp CLI can be found on the Chirp_CLI branch inside the github repo.
