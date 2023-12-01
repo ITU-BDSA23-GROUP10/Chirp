@@ -21,18 +21,59 @@
         
     <h2> @User.Identity.Name's profile </h2>
         <div>
-            <h3> Username: @ViewData["UserName"].</h3>
-            @* Add ability to add / change email here *@
-            <h3> Email: @ViewData["UserEmail"]</h3> 
+            <h3> Username: @ViewData["UserName"]</h3>
+            @if(ViewData["UserEmail"] != null) {
+                <h3> Email: @ViewData["UserEmail"]</h3> 
+                @*//TODO Add ability to update email *@
+            } else {  
+            @*//TODO Add ability to add email *@
+            }
         </div>
 
         <div>
+            <h3> Download user data: </h3>
+            <form class="dwnlbttn" asp-page-handler="DownloadData" method="post"> 
+                <button class="dwnlbttn"> Download Data </button>
+            </form>
+        </div>
+
+        <div> 
+            <h3> Delete user data: </h3>
             <form asp-page-handler="ForgetMe" method="post">
                 <input type="hidden" name="User" value="@User.Identity.Name"/>
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
-
+        <div>
+            <h3>Following: </h3>
+            @foreach (var UserFollow in Model.following)
+            {
+                <li>
+                    <a href="/@UserFollow.Name"> @UserFollow.Name <a/>
+                </li>
+            }
+        </div>
+        <div>
+            <h3>@User.Identity.Name's Cheeps:</h3>
+            @if (Model.cheeps?.Any() == true)
+            {
+                <ul id="messagelist" class="cheeps">
+                    @foreach (var cheep in Model.cheeps)
+                    {
+                        <li>
+                            <div class="activity">
+                                <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
+                                <div>
+                                    <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
+                                    <small>&mdash; @cheep.Timestamp</small>
+                                    <p>@cheep.Message</p>
+                                </div>
+                                    
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
     }
     else
     {
@@ -40,3 +81,4 @@
     }
 
 </div>
+

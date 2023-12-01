@@ -153,7 +153,7 @@ public class UserRepository : IUserRepository<User>
         }
     }
 
-    //to show all cheeps a logged in user is following 
+    //Returns all ids of users a user is following
     public async Task<List<int>> GetFollowedUsersId(int userId)
     {
         var followedUsers = await DbSetFollows
