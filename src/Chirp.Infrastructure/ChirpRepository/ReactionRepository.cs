@@ -5,21 +5,21 @@ using Chirp.Core;
 using FluentValidation;
 using FluentValidation.Results;
 
-public class ReactionRepository : IReactionRepository<Reaction, Cheep, User>
+/*namespace Chirp.Infrastructure.ChirpRepository;
+
+public class ReactionRepository : IReactionRepository<Reaction>
 {
     protected DbSet<Reaction> DbSetReaction;
-    protected DbSet<Cheep> DbSetCheep;
     protected ChirpDBContext context;
 
     public ReactionRepository(ChirpDBContext dbContext)
     {
         DbSetReaction = dbContext.Reaction;
-        DbSetCheep = dbContext.Cheep;
         context = dbContext;
     }
     
 
-    #region IReactionRepository<Reaction, Cheep, User> Members
+    #region IReactionRepository<Reaction> Members
 
     public void InsertReaction(Reaction entity)
     {
@@ -143,4 +143,4 @@ public class ReactionRepository : IReactionRepository<Reaction, Cheep, User>
 
 
     #endregion
-}
+}*/

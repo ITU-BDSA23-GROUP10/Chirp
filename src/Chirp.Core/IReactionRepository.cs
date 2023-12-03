@@ -5,7 +5,7 @@ namespace Chirp.Core;
 // Repository pattern from Remondo:
 // https://web.archive.org/web/20150404154203/https://www.remondo.net/repository-pattern-example-csharp/
 
-public interface IReactionRepository<Reaction, Cheep, User>
+public interface IReactionRepository<Reaction>
 {
     void InsertReaction(Reaction entity);
     void DeleteReaction(Reaction entity);

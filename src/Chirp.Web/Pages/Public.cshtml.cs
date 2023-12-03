@@ -19,7 +19,7 @@ public class PublicModel : PageModel
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
-    readonly IReactionRepository<Reaction, Cheep, User> _reactionService;
+    //readonly IReactionRepository<Reaction, Cheep, User> _reactionService;
 
 
     public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();
@@ -147,18 +147,18 @@ public class PublicModel : PageModel
 
     public async Task<int> FindUpvoteCountByCheepID(int id)
     {
-        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+        return 0;//await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
     }
 
     public async Task<int> FindUpdownCountByCheepID(int id)
     {
-        return await _reactionService.GetCheepsUpdownCountsFromCheepID(id);
+        return 0;//await _reactionService.GetCheepsUpdownCountsFromCheepID(id);
     }
 
     public async Task<IActionResult> OnPostReaction()
     {
         // the id for the user who is reacting
-        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        /*var userId = await _userService.GetUserIDByName(User.Identity.Name);
         var cheepId = NewCheep.id;
 
         var newreact = new ReactionDTO()
@@ -168,7 +168,7 @@ public class PublicModel : PageModel
             reactionType = "PLACEHOLDER"
         };
 
-        await _reactionService.ReactToCheep(newreact);
+        await _reactionService.ReactToCheep(newreact);*/
 
         return Redirect("/" + User.Identity.Name);
     }
