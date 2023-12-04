@@ -32,12 +32,9 @@ public class UserProfileModel : PageModel
 
     public async Task<ActionResult> OnGetAsync()
     {
-        var userName = User?.Identity?.Name ?? "default";
-        
-        if(User?.Identity?.IsAuthenticated == false)
+        try
         {
-            return Redirect("/");
-        }
+        var userName = User?.Identity?.Name!;
         
         if(await _userService.GetUserByName(userName) == null)
         {
@@ -62,6 +59,12 @@ public class UserProfileModel : PageModel
         cheeps = await _authorService.GetAllCheepsByAuthorName(user.Name);
 
         return Page();
+        
+        }
+        catch (NullReferenceException)
+        {
+            return Redirect("/");
+        }
     }
 
     public async Task<IActionResult> OnPostForgetMeAsync()
@@ -183,7 +186,7 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostAddUpdateEmail()
     {
-        if(User?.Identity?.IsAuthenticated ?? false)
+        if(!User?.Identity?.IsAuthenticated ?? false)
         {
             var userName = User?.Identity?.Name ?? "default";
             var user = await _userService.GetUserByName(userName);
