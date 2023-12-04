@@ -206,7 +206,7 @@ public class UserTimelineModel : PageModel
 
     public string? GetYouTubeEmbed(string message, out string Message)
     {
-        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^ &\n]+)(?:[^\n ]*)(.*)";
+        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
         Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
 
         if (match.Success)
