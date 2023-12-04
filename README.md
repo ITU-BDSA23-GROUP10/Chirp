@@ -42,7 +42,8 @@ Now you can run the application using:
 ./Chirp.Web
 
 ### Windows Example:
-*Coming soon*
+Unzip the folder using your unzipper of choice then open the folder
+Double click the Chirp.Web.exe file
 
 ## Run from source code
 To run the program from source you can build it using the source code on the repo and use dotnet run to run the program locally on your machine. This should be done from the ./Chirp/src/Chirp.Web directory 

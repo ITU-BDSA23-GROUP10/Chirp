@@ -9,7 +9,7 @@
 }
 
 <div>
-    @if((ViewData["UserExists"] as string) == "true")//(ViewData["UserExists"] == "true") 
+    @if((ViewData["UserExists"] as string) == "true")//(ViewData["UserExists"] == "true") // TODO: Why not use User.Identity != null && User.Identity.IsAuthenticated as well?
     {
 
     <h2> @routeName's Timeline </h2>

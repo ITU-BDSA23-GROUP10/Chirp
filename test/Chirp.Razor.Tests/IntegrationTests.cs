@@ -52,21 +52,26 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     }
 
     [Theory]
-    //Do not put test2 as a inline data the test will fail cause microsoft hates me
     [InlineData("test1")]
     [InlineData("test3")]
     public async Task UserDoesntExistPageErrorTest(string authorName) 
     {
-        var response = await _client.GetAsync("/" + authorName);
-        response.EnsureSuccessStatusCode();
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
 
-        var contentPage = await response.Content.ReadAsStringAsync();
+        using (var scope = factory.Services.CreateScope())
+        {
+            var response = await _client.GetAsync("/" + authorName);
+            response.EnsureSuccessStatusCode();
 
-        string UserDoesntExist = "User " + authorName + " does not exist";
-        string GoBackHome = "Go back to the home page";
+            var contentPage = await response.Content.ReadAsStringAsync();
 
-        Assert.Contains(UserDoesntExist, contentPage);
-        Assert.Contains(GoBackHome, contentPage);
+            string UserDoesntExist = "User " + authorName + " does not exist";
+            string GoBackHome = "Go back to the home page";
+
+            Assert.Contains(UserDoesntExist, contentPage);
+            Assert.Contains(GoBackHome, contentPage);
+        } 
     }
 
     // Checks if author, with no cheeps, has no cheeps.
@@ -94,7 +99,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
             Assert.Contains("There are no cheeps so far.", content);
         } 
-
     }
 
     // is the root page the same as page 1?
@@ -191,7 +195,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     //Tests if the program can create a cheep using a try catch to ensure the author exists
     [Theory]
     [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
-    [InlineData("test2", "test2@test.de", "This is a test cheep2")]
+    [InlineData("test3", "test3@test.de", "This is a test cheep2")]
     public async Task CreateCheepInDatabase_CreateAuthorAfterException(string authorName, string authorEmail, string message) 
     {
         // Arrange
@@ -227,5 +231,65 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(authorName, retrievedAuthor!.User.Name);
             Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
         }
+    }
+
+    //Tests if the program adds follows correctly and creates a user if the user does not exist
+    [Theory]
+    [InlineData("test1", "test1@test.dk", "test2", "test2@test.com")]
+    [InlineData("test3", "test3@test.de", "test4", "test4@test.uk")] 
+    public async Task CreateFollowInDatabase_CreateUserAfterException(string authorName, string authorEmail, string followName, string followEmail) 
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
+
+            // Creates the user for the follow if it does not exist
+            try
+            {
+                await ur.CreateUser(followName, followEmail);
+                await ar.CreateAuthor( await ur.GetUserByName(followName) );
+            }
+            catch
+            {
+                Assert.Fail("Failed to create follow_User");
+            }
+            // Act            
+            try 
+            {
+                var userId = await ur.GetUserIDByName(authorName);
+                if(userId == -1)
+                {
+                    await ur.CreateUser(authorName, authorEmail);
+                    userId = await ur.GetUserIDByName(authorName);
+                }
+                var followID = await ur.GetUserIDByName(followName);
+
+                var follow = new FollowDTO(userId, followID);
+                await ur.FollowUser(follow);
+            }
+            catch 
+            {
+                Assert.Fail("Failed to create follow");
+            }
+
+            // Assert
+            var retrievedUser = await ur.GetUserByName(authorName);
+            var retrievedFollow = await ur.GetUserByName(followName);
+
+            var UserFollows = await ur.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
+            var FollowDoesntFollowUser = await ur.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
+
+            Assert.Equal(authorName, retrievedUser.Name);
+            Assert.Equal(followName, retrievedFollow.Name);
+            Assert.True(UserFollows);
+            Assert.False(FollowDoesntFollowUser);
+            }
     }
 }

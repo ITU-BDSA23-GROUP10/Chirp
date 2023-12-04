@@ -115,6 +115,34 @@ public class ChirpDatabaseTest : IAsyncLifetime
         Assert.Equal(email, userByEmail!.Email);
     }
     
+    [Theory]
+    [InlineData("Anakin", "skywalker@jedi.com")]
+    public async Task DeleteUser(string name, string email)
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+    
+        var userService = new UserRepository(context);
+
+        // Act
+        await userService.CreateUser(name, email);
+        var userToBeDeleted = await userService.GetUserByName(name);
+        if (userToBeDeleted is null) {
+            throw new Exception("User not found");
+        }
+        else
+        {
+            // Act part II
+            userService.DeleteUser(userToBeDeleted);
+
+            // Assert
+            var userByName = await userService.GetUserByName(name);
+            Assert.Null(userByName);
+            var userByEmail = await userService.GetUserByEmail(email);
+            Assert.Null(userByEmail);
+        }
+    }
+    
     public record Follows { 
         public required int FollowerId { get; set; }
         public required int FollowingId { get; set; }
