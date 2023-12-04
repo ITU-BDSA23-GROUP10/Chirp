@@ -52,21 +52,26 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
     }
 
     [Theory]
-    //Do not put test2 as a inline data the test will fail cause microsoft hates me
     [InlineData("test1")]
     [InlineData("test3")]
     public async Task UserDoesntExistPageErrorTest(string authorName) 
     {
-        var response = await _client.GetAsync("/" + authorName);
-        response.EnsureSuccessStatusCode();
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
 
-        var contentPage = await response.Content.ReadAsStringAsync();
+        using (var scope = factory.Services.CreateScope())
+        {
+            var response = await _client.GetAsync("/" + authorName);
+            response.EnsureSuccessStatusCode();
 
-        string UserDoesntExist = "User " + authorName + " does not exist";
-        string GoBackHome = "Go back to the home page";
+            var contentPage = await response.Content.ReadAsStringAsync();
 
-        Assert.Contains(UserDoesntExist, contentPage);
-        Assert.Contains(GoBackHome, contentPage);
+            string UserDoesntExist = "User " + authorName + " does not exist";
+            string GoBackHome = "Go back to the home page";
+
+            Assert.Contains(UserDoesntExist, contentPage);
+            Assert.Contains(GoBackHome, contentPage);
+        } 
     }
 
     // Checks if author, with no cheeps, has no cheeps.
@@ -94,7 +99,6 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
 
             Assert.Contains("There are no cheeps so far.", content);
         } 
-
     }
 
     // is the root page the same as page 1?
