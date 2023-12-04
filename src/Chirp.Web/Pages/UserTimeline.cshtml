@@ -9,14 +9,14 @@
 }
 
 <div>
-    @if(ViewData["UserExists"] == "true") // TODO: Why not use User.Identity != null && User.Identity.IsAuthenticated as well?
+    @if((ViewData["UserExists"] as string) == "true")//(ViewData["UserExists"] == "true") // TODO: Why not use User.Identity != null && User.Identity.IsAuthenticated as well?
     {
 
     <h2> @routeName's Timeline </h2>
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-        @if(ViewData["CheepTooShort"] == "true") 
+        @if((ViewData["CheepTooShort"] as string) == "true")//(ViewData["CheepTooShort"] == "true") 
         {
             <div class="alert alert-warning" role="alert">
                 Your cheep is too short!
@@ -36,8 +36,9 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
-                //get the id's and whether or not the user is following                    
-                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                //get the id's and whether or not the user is following
+                var userName = User?.Identity?.Name ?? "default";                 
+                var userId = Model.FindUserIDByName(userName).Result;
                 var authorId = Model.FindUserIDByName(@cheep.Author).Result;
                 var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
         
@@ -49,7 +50,7 @@
                             <small>&mdash; @cheep.Timestamp</small>
                             <p>@cheep.Message</p>
                  
-                            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                            @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person

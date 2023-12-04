@@ -30,32 +30,40 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-
         AsyncPadlock padlock = new();
-        var userName = User.Identity.Name;
+        var userName = User?.Identity?.Name ?? "default"; //throw new InvalidOperationException("401 Unauthorized: User not logged in.");
 
         try
         {
-        await padlock.Lock();
-        var author = await _authorService.GetAuthorByName(userName);
+            await padlock.Lock();
+            var author = await _authorService.GetAuthorByName(userName);
 
-        // Create new auther if does not exist in database ready
-        if (author is null) 
-        {
-            var user = await _userService.GetUserByName(userName);
-            if (user is null) {
-                await _userService.CreateUser(userName);
-                user = await _userService.GetUserByName(userName);
+            // Create new author if it doesn't exist in database allready
+            if (author is null) 
+            {
+                var user = await _userService.GetUserByName(userName);
+                
+                if (user is null) {
+                    await _userService.CreateUser(userName);
+                    user = await _userService.GetUserByName(userName)
+                        ?? throw new InvalidOperationException("author could not be created.");
+                }
+
+                await _authorService.CreateAuthor(user);
+                author = await _authorService.GetAuthorByName(userName);
             }
-            await _authorService.CreateAuthor(user);
-            author = await _authorService.GetAuthorByName(userName);
-        }
 
+            if (author is null) 
+            {
+                throw new InvalidOperationException("author could not be created.");
+            }
+ 
         if(NewCheep.Message is null || NewCheep.Message.Length < 1)
         {
             ViewData["CheepTooShort"] = "true";
             return Page();
-        } else 
+        }
+        else 
         {
             ViewData["CheepTooShort"] = "false";
             
@@ -111,17 +119,26 @@ public class PublicModel : PageModel
     //follow form button
     public async Task<IActionResult> OnPostFollow() 
     {
-        var LoggedInUserName = User.Identity.Name;
+        var LoggedInUserName = User?.Identity?.Name ?? "default";
         //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         
+        // Check if followedUserName is null
+        if (FollowedUserName == null)
+        {
+            throw new ArgumentNullException("Followed user does not exist.");
+        }
+        
         //Check if the user that is logged in exists
-        try {
+        try
+        {
             var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
             if (loggedInUser is null) {
                 throw new Exception("User does not exist");
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             await _userService.CreateUser(LoggedInUserName);
         }
@@ -139,15 +156,23 @@ public class PublicModel : PageModel
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
+        var userName = User?.Identity?.Name ?? "default";
         // Convert the username to Id
-        var followerId = await _userService.GetUserIDByName(User.Identity.Name);
-        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+        if (string.IsNullOrEmpty(NewFollow.Author))
+        {
+            throw new ArgumentException("NewFollow.Author cannot be null or empty");
+        }
+        else
+        {
+            var followerId = await _userService.GetUserIDByName(userName);
+            var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
-        var unfollowDTO = new FollowDTO(followerId, followingId);
-            
-        await _userService.UnfollowUser(unfollowDTO);
+            var unfollowDTO = new FollowDTO(followerId, followingId);
+                
+            await _userService.UnfollowUser(unfollowDTO);
 
-        return Redirect("/" + User.Identity.Name);
+            return Redirect("/" + userName);
+        }
     }
 }
 

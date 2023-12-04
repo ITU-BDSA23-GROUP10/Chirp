@@ -213,21 +213,24 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             // Act            
             try 
             {
-                await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
+                var author = await ar.GetAuthorByName(authorName);
+                await cr.CreateCheep(cheep, author!);
             }
             catch 
             {
                 await ur.CreateUser(authorName, authorEmail);
-                await ar.CreateAuthor( await ur.GetUserByName(authorName) );
-                await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
+                var user = await ur.GetUserByName(authorName);
+                await ar.CreateAuthor(user!);
+                var author = await ar.GetAuthorByName(authorName);
+                await cr.CreateCheep(cheep, author!);
             }
 
             // Assert
             var retrievedAuthor = await ar.GetAuthorByName(authorName);
 
-            Assert.Equal(authorName, retrievedAuthor.User.Name);
+            Assert.Equal(authorName, retrievedAuthor!.User.Name);
             Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
-            }
+        }
     }
 
     //Tests if the program adds follows correctly and creates a user if the user does not exist

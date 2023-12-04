@@ -48,16 +48,18 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
         // Act
         await userService.CreateUser(authorName);
-        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+        var user = await userService.GetUserByName(authorName);
+        await authorService.CreateAuthor(user!);
         var cheep = new CheepCreateDTO(message, authorName);
 
-        await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
+        var author = await authorService.GetAuthorByName(authorName);
+        await cheepService.CreateCheep(cheep, author!);
         
         var dbCheep = cheepService.GetAll();
 
         // Assert
         Assert.Equal(1, dbCheep.Item2);
-        Assert.Equal(message, dbCheep.Item1.FirstOrDefault().Text);
+        Assert.Equal(message, dbCheep.Item1.FirstOrDefault()!.Text);
     }
 
     [Fact]
@@ -75,9 +77,14 @@ public class ChirpDatabaseTest : IAsyncLifetime
         {
             var authorName = "Test author " + i;
             await userService.CreateUser(authorName);
-            await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+
+            var user = await userService.GetUserByName(authorName);
+            await authorService.CreateAuthor(user!);
+
             var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
-            await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName));
+            var author =  await authorService.GetAuthorByName(authorName);
+            
+            await cheepService.CreateCheep(cheep, author!);
         }
 
         // Assert
@@ -85,7 +92,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
         var cheeps = await cheepService.GetSome(0, 32);
         Assert.Equal(100, allCheeps.Item2); // All cheeps are created
         Assert.Equal(32, cheeps.Item1.Count); // Only getting 32 cheeps
-        Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault().Message); // The cheeps gotten is the most resent 
+        Assert.Equal("Test message for author 99", cheeps.Item1.FirstOrDefault()!.Message); // The cheeps gotten is the most resent 
     }
 
     [Theory]
@@ -103,11 +110,11 @@ public class ChirpDatabaseTest : IAsyncLifetime
         
         // Assert
         var userByName = await userService.GetUserByName(name);
-        Assert.Equal(name, userByName.Name);
+        Assert.Equal(name, userByName!.Name);
         var userByEmail = await userService.GetUserByEmail(email);
-        Assert.Equal(email, userByEmail.Email);
+        Assert.Equal(email, userByEmail!.Email);
     }
-
+    
     [Theory]
     [InlineData("Anakin", "skywalker@jedi.com")]
     public async Task DeleteUser(string name, string email)
@@ -126,7 +133,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
         else
         {
             // Act part II
-            userService.DeleteUser(userToBeDeleted);
+            await userService.DeleteUser(userToBeDeleted);
 
             // Assert
             var userByName = await userService.GetUserByName(name);
@@ -135,11 +142,9 @@ public class ChirpDatabaseTest : IAsyncLifetime
             Assert.Null(userByEmail);
         }
     }
-
+    
     public record Follows { 
         public required int FollowerId { get; set; }
         public required int FollowingId { get; set; }
-
-        
-    }    
+    }  
 }

@@ -31,19 +31,24 @@ public class UserProfileModel : PageModel
 
     public async Task<ActionResult> OnGetAsync()
     {
-        if(!User.Identity.IsAuthenticated) {
-            return Redirect("/");
-        }
+        try
+        {
+        var userName = User?.Identity?.Name!;
         
-        if(await _userService.GetUserByName(User.Identity.Name) == null) {
-            await _userService.CreateUser(User.Identity.Name);
+        if(await _userService.GetUserByName(userName) == null)
+        {
+            await _userService.CreateUser(userName);
         }
 
-        var loggedInUserId = await FindUserIDByName(User.Identity.Name);
+        var loggedInUserId = await FindUserIDByName(userName);
         await findUserFollowingByUserID(loggedInUserId);
 
-        var userName = User.Identity.Name;
         var user = await _userService.GetUserByName(userName);
+
+        if (user is null)
+        {
+            throw new InvalidOperationException("User could not be created.");
+        }
         
         ViewData["UserName"] = user.Name;
         ViewData["UserEmail"] = user.Email;
@@ -53,20 +58,35 @@ public class UserProfileModel : PageModel
         cheeps = await _authorService.GetAllCheepsByAuthorName(user.Name);
 
         return Page();
+        
+        }
+        catch (NullReferenceException)
+        {
+            return Redirect("/");
+        }
     }
 
     public async Task<IActionResult> OnPostForgetMeAsync()
     {
-        if(!User.Identity.IsAuthenticated) {
-            return Redirect("/");
-        }
-
-        var userName = User.Identity.Name;
+        try
+        {
+        var userName = User?.Identity?.Name!;
         var user = await _userService.GetUserByName(userName);
+        
+        if (user is null)
+        {
+            throw new InvalidOperationException("User could not be created.");
+        }
+        
         await _userService.DeleteAllFollowers(user.UserId);
-        _userService.DeleteUser(user);
+        await _userService.DeleteUser(user);
 
         return await Logout();
+        }
+        catch (NullReferenceException)
+        {
+            return Redirect("/");
+        }
     }
     // This was inspired by: https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-sign-user-sign-in?tabs=aspnetcore
     public async Task<IActionResult> Logout()
@@ -83,44 +103,60 @@ public class UserProfileModel : PageModel
     public async Task findUserFollowingByUserID(int userId)
     {
         var followingIDs = await _userService.GetFollowedUsersId(userId);
-        foreach (var id in followingIDs) {
-            // check if user/id is in the list
-            following.Add(await _userService.GetUserById(id));
+        foreach (var id in followingIDs)
+        {
+            var fetchedUser = await _userService.GetUserById(id);
+            if(fetchedUser != null)
+            {
+                // check if user/id is in the list
+                following.Add(fetchedUser);
+            }
         }
     }
 
     // This downloads the user data as a JSON file
-    public async Task<IActionResult> OnPostDownloadData() {
+    public async Task<IActionResult> OnPostDownloadData()
+    {
+        var userName = User?.Identity?.Name ?? "default";
+
         // This is the filepath where the file will be saved
         var folder = Path.Combine("userDataFolder");
         Directory.CreateDirectory(folder);
 
-        string filePathName = Path.Combine(folder, User.Identity.Name + "_UserData.json");
+        string filePathName = Path.Combine(folder, userName + "_UserData.json");
 
         // This is the data that will be saved
-        var userID = await _userService.GetUserIDByName(User.Identity.Name);
-        var username = User.Identity.Name;
-        var email = (await _userService.GetUserByName(username)).Email;
-
+        var userID = await _userService.GetUserIDByName(userName);
+        var user = await _userService.GetUserByName(userName);
+        var email = user?.Email;
         var followersIDs = await _userService.GetFollowedUsersId(userID);
         var followers = new List<string>();
-        foreach (var id in followersIDs) {
-            followers.Add((await _userService.GetUserById(id)).Name);
+        
+        foreach (var id in followersIDs)
+        {
+            var fetchedUser = await _userService.GetUserById(id);
+            
+            if(fetchedUser != null)
+            {
+                followers.Add(fetchedUser.Name);
+            }
         }
 
-        var cheeps = await _authorService.GetAllCheepsByAuthorName(username);
+        var cheeps = await _authorService.GetAllCheepsByAuthorName(userName);
         var cheepFormated = new List<string>();
 
-        foreach(var cheep in cheeps) {
+        foreach(var cheep in cheeps)
+        {
             cheepFormated.Add("[" + cheep.Timestamp + "] - \"" + cheep.Message + "\"");
         }
 
         // This saves the data to the file
         string[] userData;
         
-        userData = new string[] {
+        userData = new string[]
+        {
             "User ID: " + userID,
-            "Username: " + username,
+            "Username: " + userName,
             "Email: " + email,
             "Followers: " + string.Join(", ", followers),
             "Cheeps: " + string.Join(", ", cheepFormated)
@@ -146,14 +182,19 @@ public class UserProfileModel : PageModel
             System.IO.File.Delete(filePathName);
         }
         
-        return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
+        return File(fileStream: ms, "application/json", userName + "_UserData.json");
     }
 
-    public async Task<IActionResult> OnPostAddUpdateEmail() {
+    public async Task<IActionResult> OnPostAddUpdateEmail()
+    {
+        if(!User?.Identity?.IsAuthenticated ?? false)
+        {
+            var userName = User?.Identity?.Name ?? "default";
+            var user = await _userService.GetUserByName(userName);
+            var email = user?.Email;
 
-        if(User.Identity.IsAuthenticated) {
-            var email = (await _userService.GetUserByName(User.Identity.Name)).Email;
-            if(email != null) {
+            if(email != null)
+            {
                 ViewData["UserEmail"] = email;
             }
         }
@@ -162,27 +203,32 @@ public class UserProfileModel : PageModel
         var result = validator.Validate(NewEmail);
 
         var duplicateEmail = await _userService.GetUserByEmail(NewEmail.Email);
-        if(!result.IsValid) {
+        
+        if(!result.IsValid)
+        {
             ViewData["EmailError"] = "formatting";
             return Page();
-        } else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email) {
+        }
+        else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email)
+        {
             ViewData["EmailError"] = "duplicate";
             return Page();
         }
 
         try
         {
-            await _userService.UpdateUserEmail(User.Identity.Name, NewEmail.Email);
+            var userName = User?.Identity?.Name ?? "default";
+            await _userService.UpdateUserEmail(userName, NewEmail.Email);
             ViewData["EmailError"] = "success";
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             ViewData["EmailError"] = "error";
         }
 
-
         return Page();
     }
-
 }
 public class NewEmail 
 {

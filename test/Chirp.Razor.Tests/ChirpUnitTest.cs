@@ -50,10 +50,11 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Act
             await ur.CreateUser(authorName, authorEmail);
-            ar.CreateAuthor( await ur.GetUserByName(authorName) );
+            var user = await ur.GetUserByName(authorName); 
+            await ar.CreateAuthor(user!);
 
             // Assert
-            Author? retrievedAuthor = await (Task<Author>) ar.GetAuthorByName(authorName);
+            Author? retrievedAuthor = await ar.GetAuthorByName(authorName);
             
             if (retrievedAuthor is null) 
             {
@@ -85,11 +86,11 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Act
             await ur.CreateUser(authorName, authorEmail);
-            ar.CreateAuthor( await ur.GetUserByName(authorName) );
-            
+            var user = await ur.GetUserByName(authorName);
+            await ar.CreateAuthor(user!);
 
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => await ar.CreateAuthor( await ur.GetUserByName(authorName) ));
+            await Assert.ThrowsAsync<Exception>(async() => await ar.CreateAuthor(user!));
             //Assert.Equal(authorName, retrievedAuthor.Name);
         }
     }
@@ -114,10 +115,12 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
 
             // Act
             await ur.CreateUser(authorName, authorEmail);
-            await ar.CreateAuthor( await ur.GetUserByName(authorName) );
+            var user = await ur.GetUserByName(authorName);
+            await ar.CreateAuthor(user!);
 
             var cheep = new CheepCreateDTO(message, authorName);
-            await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName));
+            var author = await ar.GetAuthorByName(authorName);
+            await cr.CreateCheep(cheep, author!);
 
             // Assert
             var retrievedAuthor = await ar.GetAuthorByName(authorName);
@@ -151,9 +154,9 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
             CheepRepository cr = new CheepRepository(context);
             
             var cheep = new CheepCreateDTO(message, authorName);
-
+            var author = await ar.GetAuthorByName(authorName);
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => await cr.CreateCheep(cheep, await ar.GetAuthorByName(authorName)));
+            await Assert.ThrowsAsync<Exception>(async() => await cr.CreateCheep(cheep, author!));
         }
     }
 

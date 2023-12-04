@@ -1,9 +1,6 @@
 @page "/Profile"
 @model Chirp.Web.Pages.UserProfileModel
 @using System
-@using Chirp.Core
-@using Chirp.Infrastructure.Models;
-@inject IUserRepository<User> UserRepository
 @{
 
     ViewData["Title"] = "Chirp!";
@@ -23,27 +20,32 @@
         <div class="profile-user">
             <p> Username: @User.Identity.Name</p>
             @if(ViewData["UserEmail"] != null) {
+
                 <p> Email: @ViewData["UserEmail"]</p> 
                 <h4> Update your email:</h4>
-                @if(ViewData["EmailError"] == "formatting")
+
+                @if((ViewData["EmailError"] as string) == "formatting") //(ViewData["EmailError"] == "formatting")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email formatting is incorrect
                     </div>
                     ViewData["EmailError"] = null;
-                } else if (ViewData["EmailError"] == "duplicate")
+                }
+                else if((ViewData["EmailError"] as string) == "duplicate") //(ViewData["EmailError"] == "duplicate")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email already exists
                     </div>
                     ViewData["EmailError"] = null;
-                } else if (ViewData["EmailError"] == "success")
+                }
+                else if((ViewData["EmailError"] as string) == "success")//(ViewData["EmailError"] == "success")
                 {
                     <div class="alert alert-success" role="alert">
                         Email successfully updated
                     </div>
-                        ViewData["EmailError"] = null;
-                } else if (ViewData["EmailError"] == "error")
+                    ViewData["EmailError"] = null;
+                }
+                else if((ViewData["EmailError"] as string) == "error")//(ViewData["EmailError"] == "error")
                 {
                     <div class="alert alert-danger" role="alert">
                         Error updating email
@@ -54,36 +56,42 @@
                     <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
                     <input type="submit" value="Add Email">
                 </form>
-            } else {  
-            @if(ViewData["EmailError"] == "formatting")
+            }
+            else
+            {  
+                @if((ViewData["EmailError"] as string) == "formatting")//(ViewData["EmailError"] == "formatting")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email formatting is incorrect
                     </div>
                     ViewData["EmailError"] = null;
-                } else if (ViewData["EmailError"] == "duplicate")
+                }
+                else if((ViewData["EmailError"] as string) == "duplicate")// (ViewData["EmailError"] == "duplicate")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email already exists
                     </div>
                     ViewData["EmailError"] = null;
-                } else if (ViewData["EmailError"] == "success")
+                }
+                else if((ViewData["EmailError"] as string) == "success")//(ViewData["EmailError"] == "success")
                 {
                     <div class="alert alert-success" role="alert">
                         Email successfully updated
-                        ViewData["EmailError"] = null;
                     </div>
-                } else if (ViewData["EmailError"] == "error")
+                    ViewData["EmailError"] = null;
+                }
+                else if((ViewData["EmailError"] as string) == "error")//(ViewData["EmailError"] == "error")
                 {
                     <div class="alert alert-danger" role="alert">
                         Error updating email
                     </div>
                     ViewData["EmailError"] = null;
                 }
-            <form asp-page-handler="AddUpdateEmail" method="post">
-                <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
-                <input type="submit" value="Add Email">
-            </form>
+
+                <form asp-page-handler="AddUpdateEmail" method="post">
+                    <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
+                    <input type="submit" value="Add Email">
+                </form>
             }
         </div>
 
@@ -138,6 +146,5 @@
     {
         <em>You need to be logged in to view the profile page</em>
     }
-
 </div>
 

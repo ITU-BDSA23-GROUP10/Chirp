@@ -27,12 +27,14 @@ public class WriteCheepFormViewComponent : ViewComponent
         try
         {
             await padlock.Lock();
-            author = await _authorService.GetAuthorByName(userName);
+            author = await _authorService.GetAuthorByName(userName)
+                ?? throw new InvalidOperationException("author could not be created.");
 
-            if (author is null) 
+            if (author is null)
             {
                 //await _authorService.CreateAuthor(userName);
-                author = await _authorService.GetAuthorByName(userName);
+                author = await _authorService.GetAuthorByName(userName)
+                    ?? throw new InvalidOperationException("author could not be created.");
             }
 
             if(newCheepMessage is null || newCheepMessage.Length < 1)
