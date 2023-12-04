@@ -133,7 +133,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
         else
         {
             // Act part II
-            userService.DeleteUser(userToBeDeleted);
+            await userService.DeleteUser(userToBeDeleted);
 
             // Assert
             var userByName = await userService.GetUserByName(name);

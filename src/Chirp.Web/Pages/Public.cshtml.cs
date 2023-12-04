@@ -31,7 +31,7 @@ public class PublicModel : PageModel
     public async Task<IActionResult> OnPost()
     {
         AsyncPadlock padlock = new();
-        var userName = User?.Identity?.Name ?? throw new InvalidOperationException("401 Unauthorized: User not logged in.");
+        var userName = User?.Identity?.Name ?? "default"; //throw new InvalidOperationException("401 Unauthorized: User not logged in.");
 
         try
         {
