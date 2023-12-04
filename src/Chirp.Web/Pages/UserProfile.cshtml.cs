@@ -145,7 +145,7 @@ public class UserProfileModel : PageModel
             Thread.Sleep(10000);
             System.IO.File.Delete(filePathName);
         }
-
+        
         return File(fileStream: ms, "application/json", User.Identity.Name + "_UserData.json");
     }
 

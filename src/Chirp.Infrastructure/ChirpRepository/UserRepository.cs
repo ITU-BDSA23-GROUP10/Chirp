@@ -127,8 +127,6 @@ public class UserRepository : IUserRepository<User>
 
         context.SaveChanges();
     }
-
-
     public async Task FollowUser(FollowDTO followDTO)
     {
         var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
