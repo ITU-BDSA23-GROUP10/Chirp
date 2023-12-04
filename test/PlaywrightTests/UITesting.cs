@@ -329,6 +329,47 @@ class Program
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-  
-  
+    
+    [Test]
+    public static async Task LoginAndDeleteUser()
+    {
+
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true,
+        });
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+
+        var page = await context.NewPageAsync();
+
+        await page.GotoAsync("https://localhost:5273");
+
+        await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+
+        await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
+        {
+            Modifiers = new[] { KeyboardModifier.Control },
+        });
+
+        await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
+
+        await page.GetByLabel("Password").ClickAsync();
+
+        await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+
+        //LoginWithUser();
+
+        await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.GotoAsync("https://localhost:5273/UI-tester-bdsa");
+
+        await page.GetByText("User UI-tester-bdsa does not exist").ClickAsync();
+
+        await page.GetByText("Go back to the home page").ClickAsync();
+    } 
 }
