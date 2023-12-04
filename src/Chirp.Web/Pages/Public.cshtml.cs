@@ -4,6 +4,7 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
 using Chirp.Web.ViewComponents;
+using System.Text.RegularExpressions;
 
 namespace Chirp.Web.Pages;
 
@@ -174,6 +175,24 @@ public class PublicModel : PageModel
             return Redirect("/" + userName);
         }
     }
+    public string? GetYouTubeEmbed(string message, out string Message)
+    {
+        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
+        Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
+
+        if (match.Success)
+        {
+            var videoId = match.Groups[6].Value.Substring(0, 11);
+            Message = match.Groups[1].Value.Trim() + " " + match.Groups[7].Value.Trim();
+            return $"https://www.youtube.com/embed/{videoId}";
+        }
+        else
+        {
+            Message = message;
+            return null;
+        }
+    }
+
 }
 
 public class NewFollow 
