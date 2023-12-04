@@ -69,12 +69,9 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostForgetMeAsync()
     {
-        if(User?.Identity?.IsAuthenticated == false)
+        try
         {
-            return Redirect("/");
-        }
-
-        var userName = User?.Identity?.Name ?? "default";
+        var userName = User?.Identity?.Name!;
         var user = await _userService.GetUserByName(userName);
         
         if (user is null)
@@ -86,6 +83,11 @@ public class UserProfileModel : PageModel
         await _userService.DeleteUser(user);
 
         return await Logout();
+        }
+        catch (NullReferenceException)
+        {
+            return Redirect("/");
+        }
     }
     // This was inspired by: https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-sign-user-sign-in?tabs=aspnetcore
     public async Task<IActionResult> Logout()

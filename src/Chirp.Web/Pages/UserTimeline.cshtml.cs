@@ -164,7 +164,7 @@ public class UserTimelineModel : PageModel
         {
             await padlock.Lock();
             
-            var userName = User?.Identity?.Name ?? "default";
+            var userName = User?.Identity?.Name ?? throw new InvalidOperationException("401 Unauthorized: User not logged in.");
             var userId = await _userService.GetUserIDByName(author);
             
             if(userId != -1) 
