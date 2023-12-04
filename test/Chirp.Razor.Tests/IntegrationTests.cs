@@ -225,4 +225,64 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(message, retrievedAuthor.Cheeps[0].Text);
             }
     }
+
+    //Tests if the program adds follows correctly and creates a user if the user does not exist
+    [Theory]
+    [InlineData("test1", "test1@test.dk", "test2", "test2@test.com")]
+    [InlineData("test3", "test3@test.de", "test4", "test4@test.uk")] 
+    public async Task CreateFollowInDatabase_CreateUserAfterException(string authorName, string authorEmail, string followName, string followEmail) 
+    {
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+            UserRepository ur = new UserRepository(context);
+
+            // Creates the user for the follow if it does not exist
+            try
+            {
+                await ur.CreateUser(followName, followEmail);
+                await ar.CreateAuthor( await ur.GetUserByName(followName) );
+            }
+            catch
+            {
+                Assert.Fail("Failed to create follow_User");
+            }
+            // Act            
+            try 
+            {
+                var userId = await ur.GetUserIDByName(authorName);
+                if(userId == -1)
+                {
+                    await ur.CreateUser(authorName, authorEmail);
+                    userId = await ur.GetUserIDByName(authorName);
+                }
+                var followID = await ur.GetUserIDByName(followName);
+
+                var follow = new FollowDTO(userId, followID);
+                await ur.FollowUser(follow);
+            }
+            catch 
+            {
+                Assert.Fail("Failed to create follow");
+            }
+
+            // Assert
+            var retrievedUser = await ur.GetUserByName(authorName);
+            var retrievedFollow = await ur.GetUserByName(followName);
+
+            var UserFollows = await ur.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
+            var FollowDoesntFollowUser = await ur.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
+
+            Assert.Equal(authorName, retrievedUser.Name);
+            Assert.Equal(followName, retrievedFollow.Name);
+            Assert.True(UserFollows);
+            Assert.False(FollowDoesntFollowUser);
+            }
+    }
 }
