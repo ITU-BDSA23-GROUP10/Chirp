@@ -27,9 +27,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         await context.SaveChangesAsync();
     }
 
-    public void Delete(Cheep entity)
+    public async Task Delete(Cheep entity)
     {
         DbSet.Remove(entity);
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
