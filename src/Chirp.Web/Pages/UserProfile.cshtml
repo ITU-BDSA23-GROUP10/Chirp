@@ -11,50 +11,109 @@
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("profile");
     ViewData["RouteName"] = routeName;
-
+    string email = Model.NewEmail.Email;
 }
 
-<div>
+<div class="profile-page">
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
         
     <h2> @User.Identity.Name's profile </h2>
-        <div>
-            <h3> Username: @ViewData["UserName"]</h3>
+        <div class="profile-user">
+            <p> Username: @User.Identity.Name</p>
             @if(ViewData["UserEmail"] != null) {
-                <h3> Email: @ViewData["UserEmail"]</h3> 
-                @*//TODO Add ability to update email *@
+                <p> Email: @ViewData["UserEmail"]</p> 
+                <h4> Update your email:</h4>
+                @if(ViewData["EmailError"] == "formatting")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email formatting is incorrect
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "duplicate")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email already exists
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "success")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Email successfully updated
+                    </div>
+                        ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "error")
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Error updating email
+                    </div>
+                    ViewData["EmailError"] = null;
+                }
+                <form asp-page-handler="AddUpdateEmail" method="post">
+                    <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
+                    <input type="submit" value="Add Email">
+                </form>
             } else {  
-            @*//TODO Add ability to add email *@
+            @if(ViewData["EmailError"] == "formatting")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email formatting is incorrect
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "duplicate")
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Email already exists
+                    </div>
+                    ViewData["EmailError"] = null;
+                } else if (ViewData["EmailError"] == "success")
+                {
+                    <div class="alert alert-success" role="alert">
+                        Email successfully updated
+                        ViewData["EmailError"] = null;
+                    </div>
+                } else if (ViewData["EmailError"] == "error")
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Error updating email
+                    </div>
+                    ViewData["EmailError"] = null;
+                }
+            <form asp-page-handler="AddUpdateEmail" method="post">
+                <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
+                <input type="submit" value="Add Email">
+            </form>
             }
         </div>
 
-        <div>
-            <h3> Download user data: </h3>
-            <form class="dwnlbttn" asp-page-handler="DownloadData" method="post"> 
-                <button class="dwnlbttn"> Download Data </button>
+        <div class="profile-download">
+            <h4> Download user data: </h4>
+            <form asp-page-handler="DownloadData" method="post"> 
+                <button class="dwnlbttn download"> Download Data </button>
             </form>
         </div>
 
-        <div> 
-            <h3> Delete user data: </h3>
+        <div class="profile-delete"> 
+            <h4> Delete user data: </h4>
             <form asp-page-handler="ForgetMe" method="post">
                 <input type="hidden" name="User" value="@User.Identity.Name"/>
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
-        <div>
-            <h3>Following: </h3>
+        <div class="profile-follow">
+            <h4>Following: </h4>
             @foreach (var UserFollow in Model.following)
             {
-                <li>
-                    <a href="/@UserFollow.Name"> @UserFollow.Name <a/>
-                </li>
+                <ul>
+                    <li>
+                        <a href="/@UserFollow.Name"> @UserFollow.Name <a/>
+                    </li>
+                </ul>
             }
         </div>
-        <div>
-            <h3>@User.Identity.Name's Cheeps:</h3>
+        <div class="profile-cheeps">
+            <h4>@User.Identity.Name's Cheeps:</h4>
             @if (Model.cheeps?.Any() == true)
             {
                 <ul id="messagelist" class="cheeps">

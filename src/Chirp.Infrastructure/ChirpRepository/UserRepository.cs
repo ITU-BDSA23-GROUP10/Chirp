@@ -1,6 +1,7 @@
+
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-//using Chirp.Infrastructure.Migrations;
+using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;
@@ -107,7 +108,26 @@ public class UserRepository : IUserRepository<User>
             InsertUser(userEntity);
         }
     }
+    // checks if user exists and if email is null or empty 
+    public async Task UpdateUserEmail(string name, string email)
+    {
+        var user = await GetUserByName(name);
 
+        // checks if user exists and if email is null or empty
+        if (user is null)
+        {
+            throw new Exception("User does not exist");
+        } else if (email is null || email == "")
+        {
+            throw new Exception("Email is null or empty");
+        }
+
+        DbSetUser
+        .Where(u => u.UserId == user.UserId)
+        .ExecuteUpdate(u => u.SetProperty(e => e.Email, e => email));
+
+        context.SaveChanges();
+    }
     public async Task FollowUser(FollowDTO followDTO)
     {
         var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
