@@ -9,7 +9,6 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 
-
 namespace Chirp.Web.Pages;
 
 public class UserProfileModel : PageModel
