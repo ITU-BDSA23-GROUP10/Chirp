@@ -18,6 +18,9 @@ public class UserTimelineModel : PageModel
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
 
+    //TODO: Figure out why 2 extra pages are added to the pagination
+    private readonly int excessiveCheepsCount = 32*2;
+
     // maybe remove
     public List<CheepDTO> UserCheeps { get; set; } = new List<CheepDTO>();
 
@@ -146,11 +149,11 @@ public class UserTimelineModel : PageModel
             List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
-            int count = 0;
+            int followedUsersCheepsCount = 0;
 
             foreach(int id in FollowedUsers) {
                 followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(id, offset, limit));
-                count += await _authorService.GetCheepsCountsFromAuthorId(id);
+                followedUsersCheepsCount += await _authorService.GetCheepsCountsFromAuthorId(id);
             }
 
             if (User.Identity.Name == author) // logged-in user's page
@@ -159,7 +162,7 @@ public class UserTimelineModel : PageModel
                 Cheeps.Clear();
                 Cheeps.AddRange(UserCheeps);
                 Cheeps.AddRange(followingCheeps);
-                ViewData["CheepsCount"] = cheepsCount + count;
+                ViewData["CheepsCount"] = cheepsCount + followedUsersCheepsCount - excessiveCheepsCount;
             }
             else // other users' pages
             {
