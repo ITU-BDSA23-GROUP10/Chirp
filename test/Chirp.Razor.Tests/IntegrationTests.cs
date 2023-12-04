@@ -226,11 +226,11 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             }
     }
 
-    //Tests if the program adds the email of a user
+    //Tests if the program adds follows correctly and creates a user if the user does not exist
     [Theory]
-    [InlineData("test1", "test1@itu.dk")]
-    [InlineData("test3", "test3@gmail.com")]
-    public async Task AddEmailInDatabase(string authorName, string authorEmail) 
+    [InlineData("test1", "test1@test.dk", "test2", "test2@test.com")]
+    [InlineData("test3", "test3@test.de", "test4", "test4@test.uk")] 
+    public async Task CreateFollowInDatabase_CreateUserAfterException(string authorName, string authorEmail, string followName, string followEmail) 
     {
         // Arrange
         var factory = new CustomWebApplicationFactory<Program>();
@@ -243,43 +243,46 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             CheepRepository cr = new CheepRepository(context);
             UserRepository ur = new UserRepository(context);
 
-            // sets the email of the user  
-            await ur.CreateUser(authorName);
-            await ur.UpdateUserEmail(authorName, authorEmail);
+            // Creates the user for the follow if it does not exist
+            try
+            {
+                await ur.CreateUser(followName, followEmail);
+                await ar.CreateAuthor( await ur.GetUserByName(followName) );
+            }
+            catch
+            {
+                Assert.Fail("Failed to create follow_User");
+            }
+            // Act            
+            try 
+            {
+                var userId = await ur.GetUserIDByName(authorName);
+                if(userId == -1)
+                {
+                    await ur.CreateUser(authorName, authorEmail);
+                    userId = await ur.GetUserIDByName(authorName);
+                }
+                var followID = await ur.GetUserIDByName(followName);
 
-            var userEmail = (await ur.GetUserByName(authorName)).Email;
+                var follow = new FollowDTO(userId, followID);
+                await ur.FollowUser(follow);
+            }
+            catch 
+            {
+                Assert.Fail("Failed to create follow");
+            }
 
-            Assert.Equal(authorEmail, userEmail);
-        }
-    }
+            // Assert
+            var retrievedUser = await ur.GetUserByName(authorName);
+            var retrievedFollow = await ur.GetUserByName(followName);
 
-    //Tests if the program changes the email of a user
-    [Theory]
-    [InlineData("test1", "test1@itu.dk", "test1@changed.dk")]
-    [InlineData("test3", "test3@gmail.com", "test3@changed.com")]
-    public async Task ChangeEmailInDatabase(string authorName, string authorEmail, string changedEmail) 
-    {
-        // Arrange
-        var factory = new CustomWebApplicationFactory<Program>();
-        var client = factory.CreateClient();
+            var UserFollows = await ur.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
+            var FollowDoesntFollowUser = await ur.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
 
-        using (var scope = factory.Services.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
-            AuthorRepository ar = new AuthorRepository(context);
-            CheepRepository cr = new CheepRepository(context);
-            UserRepository ur = new UserRepository(context);
-
-            // sets the email of the user
-            await ur.CreateUser(authorName);
-            await ur.UpdateUserEmail(authorName, authorEmail);
-
-            // changes the email of the user
-            await ur.UpdateUserEmail(authorName, changedEmail);
-
-            var userEmail = (await ur.GetUserByName(authorName)).Email;
-            
-            Assert.Equal(changedEmail, userEmail);
-        }
+            Assert.Equal(authorName, retrievedUser.Name);
+            Assert.Equal(followName, retrievedFollow.Name);
+            Assert.True(UserFollows);
+            Assert.False(FollowDoesntFollowUser);
+            }
     }
 }
