@@ -192,7 +192,6 @@ public class PublicModel : PageModel
             return null;
         }
     }
-
 }
 
 public class NewFollow 
