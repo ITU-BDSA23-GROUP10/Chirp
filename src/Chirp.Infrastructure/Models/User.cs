@@ -7,7 +7,6 @@ public record User {
     public int UserId { get; set; }
     public required string Name { get; set; }
     public string? Email { get; set; }
-
 }
 
 public record Follows { 

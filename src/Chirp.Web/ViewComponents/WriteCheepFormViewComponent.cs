@@ -9,7 +9,8 @@ public class WriteCheepFormViewComponent : ViewComponent
     private readonly IAuthorRepository<Author, Cheep, User> _authorService;
     private readonly ICheepRepository<Cheep, Author>  _cheepService;
 
-    protected NewCheep NewestCheep {get; set;} = new();
+    protected NewCheep NewestCheep { get; set; } = new NewCheep { Message = string.Empty };
+
 
     public WriteCheepFormViewComponent(IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
     {
@@ -26,17 +27,28 @@ public class WriteCheepFormViewComponent : ViewComponent
         try
         {
             await padlock.Lock();
-            author = await _authorService.GetAuthorByName(userName);
+            author = await _authorService.GetAuthorByName(userName)
+                ?? throw new InvalidOperationException("author could not be created.");
 
-            if (author is null) 
+            if (author is null)
             {
                 //await _authorService.CreateAuthor(userName);
-                author = await _authorService.GetAuthorByName(userName);
+                author = await _authorService.GetAuthorByName(userName)
+                    ?? throw new InvalidOperationException("author could not be created.");
             }
 
-            cheep = new CheepCreateDTO(newCheepMessage, userName);
-            
-            await _cheepService.CreateCheep(cheep, author);
+            if(newCheepMessage is null || newCheepMessage.Length < 1)
+            {
+                ViewData["CheepTooShort"] = "true";
+                padlock.Dispose();
+                return View(NewestCheep);
+            } else 
+            {
+                ViewData["CheepTooShort"] = "false";
+                cheep = new CheepCreateDTO(newCheepMessage, userName);
+                await _cheepService.CreateCheep(cheep, author);
+            }
+
         }
         finally
         {
@@ -51,14 +63,10 @@ public class WriteCheepFormViewComponent : ViewComponent
 public class NewCheep 
 {
     //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
+    [Required]
     [MaxLength(160)]
     [Display(Name = "text")]
-    public string? Message {get; set;} = string.Empty;
-
-    /*
-    [Display(Name = "getidforcheep")]
-    public int? id {get; set;} = -1;
-    */
+    public required string Message {get; set;} = string.Empty;
 }
 
 public class NewReaction

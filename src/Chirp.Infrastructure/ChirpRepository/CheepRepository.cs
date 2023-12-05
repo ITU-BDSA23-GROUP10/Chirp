@@ -21,15 +21,16 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     #region ICheepRepository<Cheep, Author> Members
 
-    public void Insert(Cheep entity)
+    public async Task Insert(Cheep entity)
     {
         DbSet.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(Cheep entity)
+    public async Task Delete(Cheep entity)
     {
         DbSet.Remove(entity);
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
@@ -72,16 +73,12 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         // Before running CreateCheep from CheepService you must make sure to first run CreateAuthor from Author repo
         // To ensure that the author is either created or already exists!!!
         // THIS SHOULD NOT BE DONE FROM THE CHEEP REPO AS THIS IS NOT ITS CONCERN!
-
-        
         if (author is null) 
         {
             // This should most likely be changed to a custom exception pertaining to accounts not existing
             throw new Exception("Author doesn't exist try again after creating an account");
         }
-
         // For future consideration: DateTime.UTCNow vs .Now from StackOverflow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
-        
         try
         {
             var validationResult = validator.Validate(newCheep);
@@ -91,11 +88,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             {
                 List<ValidationFailure> failures = validationResult.Errors;
                 throw new Exception(string.Join(", ", failures));
-                return;
             }
 
             DateTime timestamp = DateTime.Now;
-            Insert(new Cheep()
+            await Insert(new Cheep()
             {
                 Author = author,
                 Text = newCheep.text,
