@@ -74,6 +74,28 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Follows");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Reaction", b =>
+                {
+                    b.Property<int>("cheepId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("downVote")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("upVote")
+                        .HasColumnType("bit");
+
+                    b.HasKey("cheepId", "userId");
+
+                    b.HasIndex("cheepId", "userId")
+                        .IsUnique();
+
+                    b.ToTable("Reactions");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.User", b =>
                 {
                     b.Property<int>("UserId")

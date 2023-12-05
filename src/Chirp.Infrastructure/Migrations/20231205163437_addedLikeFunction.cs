@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedFollowers : Migration
+    public partial class addedLikeFunction : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,6 +21,20 @@ namespace Chirp.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Follows", x => new { x.FollowerId, x.FollowingId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reactions",
+                columns: table => new
+                {
+                    cheepId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    upVote = table.Column<bool>(type: "bit", nullable: false),
+                    downVote = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reactions", x => new { x.cheepId, x.userId });
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +101,12 @@ namespace Chirp.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reactions_cheepId_userId",
+                table: "Reactions",
+                columns: new[] { "cheepId", "userId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",
                 table: "Users",
                 column: "Name",
@@ -101,6 +121,9 @@ namespace Chirp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Follows");
+
+            migrationBuilder.DropTable(
+                name: "Reactions");
 
             migrationBuilder.DropTable(
                 name: "Authors");

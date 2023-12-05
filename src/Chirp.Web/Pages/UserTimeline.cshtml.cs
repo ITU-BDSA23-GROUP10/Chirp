@@ -14,20 +14,28 @@ public class UserTimelineModel : PageModel
     [BindProperty]
     public NewFollow NewFollow {get; set;} = new();
 
+    [BindProperty]
+    public NewcheepId NewcheepId {get; set;} = new();
+        
+    [BindProperty]
+    public NewReaction NewReaction {get; set;} = new();
+
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
 
     // maybe remove
     public List<CheepDTO> UserCheeps { get; set; } = new List<CheepDTO>();
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
+    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService)
     {
         _authorService = authorService;
         _cheepService = cheepService;
         _userService = userService;
+        _reactionService = reactionService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -161,5 +169,38 @@ public class UserTimelineModel : PageModel
         }
 
         return Page();
+    }
+
+    public async Task<int> FindUpvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+    }
+
+    public async Task<int> FindDownvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
+    }
+
+    public async Task<IActionResult> OnPostReaction()
+    {
+        // the id for the user who is reacting
+        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        int cheepId = NewcheepId.id  ?? default(int);
+        string react = NewReaction.Reaction;
+
+        //throw new Exception("UserID:  " + userId + "  ||  cheepID: " + cheepId + "   ||   Reaction: " + NewReaction.Reaction);
+
+        var newreact = new ReactionDTO
+        (
+            cheepId,
+            userId, 
+            react
+        );
+
+        //throw new Exception("UserID:  " + newreact.userId + "  ||  cheepID: " + newreact.cheepId + "   ||   Reaction: " + newreact.reactionType);
+
+        await _reactionService.ReactToCheep(newreact);
+
+        return Redirect("/" + User.Identity.Name);
     }
 }

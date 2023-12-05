@@ -5,7 +5,7 @@ using Chirp.Core;
 using FluentValidation;
 using FluentValidation.Results;
 
-/*namespace Chirp.Infrastructure.ChirpRepository;
+namespace Chirp.Infrastructure.ChirpRepository;
 
 public class ReactionRepository : IReactionRepository<Reaction>
 {
@@ -14,7 +14,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public ReactionRepository(ChirpDBContext dbContext)
     {
-        DbSetReaction = dbContext.Reaction;
+        DbSetReaction = dbContext.Reactions;
         context = dbContext;
     }
     
@@ -57,6 +57,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task ReactToCheep(ReactionDTO reactionDTO)
     {
+        //throw new Exception("|| in the reactToCheep ||");
         var exists = await checkUserReacted(reactionDTO.userId, reactionDTO.cheepId);
 
         if (!exists)
@@ -66,17 +67,17 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 cheepId = reactionDTO.cheepId,
                 userId = reactionDTO.userId,
             };
-            if(reactionDTO.reactionDTO.Equals("Upvote"))
+            if(reactionDTO.reactionType.Equals("Upvote"))
             {
                 reaction.upVote = true;
             }
-            else if(reactionDTO.reactionDTO.Equals("Downvote"))
+            else if(reactionDTO.reactionType.Equals("Downvote"))
             {
                 reaction.downVote = true;
             }
             else 
             {
-                throw new Exception("Problem with creating the reaction");
+                throw new Exception("Problem with creating the reaction. cheepid: " + reactionDTO.cheepId +  " | userId: " + reactionDTO.userId + " | reactionType: " + reactionDTO.reactionType);
             }
 
             InsertReaction(reaction);
@@ -92,14 +93,33 @@ public class ReactionRepository : IReactionRepository<Reaction>
             string reactionType = await checkUserReactionType(reaction.userId, reaction.cheepId);
             if(reactionType.Equals("Upvote"))
             {
-                reaction.upVote = false;
-                reaction.downVote = true;
+                if(reactionDTO.reactionType.Equals("Upvote")) 
+                {
+                    reaction.upVote = true;
+                    DeleteReaction(reaction);
+                    return;  
+                }
+                else
+                {
+                    reaction.upVote = false;
+                    reaction.downVote = true;
+                }
 
             }
             else if(reactionType.Equals("Downvote"))
             {
-                reaction.upVote = true;
-                reaction.downVote = false;
+                if(reactionDTO.reactionType.Equals("Downvote")) 
+                {
+                    reaction.downVote = true;
+                    DeleteReaction(reaction); 
+                    return;   
+                }
+                else
+                {
+                    reaction.upVote = true;
+                    reaction.downVote = false;
+                }
+                
             }
             else 
             {
@@ -131,16 +151,33 @@ public class ReactionRepository : IReactionRepository<Reaction>
         }
         else if(await DbSetReaction.AnyAsync(r => r.userId == userid 
                                             && r.cheepId == cheepid 
-                                            && r.upVote == true))
+                                            && r.downVote == true))
         {
             return "Downvote";
         }
         else
         {
-            throw new Exception("No Reaction found when check reaction type");
+            throw new Exception("No Reaction found when check reaction type.  userid: " + userid + " | cheepid: " + cheepid);
         }
+    }
+
+    public async Task deleteAllUserReactions(int userid)
+    {
+        List<Reaction> usersReaction = await GetReactionByUsersId(userid);
+
+        foreach(Reaction react in usersReaction)
+        {
+            DeleteReaction(react);
+        }
+    }
+
+    public async Task<List<Reaction>> GetReactionByUsersId(int userid)
+    {
+        var usersReaction = await SearchFor(_react => _react.userId == userid).ToListAsync();
+
+        return usersReaction;
     }
 
 
     #endregion
-}*/
+}

@@ -16,4 +16,6 @@ public interface IReactionRepository<Reaction>
     Task ReactToCheep(ReactionDTO reactionDTO);
     Task<bool> checkUserReacted(int userid, int cheepid);
     Task<string> checkUserReactionType(int userid, int cheepid);
+    Task deleteAllUserReactions(int userid);
+    Task<List<Reaction>> GetReactionByUsersId(int userid);
 }

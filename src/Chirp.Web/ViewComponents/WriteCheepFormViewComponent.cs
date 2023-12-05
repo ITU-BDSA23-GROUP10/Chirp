@@ -55,5 +55,18 @@ public class NewCheep
     [Display(Name = "text")]
     public string? Message {get; set;} = string.Empty;
 
+    /*
+    [Display(Name = "getidforcheep")]
     public int? id {get; set;} = -1;
+    */
+}
+
+public class NewReaction
+{
+    public string? Reaction {get; set;} = string.Empty;
+}
+
+public class NewcheepId
+{
+    public int? id {get; set;}
 }

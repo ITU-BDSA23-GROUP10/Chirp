@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-//using Chirp.Infrastructure.Migrations;
+using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;
@@ -102,6 +102,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .Skip(offset).Take(limit)
                     .Select(_cheep => new CheepDTO
                     (
+                        _cheep.CheepId,
                         _cheep.Author.User.Name,
                         _cheep.Text,
                         _cheep.TimeStamp
@@ -130,6 +131,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .Skip(offset).Take(limit)
                     .Select(_cheep => new CheepDTO
                     (
+                        _cheep.CheepId,
                         _cheep.Author.User.Name,
                         _cheep.Text,
                         _cheep.TimeStamp

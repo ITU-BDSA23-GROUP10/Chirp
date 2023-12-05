@@ -1,9 +1,8 @@
-namespace Chirp.Infrastructure.Models;
-
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace Chirp.Infrastructure.Models;
+
 public record Reaction {   
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int cheepId { get; set; }
     public int userId { get; set; }
     public bool upVote { get; set; } = false;

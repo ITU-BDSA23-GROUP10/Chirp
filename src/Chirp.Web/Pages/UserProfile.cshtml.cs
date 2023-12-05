@@ -11,11 +11,13 @@ namespace Chirp.Web.Pages;
 public class UserProfileModel : PageModel
 {
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
 
-public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
-{
-    _userService = userService;
-}    
+    public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService, IReactionRepository<Reaction> reactionService)
+    {
+        _userService = userService;
+        _reactionService = reactionService;
+    }    
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -45,10 +47,12 @@ public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Aut
         var userName = User.Identity.Name;
         var user = await _userService.GetUserByName(userName);
         await _userService.DeleteAllFollowers(user.UserId);
+        await _reactionService.deleteAllUserReactions(user.UserId);
         _userService.DeleteUser(user);
 
         return await Logout();
     }
+
     // This was inspired by: https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-sign-user-sign-in?tabs=aspnetcore
     public async Task<IActionResult> Logout()
     {
