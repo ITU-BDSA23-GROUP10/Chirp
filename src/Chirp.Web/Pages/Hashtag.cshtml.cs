@@ -22,12 +22,11 @@ public class HashtagModel : PageModel
     {
         try
         {
-        TagName = tagName;
+            TagName = tagName;
 
-        cheeps = await _cheepService.GetCheepsByHashtag(tagName);
+            cheeps = await _cheepService.GetCheepsByHashtag(tagName);
 
-        return Page();
-        
+            return Page();
         }
         catch (NullReferenceException)
         {
