@@ -38,17 +38,21 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
-                            <!-- YouTube Link Check and Embed -->
+                            <!-- YouTube Link Check and Embed, hashtags -->
                             @{
                                 string Message;
                                 var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
+
+                                List<string> hashTags;
+                                string MessageWithHashtags;
+                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);
                                 
                                 if (embedUrl != null)
                                 {
                                     <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 }
 
-                                <p>@Message</p>
+                                <p>@Html.Raw(MessageWithHashtags)</p>
                             }
 
                  

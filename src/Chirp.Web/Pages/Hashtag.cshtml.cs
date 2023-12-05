@@ -2,22 +2,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
+using System.Text.RegularExpressions;
 
 namespace Chirp.Web.Pages;
 
 public class HashtagModel : PageModel
 {
     public string TagName { get; set; }
-    readonly IUserRepository<User> _userService;
-    readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly ICheepRepository<Cheep, Author> _cheepService;
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-    public HashtagModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService,ICheepRepository<Cheep, Author> cheepService)
+    public HashtagModel(ICheepRepository<Cheep, Author> cheepService)
     {
-        _userService = userService;
-        _authorService = authorService;
         _cheepService = cheepService;
     }    
 
@@ -26,21 +23,7 @@ public class HashtagModel : PageModel
         try
         {
         TagName = tagName;
-        var userName = User?.Identity?.Name!;
-        
-        if(await _userService.GetUserByName(userName) == null)
-        {
-            await _userService.CreateUser(userName);
-        }
 
-        var user = await _userService.GetUserByName(userName);
-
-        if (user is null)
-        {
-            throw new InvalidOperationException("User could not be created.");
-        }
-
-        //cheeps = await _authorService.GetAllCheepsByAuthorName(user.Name);
         cheeps = await _cheepService.GetCheepsByHashtag(tagName);
 
         return Page();
@@ -49,6 +32,23 @@ public class HashtagModel : PageModel
         catch (NullReferenceException)
         {
             return Redirect("/");
+        }
+    }
+    public string? GetYouTubeEmbed(string message, out string Message)
+    {
+        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
+        Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
+
+        if (match.Success)
+        {
+            var videoId = match.Groups[6].Value.Substring(0, 11);
+            Message = match.Groups[1].Value.Trim() + " " + match.Groups[7].Value.Trim();
+            return $"https://www.youtube.com/embed/{videoId}";
+        }
+        else
+        {
+            Message = message;
+            return null;
         }
     }
 }
