@@ -231,4 +231,20 @@ public class UserTimelineModel : PageModel
             return null;
         }
     }
+    //hashtags
+    public List<string> GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+");
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            hashTags.Add(match.Value);
+            message = message.Replace("#" + match.Value, String.Format("<a href=\"/hashtag/{0}\">{1}</a>", match.Value, "#" + match.Value));
+        }
+
+        Message = message;
+        return hashTags;
+    }
 }

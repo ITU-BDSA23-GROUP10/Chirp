@@ -1,0 +1,34 @@
+@page "/hashtag/{tagName}"
+@model Chirp.Web.Pages.HashtagModel
+@using System
+@{
+    ViewData["Title"] = $"Chirp - {Model.TagName}";
+    Layout = "Shared/_Layout";
+}
+
+<div class="hashtag-page">
+    <h2>Hashtag: @Model.TagName</h2>
+
+    @if (Model.cheeps?.Any() == true)
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in Model.cheeps)
+            {
+                <li>
+                    <div class="activity">
+                        <img src="https://avatars.githubusercontent.com/@cheep.Author" />
+                        <div>
+                            <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
+                            <small>&mdash; @cheep.Timestamp</small>
+                            <p>@cheep.Message</p>
+                        </div>
+
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no cheeps for this hashtag yet.</em>
+    }
+</div>

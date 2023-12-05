@@ -102,6 +102,16 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             Console.WriteLine(e.Message, ", failed validation");
         }
     }
+
+    public async Task<List<CheepDTO>> GetCheepsByHashtag(string hashtag)
+    {
+        // test this more
+        var cheeps = await _context.Cheeps
+            .Where(c => c.Message.Contains("#" + hashtag))
+            .ToListAsync();
+
+        return cheeps;
+    }
     
     #endregion
 }
