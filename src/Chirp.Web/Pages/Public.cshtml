@@ -11,6 +11,13 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
+    @if((ViewData["CheepTooShort"] as string) == "true")//(ViewData["CheepTooShort"] == "true")
+    {
+        <div class="alert alert-warning" role="alert">
+            Your cheep is too short!
+        </div>
+        ViewData["CheepTooShort"] = "false";
+    }
     <div class="cheepbox">
             <h3>What's on your mind @(User.Identity.Name)?</h3>
             <form method="post">
@@ -31,12 +38,25 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
-                            <p>@cheep.Message</p>
+                            <!-- YouTube Link Check and Embed -->
+                            @{
+                                string Message;
+                                var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
+                                
+                                if (embedUrl != null)
+                                {
+                                    <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                }
+
+                                <p>@Message</p>
+                            }
+
                  
-                            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                            @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
-                                //get the id of the logged in user                    
-                                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                                //get the id of the logged in user
+                                var userName = User?.Identity?.Name ?? "default";                
+                                var userId = Model.FindUserIDByName(userName).Result;
                                 var authorId = Model.FindUserIDByName(@cheep.Author).Result;
                                 var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230

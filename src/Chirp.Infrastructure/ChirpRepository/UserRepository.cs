@@ -9,8 +9,8 @@ namespace Chirp.Infrastructure.ChirpRepository;
 
 public class UserRepository : IUserRepository<User>
 {
-    protected DbSet<User> DbSetUser; 
-    protected DbSet<Follows> DbSetFollows;   
+    protected DbSet<User> DbSetUser;
+    protected DbSet<Follows> DbSetFollows;
     protected ChirpDBContext context;
 
     public UserRepository(ChirpDBContext dbContext)
@@ -22,28 +22,28 @@ public class UserRepository : IUserRepository<User>
 
     #region IUserRepository<User> Members
 
-    public void InsertUser(User entity)
+    public async Task InsertUser(User entity)
     {
         DbSetUser.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void DeleteUser(User entity)
+    public async Task DeleteUser(User entity)
     {
         DbSetUser.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void InsertFollow(Follows entity)
+    public async Task InsertFollow(Follows entity)
     {
         DbSetFollows.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void DeleteFollow(Follows entity)
+    public async Task DeleteFollow(Follows entity)
     {
         DbSetFollows.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
@@ -104,10 +104,29 @@ public class UserRepository : IUserRepository<User>
                 Name = name,
                 Email = email ?? null
             };
-            InsertUser(userEntity);
+            await InsertUser(userEntity);
         }
     }
+    // checks if user exists and if email is null or empty 
+    public async Task UpdateUserEmail(string name, string email)
+    {
+        var user = await GetUserByName(name);
 
+        // checks if user exists and if email is null or empty
+        if (user is null)
+        {
+            throw new Exception("User does not exist");
+        } else if (email is null || email == "")
+        {
+            throw new Exception("Email is null or empty");
+        }
+
+        DbSetUser
+        .Where(u => u.UserId == user.UserId)
+        .ExecuteUpdate(u => u.SetProperty(e => e.Email, e => email));
+
+        context.SaveChanges();
+    }
     public async Task FollowUser(FollowDTO followDTO)
     {
         var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
@@ -119,15 +138,16 @@ public class UserRepository : IUserRepository<User>
                 FollowerId = followDTO.followerId,
                 FollowingId = followDTO.followingId
             };
-            InsertFollow(newFollow);
+            await InsertFollow(newFollow);
         }
         else
         {
             throw new Exception("Follow record already exists");
         }
     }
-    
-    public async Task<int> getUserFollowingCountById(int userId) {
+
+    public async Task<int> getUserFollowingCountById(int userId)
+    {
         return await DbSetFollows.CountAsync(f => f.FollowingId == userId);
     }
 
@@ -144,7 +164,7 @@ public class UserRepository : IUserRepository<User>
 
         if (record != null)
         {
-            DeleteFollow(record);
+            await DeleteFollow(record);
         }
         else
         {
@@ -152,7 +172,7 @@ public class UserRepository : IUserRepository<User>
         }
     }
 
-    //to show all cheeps a logged in user is following 
+    //Returns all ids of users a user is following
     public async Task<List<int>> GetFollowedUsersId(int userId)
     {
         var followedUsers = await DbSetFollows
@@ -164,28 +184,33 @@ public class UserRepository : IUserRepository<User>
     }
 
     //Returns all ids of users following a user
-    public async Task<List<int>> GetIdsFollowingUser(int userId) {
+    public async Task<List<int>> GetIdsFollowingUser(int userId)
+    {
         var IdsFollowingUser = await DbSetFollows
             .Where(f => f.FollowingId == userId)
             .Select(f => f.FollowerId)
-            .ToListAsync();    
+            .ToListAsync();
 
-        return IdsFollowingUser;       
+        return IdsFollowingUser;
     }
 
     //deletes all followers of a user
-    public async Task LoopDeleteFollowers(List<int> followedUsers, int userId) {
-        foreach(int id in followedUsers) {
-            var follow = new Follows() {
+    public async Task LoopDeleteFollowers(List<int> followedUsers, int userId)
+    {
+        foreach (int id in followedUsers)
+        {
+            var follow = new Follows()
+            {
                 FollowerId = userId,
                 FollowingId = id
             };
-            DeleteFollow(follow);
-            }
+            await DeleteFollow(follow);
+        }
         return;
     }
-    
-    public async Task DeleteAllFollowers(int userId) {
+
+    public async Task DeleteAllFollowers(int userId)
+    {
         //gets all users the user is following
         List<int> followedUsers = await GetFollowedUsersId(userId);
 
@@ -199,6 +224,6 @@ public class UserRepository : IUserRepository<User>
         await LoopDeleteFollowers(followedUsers, userId);
 
         return;
-        }
+    }
     #endregion
 }

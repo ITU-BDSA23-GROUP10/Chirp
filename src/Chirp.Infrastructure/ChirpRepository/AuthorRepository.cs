@@ -20,16 +20,16 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     #region IAuthorRepository<Author, Cheep> Members
 
-    public void Insert(Author entity)
+    public async Task Insert(Author entity)
     {
         DbSetAuthor.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(Author entity)
+    public async Task Delete(Author entity)
     {
         DbSetAuthor.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
@@ -114,8 +114,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     public async Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit)
     {
-        int cheepsCount = 0;
-        
         var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
 
         if (authorEntity is null)
@@ -128,6 +126,31 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .Query()
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
                     .Skip(offset).Take(limit)
+                    .Select(_cheep => new CheepDTO
+                    (
+                        _cheep.Author.User.Name,
+                        _cheep.Text,
+                        _cheep.TimeStamp
+                    ))
+                    .ToListAsync()
+                    ?? new List<CheepDTO>();
+
+        return new List<CheepDTO>(cheeps);
+    }
+
+    public async Task<List<CheepDTO>> GetAllCheepsByAuthorName(string authorName)
+    {
+        var authorEntity = await SearchFor(_author => _author.User.Name == authorName).FirstOrDefaultAsync();
+
+        if (authorEntity is null)
+        {
+            return new List<CheepDTO>();
+        }
+
+        List<CheepDTO> cheeps = await DbSetAuthor.Entry(authorEntity)
+                    .Collection(_author => _author.Cheeps)
+                    .Query()
+                    .OrderByDescending(_cheep => _cheep.TimeStamp)
                     .Select(_cheep => new CheepDTO
                     (
                         _cheep.Author.User.Name,
@@ -164,7 +187,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                 User = user,
                 Cheeps = new List<Cheep>()
             };
-            Insert(authorEntity);
+            await Insert(authorEntity);
         }
     }
 

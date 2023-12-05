@@ -7,8 +7,8 @@ namespace Chirp.Core;
 
 public interface ICheepRepository<Cheep, Author>
 {
-    void Insert(Cheep entity);
-    void Delete(Cheep entity);
+    Task Insert(Cheep entity);
+    Task Delete(Cheep entity);
     IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate);
     (IQueryable<Cheep>, int) GetAll();
     Task<Cheep?> GetById(int id);
