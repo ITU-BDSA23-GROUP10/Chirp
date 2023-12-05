@@ -1,6 +1,11 @@
 using Microsoft.Playwright;
 using System;
 using System.Threading.Tasks;
+using Ductus.FluentDocker;
+using Microsoft.Extensions.DependencyInjection;
+using Ductus.FluentDocker.Services.Impl;
+using Ductus.FluentDocker.Model.Compose;
+using Ductus.FluentDocker.Services;
 
 namespace PlaywrightTests;
 
@@ -9,10 +14,10 @@ namespace PlaywrightTests;
 //remember in order to use the pwsh command you need to update powershell (with net8.0) with: dotnet tool update --global PowerShell
 //pwsh bin/Debug/net8.0/playwright.ps1 codegen https://localhost:5273 --ignore-https-errors
 
-[Parallelizable(ParallelScope.Self)]
-[TestFixture]
-class Program
-{
+// [Parallelizable(ParallelScope.Self)]
+// [TestFixture]
+// class Program
+// {
     // TODO: Dockerise tests so they run properly.
 
     /*[Test]
@@ -45,7 +50,7 @@ class Program
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
 
     }
-
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
     {
@@ -92,10 +97,14 @@ class Program
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }*/
-    [Parallelizable(ParallelScope.Self)]
+
 [TestFixture]
-class Program
+class UITesting 
 {
+    
+      
+
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginWithUser()
     {
@@ -104,6 +113,19 @@ class Program
         {
             Headless = false,
         });
+
+        var file = Path.Combine(Directory.GetCurrentDirectory(), "../../.devcontainer/docker-compose.yml");
+        var hosts = new Hosts().Discover();
+        var DockerHost = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
+
+        using (var svc = new DockerComposeCompositeService(DockerHost, new DockerComposeConfig
+        {
+        ComposeFilePath = new List<string> { file }, ForceRecreate = true, RemoveOrphans = true,
+        StopOnDispose = true
+        }))
+        {
+        svc.Start();
+
         var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
         var page = await context.NewPageAsync();
@@ -124,9 +146,11 @@ class Program
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-
+        }
+    
     }
 
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
     {
@@ -174,7 +198,7 @@ class Program
 
     }
 
-    // Should this be multiple tests?
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailAddTest() 
     {
@@ -211,6 +235,7 @@ class Program
         await page.GetByText("Email successfully updated").ClickAsync();
     }
 
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateDuplicateError() 
     {
@@ -251,6 +276,7 @@ class Program
         await page.GetByText("Email already exists ").ClickAsync();
     }
 
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateFormattingError() 
     {
@@ -290,6 +316,8 @@ class Program
 
         await page.GetByText("Email formatting is incorrect ").ClickAsync();
     }
+
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateChangeSuccessful() 
     {
@@ -330,6 +358,7 @@ class Program
         await page.GetByText("Email successfully updated").ClickAsync();
     }
     
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginAndDeleteUser()
     {
