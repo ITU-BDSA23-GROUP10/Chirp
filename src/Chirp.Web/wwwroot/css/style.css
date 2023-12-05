@@ -266,11 +266,11 @@ li.topic {
   color: white;
 }
 a.hashtag{
-  background: #367770;
+  background: #ddd;
   padding: 4px 8px;
   font-size: 14px;
   border-radius: 25px;
-  color: #fff;
+  color: #222;
 }
 /*bootstrap annoyances corrected*/
 .profile-page h4{
