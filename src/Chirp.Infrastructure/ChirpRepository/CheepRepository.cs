@@ -105,9 +105,15 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     public async Task<List<CheepDTO>> GetCheepsByHashtag(string hashtag)
     {
-        // test this more
-        var cheeps = await _context.Cheeps
-            .Where(c => c.Message.Contains("#" + hashtag))
+        var cheeps = await (
+            from cheep in context.Cheeps
+            where cheep.Text.Contains("#" + hashtag)
+            select new CheepDTO
+            (
+                cheep.Author.User.Name,
+                cheep.Text,
+                cheep.TimeStamp
+            ))
             .ToListAsync();
 
         return cheeps;

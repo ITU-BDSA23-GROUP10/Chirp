@@ -39,10 +39,6 @@ public class HashtagModel : PageModel
         {
             throw new InvalidOperationException("User could not be created.");
         }
-        
-        ViewData["UserName"] = user.Name;
-
-        ViewData["Author"] = user.Name;
 
         //cheeps = await _authorService.GetAllCheepsByAuthorName(user.Name);
         cheeps = await _cheepService.GetCheepsByHashtag(tagName);
