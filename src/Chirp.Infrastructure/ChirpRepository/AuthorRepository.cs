@@ -155,6 +155,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .OrderByDescending(_cheep => _cheep.TimeStamp)
                     .Select(_cheep => new CheepDTO
                     (
+                        _cheep.CheepId,
                         _cheep.Author.User.Name,
                         _cheep.Text,
                         _cheep.TimeStamp

@@ -21,23 +21,23 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     #region IReactionRepository<Reaction> Members
 
-    public void InsertReaction(Reaction entity)
+    public async Task InsertReaction(Reaction entity)
     {
         DbSetReaction.Add(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void DeleteReaction(Reaction entity)
+    public async Task DeleteReaction(Reaction entity)
     {
         DbSetReaction.Remove(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     //https://www.learnentityframeworkcore.com/dbset/modifying-data
-    public void UpdateReaction(Reaction entity)
+    public async Task UpdateReaction(Reaction entity)
     {
         DbSetReaction.Update(entity);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate)
@@ -80,7 +80,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 throw new Exception("Problem with creating the reaction. cheepid: " + reactionDTO.cheepId +  " | userId: " + reactionDTO.userId + " | reactionType: " + reactionDTO.reactionType);
             }
 
-            InsertReaction(reaction);
+            await InsertReaction(reaction);
         }
         else
         {
@@ -96,7 +96,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 if(reactionDTO.reactionType.Equals("Upvote")) 
                 {
                     reaction.upVote = true;
-                    DeleteReaction(reaction);
+                    await DeleteReaction(reaction);
                     return;  
                 }
                 else
@@ -111,7 +111,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 if(reactionDTO.reactionType.Equals("Downvote")) 
                 {
                     reaction.downVote = true;
-                    DeleteReaction(reaction); 
+                    await DeleteReaction(reaction); 
                     return;   
                 }
                 else
@@ -125,7 +125,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
             {
                 throw new Exception("No Reaction Type found when check what type it was");
             }   
-            UpdateReaction(reaction);
+            await UpdateReaction(reaction);
         }
     }
 
@@ -167,7 +167,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
         foreach(Reaction react in usersReaction)
         {
-            DeleteReaction(react);
+            await DeleteReaction(react);
         }
     }
 

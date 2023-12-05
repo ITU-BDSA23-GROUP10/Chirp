@@ -7,9 +7,9 @@ namespace Chirp.Core;
 
 public interface IReactionRepository<Reaction>
 {
-    void InsertReaction(Reaction entity);
-    void DeleteReaction(Reaction entity);
-    void UpdateReaction(Reaction entity);
+    Task InsertReaction(Reaction entity);
+    Task DeleteReaction(Reaction entity);
+    Task UpdateReaction(Reaction entity);
     IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate);
     Task<int> GetCheepsUpvoteCountsFromCheepID(int id);
     Task<int> GetCheepsDownvoteCountsFromCheepID(int id);
