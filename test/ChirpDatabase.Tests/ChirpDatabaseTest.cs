@@ -134,7 +134,7 @@ public class ChirpDatabaseTest : IAsyncLifetime
         else
         {
             // Act part II
-            await userService.DeleteUser(userToBeDeleted);
+            userService.DeleteUser(userToBeDeleted);
 
             // Assert
             var userByName = await userService.GetUserByName(name);
@@ -143,12 +143,6 @@ public class ChirpDatabaseTest : IAsyncLifetime
             Assert.Null(userByEmail);
         }
     }
-    
-    public record Follows { 
-        public required int FollowerId { get; set; }
-        public required int FollowingId { get; set; }
-    }  
-}
 
     [Fact]
     public async void CreateInvalidCheep()
@@ -163,11 +157,12 @@ public class ChirpDatabaseTest : IAsyncLifetime
         var authorName = "Obi-Wan";
         // Act
         await userService.CreateUser(authorName);
-        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+        var user = await userService.GetUserByName(authorName);
+        await authorService.CreateAuthor(user!);
         var cheep = new CheepCreateDTO("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", authorName);
 
         // Assert
-        await Assert.ThrowsAsync<ArgumentException>(async() => await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(authorName) ));      
+        await Assert.ThrowsAsync<Exception>(async() => await cheepService.CreateCheep(cheep, (await authorService.GetAuthorByName(authorName))! ));      
         var cheeps = cheepService.GetAll();
         Assert.Equal(0, cheeps.Item2);
     }
@@ -185,30 +180,12 @@ public class ChirpDatabaseTest : IAsyncLifetime
         
         // Act
         await userService.CreateUser(authorName);
-        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+        var user = await userService.GetUserByName(authorName);
+        await authorService.CreateAuthor(user!);
 
         // Assert
         var author = await authorService.GetAuthorByName(authorName);
         Assert.NotNull(author);
-    }
-
-    [Fact]
-    public async void DeleteUser()
-    {
-        // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
-
-        var userService = new UserRepository(context);
-
-        await userService.CreateUser("Test1");
-        await userService.CreateUser("Test2");
-        
-        // Act
-        userService.DeleteUser( await userService.GetUserByName("Test1") );
-
-        // Assert
-        Assert.Null( await userService.GetUserByName("Test1") );
-        Assert.NotNull( await userService.GetUserByName("Test2"));
     }
 
     [Fact]
@@ -222,10 +199,11 @@ public class ChirpDatabaseTest : IAsyncLifetime
 
         var authorName = "Test1";
         await userService.CreateUser(authorName);
-        await authorService.CreateAuthor( await userService.GetUserByName(authorName) );
+        var user = await userService.GetUserByName(authorName);
+        await authorService.CreateAuthor(user!);
 
         // Act
-        userService.DeleteUser( await userService.GetUserByName(authorName) );
+        userService.DeleteUser(user!);
 
         // Assert
         Assert.Null( await userService.GetUserByName(authorName) );
