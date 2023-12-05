@@ -62,7 +62,7 @@ public class HashtagModel : PageModel
         foreach (Match match in matches)
         {
             hashTags.Add(match.Value);
-            message = message.Replace("#" + match.Value, String.Format("<a href=\"/hashtag/{0}\">{1}</a>", match.Value, "#" + match.Value));
+            message = message.Replace("#" + match.Value, String.Format("<a rel=\"ugc nofollow\" class=\"hashtag\" href=\"/hashtag/{0}\">{1}</a>", match.Value, "#" + match.Value));
         }
 
         Message = message;

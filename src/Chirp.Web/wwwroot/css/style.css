@@ -265,7 +265,13 @@ li.topic {
   text-decoration: none;
   color: white;
 }
-
+a.hashtag{
+  background: #367770;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 25px;
+  color: #fff;
+}
 /*bootstrap annoyances corrected*/
 .profile-page h4{
   margin-block-start: 0;
