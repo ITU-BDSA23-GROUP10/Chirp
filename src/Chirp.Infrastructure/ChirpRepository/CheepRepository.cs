@@ -101,7 +101,25 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         catch (Exception e)
         {
             Console.WriteLine(e.Message, ", failed validation");
+            throw e;
         }
+    }
+    //hashtags
+    public async Task<List<CheepDTO>> GetCheepsByHashtag(string hashtag)
+    {
+        var cheeps = await (
+            from cheep in context.Cheeps
+            .OrderByDescending(d => d.TimeStamp)
+            where cheep.Text.Contains("#" + hashtag)
+            select new CheepDTO
+            (
+                cheep.Author.User.Name,
+                cheep.Text,
+                cheep.TimeStamp
+            ))
+            .ToListAsync();
+
+        return cheeps;
     }
     
     #endregion

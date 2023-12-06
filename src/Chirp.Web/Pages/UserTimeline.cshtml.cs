@@ -4,6 +4,7 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using Chirp.Web.ViewComponents;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Chirp.Web.Pages;
 
@@ -224,7 +225,7 @@ public class UserTimelineModel : PageModel
 
     public string? GetYouTubeEmbed(string message, out string Message)
     {
-        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
+        string pattern =  @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]{11})(?:[^\n ]*)(.*)";
         Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
 
         if (match.Success)
@@ -263,13 +264,13 @@ public class UserTimelineModel : PageModel
                 await _userService.CreateUser(User.Identity.Name);
                 userId = await _userService.GetUserIDByName(User.Identity.Name); 
             }
-        } catch (Exception e) 
+        }
+        catch (Exception e) 
         {
             Console.WriteLine(e.Message);
             throw new Exception("There was a problem whilst creating the user");
         }
-        //throw new Exception("UserID:  " + userId + "  ||  cheepID: " + cheepId + "   ||   Reaction: " + NewReaction.Reaction);
-
+        
         var newreact = new ReactionDTO
         (
             cheepId,
@@ -277,10 +278,27 @@ public class UserTimelineModel : PageModel
             react
         );
 
-        //throw new Exception("UserID:  " + newreact.userId + "  ||  cheepID: " + newreact.cheepId + "   ||   Reaction: " + newreact.reactionType);
-
         await _reactionService.ReactToCheep(newreact);
 
         return Redirect("/" + User.Identity.Name);
+    }
+
+    //hashtags
+    //inspired from hashtag code from worklizard.com
+    public List<string>? GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+"); 
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
+        }
+
+        Message = message;
+        return hashTags.Count > 0 ? hashTags : null;
     }
 }

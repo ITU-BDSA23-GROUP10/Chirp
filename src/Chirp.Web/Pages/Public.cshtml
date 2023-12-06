@@ -20,8 +20,8 @@
     }
     <div class="cheepbox">
             <h3>What's on your mind @(User.Identity.Name)?</h3>
-            <form method="post">
-                    <input style="float: left" type="text" asp-for="NewCheep.Message">
+            <form class="share-cheep" method="post">
+                    <textarea type="text" asp-for="NewCheep.Message"></textarea>
                     <input type="submit" value="Share">
             </form>
     </div>
@@ -40,20 +40,32 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
-                            <!-- YouTube Link Check and Embed -->
+                            <!-- YouTube Link Check and Embed, hashtags -->
                             @{
                                 string Message;
                                 var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
-                                
-                                if (embedUrl != null)
-                                {
-                                    <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                }
 
-                                <p>@Message</p>
+                                List<string> hashTags;
+                                string MessageWithHashtags;
+                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);    
                             }
 
-                 
+                            @if (embedUrl != null)
+                            {
+                                <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            }
+
+                            <p>@MessageWithHashtags</p>
+
+                            @if(hashTags != null)
+                            {
+                                foreach(var hashTag in hashTags)
+                                {
+                                    var displayTag = hashTag.Replace("/hashtag/", "#");
+                                    <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
+                                }
+                            }
+
                             @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
                                 //get the id of the logged in user
