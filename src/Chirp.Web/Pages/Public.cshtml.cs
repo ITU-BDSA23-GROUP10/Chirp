@@ -5,6 +5,7 @@ using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
 using Chirp.Web.ViewComponents;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Chirp.Web.Pages;
 
@@ -220,6 +221,18 @@ public class PublicModel : PageModel
         int cheepId = NewcheepId.id  ?? default(int);
         string react = NewReaction.Reaction;
 
+        // Checks if the user exists
+        try
+        {
+            if(userId == -1 && User.Identity.Name != null) {
+                await _userService.CreateUser(User.Identity.Name);
+                userId = await _userService.GetUserIDByName(User.Identity.Name); 
+            }
+        } catch (Exception e) 
+        {
+            Console.WriteLine(e.Message);
+            throw new Exception("There was a problem whilst creating the user");
+        }
         //throw new Exception("UserID:  " + userId + "  ||  cheepID: " + cheepId + "   ||   Reaction: " + NewReaction.Reaction);
 
         var newreact = new ReactionDTO
