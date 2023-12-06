@@ -52,20 +52,21 @@ public class HashtagModel : PageModel
     }
     //hashtags
     //inspired from hashtag code from worklizard.com
-    public List<string> GetHashTags(string message, out string Message)
+    public List<string>? GetHashTags(string message, out string Message)
     {
-        var regex = new Regex(@"(?<=#)\w+"); // \w is short for all chars, including underscore. Or written differently, $pattern = '/[#]([\p{L}_0-9a-zA-Z-]+)';
+
+        var regex = new Regex(@"(?<=#)\w+"); 
         var matches = regex.Matches(message);
         var hashTags = new List<string>();
 
-        //if theres more than one hashtag in a cheep, make them all links
         foreach (Match match in matches)
         {
-            hashTags.Add(match.Value);
-            message = message.Replace("#" + match.Value, String.Format("<a rel=\"ugc nofollow\" class=\"hashtag\" href=\"/hashtag/{0}\">{1}</a>", match.Value, "#" + match.Value));
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
         }
 
         Message = message;
-        return hashTags;
+        return hashTags.Count > 0 ? hashTags : null;
     }
 }

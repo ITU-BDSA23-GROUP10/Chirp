@@ -20,20 +20,30 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
+                            <!-- YouTube Link Check and Embed, hashtags -->
                             @{
                                 string Message;
                                 var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
 
                                 List<string> hashTags;
                                 string MessageWithHashtags;
-                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);
-                                
-                                if (embedUrl != null)
-                                {
-                                    <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                }
+                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);    
+                            }
 
-                                <p>@Html.Raw(MessageWithHashtags)</p>
+                            @if (embedUrl != null)
+                            {
+                                <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            }
+
+                            <p>@MessageWithHashtags</p>
+
+                            @if(hashTags != null)
+                            {
+                                foreach(var hashTag in hashTags)
+                                {
+                                    var displayTag = hashTag.Replace("/hashtag/", "#");
+                                    <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
+                                }
                             }
                         </div>
                     </div>
