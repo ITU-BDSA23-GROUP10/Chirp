@@ -43,9 +43,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Drop Database
-      run: yes | dotnet ef database drop --project ./src/Chirp.Web
-
     - name: Create EF bundle
       run: dotnet ef migrations bundle --self-contained -r linux-x64 --project ./src/Chirp.Web
 
@@ -56,6 +53,7 @@ jobs:
         # --query "[0].value" --output tsv
         CONNECTION_STRING=$(az webapp config connection-string list --name $WEB_APP_NAME --resource-group $RESOURCE_GROUP --query "[0].value" --output tsv)
         # https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#bundles
+        yes | dotnet ef database drop --project ./src/Chirp.Web
         chmod +x efbundle
         ./efbundle --connection "$CONNECTION_STRING"
 
