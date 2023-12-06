@@ -267,6 +267,13 @@ li.topic {
   text-decoration: none;
   color: white;
 }
+a.hashtag{
+  background: #ddd;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 25px;
+  color: #222;
+}
 .share-cheep{
   display: flex;
   flex-wrap: wrap;

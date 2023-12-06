@@ -192,6 +192,24 @@ public class PublicModel : PageModel
             return null;
         }
     }
+    //hashtags
+    //inspired from hashtag code from worklizard.com
+    public List<string>? GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+"); 
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
+        }
+
+        Message = message;
+        return hashTags.Count > 0 ? hashTags : null;
+    }
 }
 
 public class NewFollow 
