@@ -100,6 +100,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         catch (Exception e)
         {
             Console.WriteLine(e.Message, ", failed validation");
+            throw e;
         }
     }
     //hashtags
