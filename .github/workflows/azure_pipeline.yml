@@ -43,6 +43,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Drop Database
+      run: |
+        dotnet ef database drop --force
+
     - name: Create EF bundle
       run: dotnet ef migrations bundle --self-contained -r linux-x64 --project ./src/Chirp.Web
 
