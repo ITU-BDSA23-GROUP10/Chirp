@@ -45,7 +45,7 @@ jobs:
 
     - name: Drop Database
       run: |
-        dotnet ef database drop --force
+        dotnet ef database drop --project ./src/Chirp.Web
 
     - name: Create EF bundle
       run: dotnet ef migrations bundle --self-contained -r linux-x64 --project ./src/Chirp.Web
