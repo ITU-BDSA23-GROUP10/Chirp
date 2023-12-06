@@ -57,53 +57,35 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task ReactToCheep(ReactionDTO reactionDTO)
     {
-        var exists = await checkUserReacted(reactionDTO.userId, reactionDTO.cheepId);
-        var reaction = new Reaction()
+        if (!reactionDTO.reactionType.Equals("Upvote") && !reactionDTO.reactionType.Equals("Downvote") && reactionDTO.reactionType is not null)
         {
-            cheepId = reactionDTO.cheepId,
-            userId = reactionDTO.userId,
-        };
+            throw new ArgumentException("'" + reactionDTO.reactionType + "' is not a valid reactionType");
+        }
 
-        if (!exists)
+        // Create new reaction if one does not exist
+        var reaction = await GetReactionByUserAndCheep(reactionDTO.userId, reactionDTO.cheepId);
+        if (reaction is null)
         {
-            if(reactionDTO.reactionType.Equals("Upvote") || reactionDTO.reactionType.Equals("Downvote"))
+            var newReaction = new Reaction()
             {
-                reaction.reactionType = reactionDTO.reactionType;
-            }
-            else 
-            {
-                throw new Exception("Problem with creating the reaction. cheepid: " + reactionDTO.cheepId +  " | userId: " + reactionDTO.userId + " | reactionType: " + reactionDTO.reactionType);
-            }
+                cheepId = reactionDTO.cheepId,
+                userId = reactionDTO.userId,
+                reactionType = reactionDTO.reactionType,
+            };
+            await InsertReaction(newReaction);
+            return;
+        }
+        
+        // Delete reaction if reactiontype is the same as existing
+        if (reactionDTO.reactionType.Equals(reaction.reactionType))
+        {
+            await DeleteReaction(reaction);
+            return;
+        }
 
-            await InsertReaction(reaction);
-        }
-        else
-        {   
-            string reactionType = await checkUserReactionType(reaction.userId, reaction.cheepId);
-            if(reactionDTO.reactionType.Equals("Upvote") && reactionType.Equals("Upvote"))
-            {
-                // Upvote
-                reaction.reactionType = reactionDTO.reactionType;
-                await DeleteReaction(reaction);
-                return;  
-            }
-            else if(reactionDTO.reactionType.Equals("Downvote") && reactionType.Equals("Downvote")) 
-            {
-                // Downvote
-                reaction.reactionType = reactionDTO.reactionType;
-                await DeleteReaction(reaction); 
-                return; 
-            }
-            else if(reactionDTO.reactionType.Equals("Upvote") || reactionDTO.reactionType.Equals("Downvote"))
-            {
-                reaction.reactionType = reactionDTO.reactionType;
-            }
-            else
-            {
-               throw new Exception("Problem with changing the reaction. cheepid: " + reactionDTO.cheepId +  " | userId: " + reactionDTO.userId + " | reactionType: " + reactionDTO.reactionType);
-            }
-            await UpdateReaction(reaction);
-        }
+        reaction.reactionType = reactionDTO.reactionType;
+        
+        await UpdateReaction(reaction);
     }
 
     public async Task<bool> checkUserReacted(int userid, int cheepid)
@@ -146,6 +128,12 @@ public class ReactionRepository : IReactionRepository<Reaction>
         {
             await DeleteReaction(react);
         }
+    }
+
+    public async Task<Reaction?> GetReactionByUserAndCheep(int userid, int cheepid)
+    {
+        var reaction = SearchFor(_react => _react.userId == userid && _react.cheepId == cheepid).FirstOrDefault();
+        return reaction;
     }
 
     public async Task<List<Reaction>> GetReactionByUsersId(int userid)
