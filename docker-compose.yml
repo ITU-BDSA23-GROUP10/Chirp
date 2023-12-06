@@ -7,16 +7,18 @@ services:
       SA_PASSWORD: P@ssw0rd
       ACCEPT_EULA: Y
     ports:
-      - '5000:1433'
+      - '1433:1433'
     expose: 
-      - '3306'
-      - '5000'
+      - '1433'
   dotnet:
+    depends_on: 
+      - db
     build: ./
-    ports:
-      - "8081:5273"
-      - "8080:5000"
-    expose:
-      - "8080"
+    #ports:
+    #  - "8081:5273"
+    #  - "8080:1433"
+    #expose:
+    #  - "8080"
+    #  - "1433"
     
     

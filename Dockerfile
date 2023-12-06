@@ -9,7 +9,7 @@ ADD src ./
 
 # Restores the dependencies, builds the project and deletes the source code
 RUN apt-get install -y sed
-RUN sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "Data Source=localhost,5000;User ID=sa;Password=P@ssw0rd;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" },' Chirp.Web/appsettings.json
+RUN cd Chirp.Web && sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "Server=127.0.0.1,1433;Initial Catalog=master;User ID=sa;Password=P@ssw0rd;Connect Timeout=30;Encrypt=False;TrustServerCertificate=true;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" },' appsettings.json
 RUN cd Chirp.Web && dotnet restore 
 RUN cd Chirp.Web && dotnet build -c Release -o /app
 RUN rm -rf src
@@ -25,4 +25,4 @@ ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
 
 # Exposes the port
 EXPOSE 5273/tcp
-EXPOSE 5000/tcp
+#EXPOSE 1433/tcp
