@@ -1,15 +1,22 @@
 version: '3.4'
 services:
-  super-app-db:
+  db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
+      SA_USERNAME: sa
       SA_PASSWORD: P@ssw0rd
       ACCEPT_EULA: Y
     ports:
-      - '5000:5000'
-    expose:
+      - '5000:1433'
+    expose: 
+      - '3306'
       - '5000'
-  super-app-dotnet:
+  dotnet:
     build: ./
     ports:
-      - "8080:5273"
+      - "8081:5273"
+      - "8080:5000"
+    expose:
+      - "8080"
+    
+    
