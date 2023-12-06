@@ -32,6 +32,8 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.DisplayedCheeps)
             {
+                var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
+                var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result;
                 <li>
                     <div class="activity">
                         <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
@@ -71,6 +73,8 @@
                                 var userId = Model.FindUserIDByName(userName).Result;
                                 var authorId = Model.FindUserIDByName(@cheep.Author).Result;
                                 var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
+                                @* var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
+                                var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result; *@
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
                                 if(userId == authorId)
@@ -94,6 +98,22 @@
                                         </form>
                                     }
                                 }
+
+                                // reaction
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                    <input type="hidden" name="NewReaction.Reaction" value="Upvote"/>
+                                    <button class=""> Upvote (@upVoteCount) </button>
+                                </form>
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                    <input type="hidden" name="NewReaction.Reaction" value="Downvote"/>
+                                    <button class=""> Downvote (@downVoteCount) </button>
+                                </form>
+                            } else
+                            {
+                               <p>upvote (@upVoteCount)</p> 
+                               <p>Downvote (@downVoteCount)</p> 
                             }
                         </div>
                     </div>

@@ -36,6 +36,8 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
+                var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
+                var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result;
                 //get the id's and whether or not the user is following
                 var userName = User?.Identity?.Name ?? "default";                 
                 var userId = Model.FindUserIDByName(userName).Result;
@@ -99,7 +101,23 @@
                                         </form>
                                     }
                                 }
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                    <input type="hidden" name="NewReaction.Reaction" value="Upvote"/>
+                                    <button class=""> Upvote (@upVoteCount) </button>
+                                </form>
+                                <form asp-page-handler="Reaction" method="post" >
+                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                    <input type="hidden" name="NewReaction.Reaction" value="Downvote"/>
+                                    <button class=""> Downvote (@downVoteCount) </button>
+                                </form>
                             }
+                            else
+                            {
+                               <p>upvote (@upVoteCount)</p> 
+                               <p>Downvote (@downVoteCount)</p> 
+                            }
+                                
                         </div>
                     </div>
                 </li>

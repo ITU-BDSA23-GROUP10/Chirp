@@ -11,6 +11,8 @@ public class ChirpDBContext : DbContext
     public DbSet<Author> Authors { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Follows> Follows { get; set; }
+
+    public DbSet<Reaction> Reactions { get; set; }
     // public string DbPath { get; }
 
     /*public ChirpDBContext()
@@ -70,6 +72,13 @@ public class ChirpDBContext : DbContext
             .WithOne(ch => ch.Author)
             .HasForeignKey(ch => ch.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        //Reactions
+        modelBuilder.Entity<Reaction>( reactions =>
+        {
+            reactions.HasKey(_react => new {_react.cheepId, _react.userId});
+            reactions.HasIndex(_react => new {_react.cheepId, _react.userId}).IsUnique();
         });
     });
 }}

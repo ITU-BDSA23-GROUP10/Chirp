@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure.Migrations;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
 using System;

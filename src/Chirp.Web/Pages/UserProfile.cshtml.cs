@@ -15,6 +15,7 @@ public class UserProfileModel : PageModel
 {
     
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     [BindProperty]
     public NewEmail NewEmail { get; set; } = new NewEmail { Email = string.Empty};
@@ -23,11 +24,12 @@ public class UserProfileModel : PageModel
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService)
-    {
-        _userService = userService;
-        _authorService = authorService;
-    }    
+        public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, IReactionRepository<Reaction> reactionService)
+        {
+            _userService = userService;
+            _authorService = authorService;
+            _reactionService = reactionService;
+        }    
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -79,6 +81,7 @@ public class UserProfileModel : PageModel
         }
         
         await _userService.DeleteAllFollowers(user.UserId);
+        await _reactionService.deleteAllUserReactions(user.UserId);
         await _userService.DeleteUser(user);
 
         return await Logout();
