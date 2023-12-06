@@ -34,8 +34,4 @@
     <ProjectReference Include="..\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-  <Compile Include="../../GlobalUsings.cs" />
-  </ItemGroup>
-
 </Project>
