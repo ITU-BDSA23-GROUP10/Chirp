@@ -58,14 +58,14 @@ public class ReactionRepository : IReactionRepository<Reaction>
     public async Task ReactToCheep(ReactionDTO reactionDTO)
     {
         var exists = await checkUserReacted(reactionDTO.userId, reactionDTO.cheepId);
+        var reaction = new Reaction()
+        {
+            cheepId = reactionDTO.cheepId,
+            userId = reactionDTO.userId,
+        };
 
         if (!exists)
         {
-            var reaction = new Reaction()
-            {
-                cheepId = reactionDTO.cheepId,
-                userId = reactionDTO.userId,
-            };
             if(reactionDTO.reactionType.Equals("Upvote") || reactionDTO.reactionType.Equals("Downvote"))
             {
                 reaction.reactionType = reactionDTO.reactionType;
@@ -78,38 +78,26 @@ public class ReactionRepository : IReactionRepository<Reaction>
             await InsertReaction(reaction);
         }
         else
-        {
-            var reaction = new Reaction()
-            {
-                cheepId = reactionDTO.cheepId,
-                userId = reactionDTO.userId,
-            };
-            
+        {   
             string reactionType = await checkUserReactionType(reaction.userId, reaction.cheepId);
-            if(reactionType.Equals("Upvote") || reactionType.Equals("Downvote"))
+            if(reactionDTO.reactionType.Equals("Upvote") && reactionType.Equals("Upvote"))
             {
-                if(reactionDTO.reactionType.Equals("Upvote") && reactionType.Equals("Upvote")) 
-                {
-                    reaction.reactionType = "Upvote";
-                    await DeleteReaction(reaction);
-                    return;  
-                }
-                else if(reactionDTO.reactionType.Equals("Downvote") && reactionType.Equals("Downvote")) 
-                {
-                    reaction.reactionType = "Downvote";
-                    await DeleteReaction(reaction); 
-                    return;   
-                }
-                else
-                {
-                    reaction.reactionType = reactionDTO.reactionType;
-                }
-
+                // Upvote
+                reaction.reactionType = reactionDTO.reactionType;
+                await DeleteReaction(reaction);
+                return;  
             }
-            else 
+            else if(reactionDTO.reactionType.Equals("Downvote") && reactionType.Equals("Downvote")) 
             {
-                throw new Exception("No Reaction Type found when check what type it was");
-            }   
+                // Downvote
+                reaction.reactionType = reactionDTO.reactionType;
+                await DeleteReaction(reaction); 
+                return; 
+            }
+            else
+            {
+                reaction.reactionType = reactionDTO.reactionType;
+            }
             await UpdateReaction(reaction);
         }
     }
