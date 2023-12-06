@@ -3,9 +3,9 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      SA_USERNAME: sa
-      SA_PASSWORD: P@ssw0rd
-      ACCEPT_EULA: Y
+      Windows_Authentication: "false"
+      MSSQL_SA_PASSWORD: "YourGonnaBurnAlright1234"
+      ACCEPT_EULA: "Y"
     ports:
       - '1433:1433'
     expose: 
