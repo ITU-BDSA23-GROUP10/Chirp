@@ -236,7 +236,6 @@ public class UserTimelineModel : PageModel
     //inspired from hashtag code from worklizard.com
     public List<string>? GetHashTags(string message, out string Message)
     {
-
         var regex = new Regex(@"(?<=#)\w+"); 
         var matches = regex.Matches(message);
         var hashTags = new List<string>();
