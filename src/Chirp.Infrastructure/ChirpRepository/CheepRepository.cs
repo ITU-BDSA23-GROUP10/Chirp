@@ -113,6 +113,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             where cheep.Text.Contains("#" + hashtag)
             select new CheepDTO
             (
+                cheep.CheepId,
                 cheep.Author.User.Name,
                 cheep.Text,
                 cheep.TimeStamp

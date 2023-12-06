@@ -57,7 +57,6 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task ReactToCheep(ReactionDTO reactionDTO)
     {
-        //throw new Exception("|| in the reactToCheep ||");
         var exists = await checkUserReacted(reactionDTO.userId, reactionDTO.cheepId);
 
         if (!exists)
@@ -67,13 +66,9 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 cheepId = reactionDTO.cheepId,
                 userId = reactionDTO.userId,
             };
-            if(reactionDTO.reactionType.Equals("Upvote"))
+            if(reactionDTO.reactionType.Equals("Upvote") || reactionDTO.reactionType.Equals("Downvote"))
             {
-                reaction.reactionType = "Upvote";
-            }
-            else if(reactionDTO.reactionType.Equals("Downvote"))
-            {
-                reaction.reactionType = "Downvote";
+                reaction.reactionType = reactionDTO.reactionType;
             }
             else 
             {
@@ -89,25 +84,17 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 cheepId = reactionDTO.cheepId,
                 userId = reactionDTO.userId,
             };
-
+            
             string reactionType = await checkUserReactionType(reaction.userId, reaction.cheepId);
-            if(reactionType.Equals("Upvote"))
+            if(reactionType.Equals("Upvote") || reactionType.Equals("Downvote"))
             {
-                if(reactionDTO.reactionType.Equals("Upvote")) 
+                if(reactionDTO.reactionType.Equals("Upvote") && reactionType.Equals("Upvote")) 
                 {
                     reaction.reactionType = "Upvote";
                     await DeleteReaction(reaction);
                     return;  
                 }
-                else
-                {
-                    reaction.reactionType = "Downvote";
-                }
-
-            }
-            else if(reactionType.Equals("Downvote"))
-            {
-                if(reactionDTO.reactionType.Equals("Downvote")) 
+                else if(reactionDTO.reactionType.Equals("Downvote") && reactionType.Equals("Downvote")) 
                 {
                     reaction.reactionType = "Downvote";
                     await DeleteReaction(reaction); 
@@ -115,9 +102,9 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 }
                 else
                 {
-                    reaction.reactionType = "Upvote";
+                    reaction.reactionType = reactionDTO.reactionType;
                 }
-                
+
             }
             else 
             {
