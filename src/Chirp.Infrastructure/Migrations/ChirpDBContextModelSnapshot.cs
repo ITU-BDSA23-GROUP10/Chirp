@@ -82,11 +82,9 @@ namespace Chirp.Infrastructure.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("downVote")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("upVote")
-                        .HasColumnType("bit");
+                    b.Property<string>("reactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("cheepId", "userId");
 

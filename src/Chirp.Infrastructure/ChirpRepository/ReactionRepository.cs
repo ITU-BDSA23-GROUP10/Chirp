@@ -47,12 +47,12 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task<int> GetCheepsUpvoteCountsFromCheepID(int id) 
     {
-        return await DbSetReaction.CountAsync(r => r.cheepId == id && r.upVote == true);
+        return await DbSetReaction.CountAsync(r => r.cheepId == id && r.reactionType.Equals("Upvote"));
     }
 
     public async Task<int> GetCheepsDownvoteCountsFromCheepID(int id) 
     {
-        return await DbSetReaction.CountAsync(r => r.cheepId == id && r.downVote == true);
+        return await DbSetReaction.CountAsync(r => r.cheepId == id && r.reactionType.Equals("Downvote"));
     }
 
     public async Task ReactToCheep(ReactionDTO reactionDTO)
@@ -69,11 +69,11 @@ public class ReactionRepository : IReactionRepository<Reaction>
             };
             if(reactionDTO.reactionType.Equals("Upvote"))
             {
-                reaction.upVote = true;
+                reaction.reactionType = "Upvote";
             }
             else if(reactionDTO.reactionType.Equals("Downvote"))
             {
-                reaction.downVote = true;
+                reaction.reactionType = "Downvote";
             }
             else 
             {
@@ -95,14 +95,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
             {
                 if(reactionDTO.reactionType.Equals("Upvote")) 
                 {
-                    reaction.upVote = true;
+                    reaction.reactionType = "Upvote";
                     await DeleteReaction(reaction);
                     return;  
                 }
                 else
                 {
-                    reaction.upVote = false;
-                    reaction.downVote = true;
+                    reaction.reactionType = "Downvote";
                 }
 
             }
@@ -110,14 +109,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
             {
                 if(reactionDTO.reactionType.Equals("Downvote")) 
                 {
-                    reaction.downVote = true;
+                    reaction.reactionType = "Downvote";
                     await DeleteReaction(reaction); 
                     return;   
                 }
                 else
                 {
-                    reaction.upVote = true;
-                    reaction.downVote = false;
+                    reaction.reactionType = "Upvote";
                 }
                 
             }
@@ -145,13 +143,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
     {
         if(await DbSetReaction.AnyAsync(r => r.userId == userid 
                                         && r.cheepId == cheepid 
-                                        && r.upVote == true))
+                                        && r.reactionType.Equals("Upvote")))
         {
             return "Upvote";
         }
         else if(await DbSetReaction.AnyAsync(r => r.userId == userid 
                                             && r.cheepId == cheepid 
-                                            && r.downVote == true))
+                                            && r.reactionType.Equals("Downvote")))
         {
             return "Downvote";
         }

@@ -29,8 +29,7 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     cheepId = table.Column<int>(type: "int", nullable: false),
                     userId = table.Column<int>(type: "int", nullable: false),
-                    upVote = table.Column<bool>(type: "bit", nullable: false),
-                    downVote = table.Column<bool>(type: "bit", nullable: false)
+                    reactionType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

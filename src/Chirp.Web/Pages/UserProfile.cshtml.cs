@@ -27,7 +27,7 @@ public class UserProfileModel : PageModel
         public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, IReactionRepository<Reaction> reactionService)
         {
             _userService = userService;
-        _authorService = authorService;
+            _authorService = authorService;
             _reactionService = reactionService;
         }    
 

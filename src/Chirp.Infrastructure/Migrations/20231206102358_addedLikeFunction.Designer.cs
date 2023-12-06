@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDBContext))]
-    [Migration("20231205163437_addedLikeFunction")]
+    [Migration("20231206102358_addedLikeFunction")]
     partial class addedLikeFunction
     {
         /// <inheritdoc />
@@ -85,11 +85,9 @@ namespace Chirp.Infrastructure.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("downVote")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("upVote")
-                        .HasColumnType("bit");
+                    b.Property<string>("reactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("cheepId", "userId");
 

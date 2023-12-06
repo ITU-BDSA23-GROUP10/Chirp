@@ -143,8 +143,4 @@ public class ChirpDatabaseTest : IAsyncLifetime
         }
     }
     
-    public record Follows { 
-        public required int FollowerId { get; set; }
-        public required int FollowingId { get; set; }
-    }  
 }
