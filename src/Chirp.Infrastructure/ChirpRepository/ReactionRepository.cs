@@ -94,9 +94,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
                 await DeleteReaction(reaction); 
                 return; 
             }
-            else
+            else if(reactionDTO.reactionType.Equals("Upvote") || reactionDTO.reactionType.Equals("Downvote"))
             {
                 reaction.reactionType = reactionDTO.reactionType;
+            }
+            else
+            {
+               throw new Exception("Problem with changing the reaction. cheepid: " + reactionDTO.cheepId +  " | userId: " + reactionDTO.userId + " | reactionType: " + reactionDTO.reactionType);
             }
             await UpdateReaction(reaction);
         }
@@ -150,7 +154,5 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
         return usersReaction;
     }
-
-
     #endregion
 }
