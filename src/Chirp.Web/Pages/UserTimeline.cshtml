@@ -9,14 +9,23 @@
 }
 
 <div>
+    @if((ViewData["UserExists"] as string) == "true")//(ViewData["UserExists"] == "true") // TODO: Why not use User.Identity != null && User.Identity.IsAuthenticated as well?
+    {
+
     <h2> @routeName's Timeline </h2>
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
+        @if((ViewData["CheepTooShort"] as string) == "true")//(ViewData["CheepTooShort"] == "true") 
+        {
+            <div class="alert alert-warning" role="alert">
+                Your cheep is too short!
+            </div>
+        }
     <div class="cheepbox">
             <h3>What's on your mind @(User.Identity.Name)?</h3>
-            <form method="post">
-                    <input style="float: left" type="text" asp-for="NewCheep.Message">
+            <form class="share-cheep" method="post">
+                    <textarea type="text" asp-for="NewCheep.Message"></textarea>
                     <input type="submit" value="Share">
             </form>
     </div>
@@ -27,8 +36,9 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
-                //get the id's and whether or not the user is following                    
-                var userId = Model.FindUserIDByName(User.Identity.Name).Result;
+                //get the id's and whether or not the user is following
+                var userName = User?.Identity?.Name ?? "default";                 
+                var userId = Model.FindUserIDByName(userName).Result;
                 var authorId = Model.FindUserIDByName(@cheep.Author).Result;
                 var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
         
@@ -38,9 +48,33 @@
                         <div>
                             <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                             <small>&mdash; @cheep.Timestamp</small>
-                            <p>@cheep.Message</p>
+                            <!-- YouTube Link Check and Embed, hashtags -->
+                            @{
+                                string Message;
+                                var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
+
+                                List<string> hashTags;
+                                string MessageWithHashtags;
+                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);    
+                            }
+
+                            @if (embedUrl != null)
+                            {
+                                <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            }
+
+                            <p>@MessageWithHashtags</p>
+
+                            @if(hashTags != null)
+                            {
+                                foreach(var hashTag in hashTags)
+                                {
+                                    var displayTag = hashTag.Replace("/hashtag/", "#");
+                                    <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
+                                }
+                            }
                  
-                            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                            @if (User?.Identity is not null && User.Identity.IsAuthenticated)
                             {  
                                 // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
                                 //@if() Add if statement to check if you are following that person
@@ -78,4 +112,9 @@
     }
 
     @await Component.InvokeAsync("Pagination", ViewData["Author"])
+    } else 
+    {
+        <h2> User @routeName does not exist </h2>
+        <a href="/"> Go back to the home page </a>
+    }
 </div>

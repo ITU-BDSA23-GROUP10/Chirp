@@ -4,16 +4,17 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
 using Chirp.Web.ViewComponents;
+using System.Text.RegularExpressions;
 
 namespace Chirp.Web.Pages;
 
 public class PublicModel : PageModel
 {
     [BindProperty]
-    public NewCheep NewCheep {get; set;} = new();
+    public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty };
 
     [BindProperty]
-    public NewFollow NewFollow {get; set;} = new();
+    public NewFollow NewFollow { get; set; } = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
@@ -30,30 +31,46 @@ public class PublicModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-
         AsyncPadlock padlock = new();
-        var userName = User.Identity.Name;
+        var userName = User?.Identity?.Name ?? "default"; //throw new InvalidOperationException("401 Unauthorized: User not logged in.");
 
         try
         {
-        await padlock.Lock();
-        var author = await _authorService.GetAuthorByName(userName);
+            await padlock.Lock();
+            var author = await _authorService.GetAuthorByName(userName);
 
-        // Create new auther if does not exist in database ready
-        if (author is null) 
-        {
-            var user = await _userService.GetUserByName(userName);
-            if (user is null) {
-                await _userService.CreateUser(userName);
-                user = await _userService.GetUserByName(userName);
+            // Create new author if it doesn't exist in database allready
+            if (author is null) 
+            {
+                var user = await _userService.GetUserByName(userName);
+                
+                if (user is null) {
+                    await _userService.CreateUser(userName);
+                    user = await _userService.GetUserByName(userName)
+                        ?? throw new InvalidOperationException("author could not be created.");
+                }
+
+                await _authorService.CreateAuthor(user);
+                author = await _authorService.GetAuthorByName(userName);
             }
-            await _authorService.CreateAuthor(user);
-            author = await _authorService.GetAuthorByName(userName);
-        }
 
-        var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-        
-        await _cheepService.CreateCheep(cheep, author);
+            if (author is null) 
+            {
+                throw new InvalidOperationException("author could not be created.");
+            }
+ 
+        if(NewCheep.Message is null || NewCheep.Message.Length < 1)
+        {
+            ViewData["CheepTooShort"] = "true";
+            return Page();
+        }
+        else 
+        {
+            ViewData["CheepTooShort"] = "false";
+            
+            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+            await _cheepService.CreateCheep(cheep, author);
+        }
 
         }
         finally
@@ -103,17 +120,26 @@ public class PublicModel : PageModel
     //follow form button
     public async Task<IActionResult> OnPostFollow() 
     {
-        var LoggedInUserName = User.Identity.Name;
+        var LoggedInUserName = User?.Identity?.Name ?? "default";
         //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
         
+        // Check if followedUserName is null
+        if (FollowedUserName == null)
+        {
+            throw new ArgumentNullException("Followed user does not exist.");
+        }
+        
         //Check if the user that is logged in exists
-        try {
+        try
+        {
             var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
             if (loggedInUser is null) {
                 throw new Exception("User does not exist");
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             await _userService.CreateUser(LoggedInUserName);
         }
@@ -131,15 +157,58 @@ public class PublicModel : PageModel
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
+        var userName = User?.Identity?.Name ?? "default";
         // Convert the username to Id
-        var followerId = await _userService.GetUserIDByName(User.Identity.Name);
-        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+        if (string.IsNullOrEmpty(NewFollow.Author))
+        {
+            throw new ArgumentException("NewFollow.Author cannot be null or empty");
+        }
+        else
+        {
+            var followerId = await _userService.GetUserIDByName(userName);
+            var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
-        var unfollowDTO = new FollowDTO(followerId, followingId);
-            
-        await _userService.UnfollowUser(unfollowDTO);
+            var unfollowDTO = new FollowDTO(followerId, followingId);
+                
+            await _userService.UnfollowUser(unfollowDTO);
 
-        return Redirect("/" + User.Identity.Name);
+            return Redirect("/" + userName);
+        }
+    }
+    public string? GetYouTubeEmbed(string message, out string Message)
+    {
+        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
+        Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
+
+        if (match.Success)
+        {
+            var videoId = match.Groups[6].Value.Substring(0, 11);
+            Message = match.Groups[1].Value.Trim() + " " + match.Groups[7].Value.Trim();
+            return $"https://www.youtube.com/embed/{videoId}";
+        }
+        else
+        {
+            Message = message;
+            return null;
+        }
+    }
+    //hashtags
+    //inspired from hashtag code from worklizard.com
+    public List<string>? GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+"); 
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
+        }
+
+        Message = message;
+        return hashTags.Count > 0 ? hashTags : null;
     }
 }
 

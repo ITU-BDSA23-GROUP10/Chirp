@@ -7,11 +7,12 @@ namespace Chirp.Core;
 
 public interface ICheepRepository<Cheep, Author>
 {
-    void Insert(Cheep entity);
-    void Delete(Cheep entity);
+    Task Insert(Cheep entity);
+    Task Delete(Cheep entity);
     IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate);
     (IQueryable<Cheep>, int) GetAll();
     Task<Cheep?> GetById(int id);
     Task<Tuple<List<CheepDTO>, int>> GetSome(int offset, int limit);
     Task CreateCheep(CheepCreateDTO cheepCreateDTO, Author author);
+    Task<List<CheepDTO>> GetCheepsByHashtag(string hashtag);
 }

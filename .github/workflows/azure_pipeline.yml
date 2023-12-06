@@ -66,5 +66,4 @@ jobs:
       # insert the following command (after youre logged in): az ad sp create-for-rbac
       # dont know if i have access? command to see which subscription IDs are available:
       # az account list --output table
-      # az ad sp create-for-rbac --name "chirpgroup10database" --role contributor --scopes /subscriptions/7d28c7ae-3a30-445f-b5c5-17afb26b07f8/resourceGroups/bdsagroup10chirpremotedb_group --sdk-auth
-      #comment
+      # az ad sp create-for-rbac --name "chirpgroup10database" --role contributor --scopes /subscriptions/<id>/resourceGroups/<remote group name> --sdk-auth

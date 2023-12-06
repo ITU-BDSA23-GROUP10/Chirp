@@ -1,0 +1,58 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet-mssql
+{
+	"name": "C# (.NET) and MS SQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": { 
+				"mssql.connections": [
+					{
+						"server": "localhost,1433",
+						"database": "",
+						"authenticationType": "SqlLogin",
+						"user": "sa",
+						"password": "P@ssw0rd",
+						"emptyPasswordInput": false,
+						"savePassword": false,
+						"profileName": "mssql-container"
+					}
+				]
+			},
+			
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-dotnettools.csharp",
+				"ms-mssql.mssql",
+				"ms-dotnettools.csdevkit",
+				"formulahendry.docker-extension-pack"
+			]
+		}
+	},
+
+	//Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [5273, 7102],
+	"portsAttributes": {
+			"5273": {
+				"protocol": "https"
+			}
+	}
+
+	// postCreateCommand.sh parameters: $1=SA password, $2=dacpac path, $3=sql script(s) path
+	"postCreateCommand": "bash .devcontainer/mssql/postCreateCommand.sh 'P@ssw0rd' './bin/Debug/' './.devcontainer/mssql/' ; dotnet tool install --global dotnet-user-secrets ; dotnet tool install --global dotnet-ef --version --version 7.0.14 ; dotnet dev-certs https --clean ; dotnet dev-certs https --trust ; cd src/Chirp.Web && dotnet user-secrets init && dotnet user-secrets set 'ConnectionStrings:ConnectionString' 'Data Source=localhost,1433;Initial Catalog=Chirp;User ID=sa;Password=P@ssw0rd;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False' ",
+	"features": {
+		"ghcr.io/dhoeric/features/act:1": {}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
