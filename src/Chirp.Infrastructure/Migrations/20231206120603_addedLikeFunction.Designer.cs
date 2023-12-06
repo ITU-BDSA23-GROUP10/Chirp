@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDBContext))]
-    [Migration("20231128113908_AddFollowers")]
-    partial class AddFollowers
+    [Migration("20231206120603_addedLikeFunction")]
+    partial class addedLikeFunction
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,26 @@ namespace Chirp.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Reaction", b =>
+                {
+                    b.Property<int>("cheepId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("reactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("cheepId", "userId");
+
+                    b.HasIndex("cheepId", "userId")
+                        .IsUnique();
+
+                    b.ToTable("Reactions");
                 });
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.User", b =>
