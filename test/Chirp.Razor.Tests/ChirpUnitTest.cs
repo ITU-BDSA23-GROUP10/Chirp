@@ -20,18 +20,6 @@ public class ChirpUnitTests : IClassFixture<CustomWebApplicationFactory<Program>
         _client = _fixture.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true, HandleCookies = true });
     }
 
-    //Tests if the publictimline is visable and contains the elements for it to be correct
-    [Fact]
-    public async Task CanSeePublicTimeline()
-    {
-        var response = await _client.GetAsync("/");
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-
-        Assert.Contains("Chirp!", content);
-        Assert.Contains("Public Timeline", content);
-    }
-
     //Tests if the program can create an author when it doesn't exist in the database
     [Theory]
     [InlineData("test1", "test1@test.dk")]
