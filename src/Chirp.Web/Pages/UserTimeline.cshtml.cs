@@ -14,11 +14,18 @@ public class UserTimelineModel : PageModel
     public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty};
     
     [BindProperty]
-    public NewFollow NewFollow { get; set; } = new();
+    public NewFollow NewFollow {get; set;} = new();
+
+    [BindProperty]
+    public NewcheepId NewcheepId {get; set;} = new();
+        
+    [BindProperty]
+    public NewReaction NewReaction {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
 
     //TODO: Figure out why 2 extra pages are added to the pagination
     private readonly int excessiveCheepsCount = 32*2;
@@ -28,11 +35,12 @@ public class UserTimelineModel : PageModel
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
+    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService)
     {
         _authorService = authorService;
         _cheepService = cheepService;
         _userService = userService;
+        _reactionService = reactionService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -232,6 +240,49 @@ public class UserTimelineModel : PageModel
             return null;
         }
     }
+
+    public async Task<int> FindUpvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+    }
+
+    public async Task<int> FindDownvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
+    }
+
+    public async Task<IActionResult> OnPostReaction()
+    {
+        // the id for the user who is reacting
+        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        int cheepId = NewcheepId.id  ?? default(int);
+        string react = NewReaction.Reaction;
+        // Checks if the user exists
+        try
+        {
+            if(userId == -1 && User.Identity.Name != null) {
+                await _userService.CreateUser(User.Identity.Name);
+                userId = await _userService.GetUserIDByName(User.Identity.Name); 
+            }
+        }
+        catch (Exception e) 
+        {
+            Console.WriteLine(e.Message);
+            throw new Exception("There was a problem whilst creating the user");
+        }
+        
+        var newreact = new ReactionDTO
+        (
+            cheepId,
+            userId, 
+            react
+        );
+
+        await _reactionService.ReactToCheep(newreact);
+
+        return Redirect("/" + User.Identity.Name);
+    }
+
     //hashtags
     //inspired from hashtag code from worklizard.com
     public List<string>? GetHashTags(string message, out string Message)

@@ -58,9 +58,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
                     .Take(limit)
                      select new CheepDTO
                      (
-                         cheep.Author.User.Name,
-                         cheep.Text,
-                         cheep.TimeStamp
+                        cheep.CheepId,
+                        cheep.Author.User.Name,
+                        cheep.Text,
+                        cheep.TimeStamp
                      ))
                     .ToListAsync();
 
@@ -112,6 +113,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
             where cheep.Text.Contains("#" + hashtag)
             select new CheepDTO
             (
+                cheep.CheepId,
                 cheep.Author.User.Name,
                 cheep.Text,
                 cheep.TimeStamp
