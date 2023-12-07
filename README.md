@@ -6,16 +6,29 @@ You can access it by using this link:
 https://bdsagroup10chirprazor.azurewebsites.net/
 
 # How to run
+## Using docker
+The project is fully dockerized as can be seen by the Dockerfile and docker-compose.yml file in the main Chirp directory
+To run the project with docker you must first download docker and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)
+
+After installing docker you can run the bash script found in Chirp called create_cert.sh or run the dotnet dev-cert commands found in there making sure to put the cert inside a folder called .local in Chirp
+
+To run the bash file you can simply do this in a terminal from the Chirp folder
+$ chmod +x create_cert.sh && ./create_cert
+
+After doing this you can run the program using docker compose up in your terminal from the Chirp folder. This will boot the database and program at the same time
+If you are on an OS that allows you to --trust the cert then you should be able to connect to the application using https://localhost:5273 if you are not on an OS that allows for this (sadly most linux distros seem to not be allowed to do this) you have to either create a trusted cert file on an OS that allows for it or make an exception in your browser when first opening the site. Most browsers will warn you when entering the site. You can click the advanced button and then accept on firefox for example. This will be remembered for future use so you only have to do this once.
+
+
 ## Run using VS code dev containers
 This is by far the easiest option. First ensure you have the docker and dev container extension installed on your VS code installation. Afterwards you may get a small popup in the bottom right corner telling you that you can open the project as a dev container. Press that button. If this is not the case open the VS code command pallete (Ctrl + shift + p or cmd + shift + p) and dev containers and select either "Rebuild and reopen in Container" or "Reopen in a Container" 
 
 After VS code is done opening the container you should be able to go to the left hand sidebar in VS code and select the run and debug option and press the small green play button.
 
 ## For all of the below you must have a dockerized container with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+$ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 
 You can check if the docker container is running by using this in a terminal. Look for wether it shows a container running:
-docker ps
+$ docker ps
 
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
 
@@ -24,22 +37,22 @@ You can also download the latest release build for your platform and use the inc
 
 ### Linux Example:
 First you must unzip the directory using your unzipper of choice and go into that directory using
-cd Chirp-vX.X.X-linux-x64
+$ cd Chirp-vX.X.X-linux-x64
 Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:
-chmod +x ./Chirp.Web
+$ chmod +x ./Chirp.Web
 then you can run the program using:
-./Chirp.Web
+$ ./Chirp.Web
 
 ### MacOS Example:
 Unzip the folder using your unzipper of choice then enter the directory using
-cd ./Chirp-vX.X.X-osx-x64
+$ cd ./Chirp-vX.X.X-osx-x64
 Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:
-chmod +x ./Chirp.Web
+$ chmod +x ./Chirp.Web
 Since the app is unsigned you have to strip the xattr attribute from it using this command
-xattr -dr com.apple.quarantine "Chirp.Web"
+$ xattr -dr com.apple.quarantine "Chirp.Web"
 (Read more about this here https://apple.stackexchange.com/questions/202169/how-can-i-open-an-app-from-an-unidentified-developer-without-using-the-gui)
 Now you can run the application using:
-./Chirp.Web
+$ ./Chirp.Web
 
 ### Windows Example:
 Unzip the folder using your unzipper of choice then open the folder
