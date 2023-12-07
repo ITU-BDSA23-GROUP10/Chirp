@@ -66,55 +66,57 @@
                                 }
                             }
 
-                            @if (User?.Identity is not null && User.Identity.IsAuthenticated)
-                            {  
-                                //get the id of the logged in user
-                                var userName = User?.Identity?.Name ?? "default";                
-                                var userId = Model.FindUserIDByName(userName).Result;
-                                var authorId = Model.FindUserIDByName(@cheep.Author).Result;
-                                var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
-                                @* var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
-                                var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result; *@
-                                // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
-                                //@if() Add if statement to check if you are following that person
-                                if(userId == authorId)
-                                {
-                                    //no form is shown since the logged in user shouldnt follow themselves
-                                }
-                                else if(userId != authorId)
-                                {   
-                                    if(isFollowing)
+                            <div class="flex-it">
+                                @if (User?.Identity is not null && User.Identity.IsAuthenticated)
+                                {  
+                                    //get the id of the logged in user
+                                    var userName = User?.Identity?.Name ?? "default";                
+                                    var userId = Model.FindUserIDByName(userName).Result;
+                                    var authorId = Model.FindUserIDByName(@cheep.Author).Result;
+                                    var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
+                                    @* var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
+                                    var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result; *@
+                                    // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
+                                    //@if() Add if statement to check if you are following that person
+                                    if(userId == authorId)
                                     {
-                                        <form asp-page-handler="Unfollow" method="post">
-                                            <input type="hidden" name="Author" value="@cheep.Author"/>
-                                            <button class="flwbtn unfollow"> Unfollow </button>
-                                        </form>
+                                        //no form is shown since the logged in user shouldnt follow themselves
                                     }
-                                    else
-                                    {
-                                        <form asp-page-handler="Follow" method="post" >
-                                            <input type="hidden" name="author" value="@cheep.Author"/>
-                                            <button class="flwbtn follow"> Follow </button>
-                                        </form>
+                                    else if(userId != authorId)
+                                    {   
+                                        if(isFollowing)
+                                        {
+                                            <form asp-page-handler="Unfollow" method="post">
+                                                <input type="hidden" name="Author" value="@cheep.Author"/>
+                                                <button class="flwbtn unfollow"> Unfollow </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-page-handler="Follow" method="post" >
+                                                <input type="hidden" name="author" value="@cheep.Author"/>
+                                                <button class="flwbtn follow"> Follow </button>
+                                            </form>
+                                        }
                                     }
-                                }
 
-                                // reaction
-                                <form asp-page-handler="Reaction" method="post" >
-                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                    <input type="hidden" name="NewReaction.Reaction" value="Upvote"/>
-                                    <button class=""> Upvote (@upVoteCount) </button>
-                                </form>
-                                <form asp-page-handler="Reaction" method="post" >
-                                    <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                    <input type="hidden" name="NewReaction.Reaction" value="Downvote"/>
-                                    <button class=""> Downvote (@downVoteCount) </button>
-                                </form>
-                            } else
-                            {
-                               <p>upvote (@upVoteCount)</p> 
-                               <p>Downvote (@downVoteCount)</p> 
-                            }
+                                    // reaction
+                                    <form asp-page-handler="Reaction" method="post" >
+                                        <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                        <input type="hidden" name="NewReaction.Reaction" value="Upvote"/>
+                                        <button class="votebtn"> Upvote (@upVoteCount) </button>
+                                    </form>
+                                    <form asp-page-handler="Reaction" method="post" >
+                                        <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                        <input type="hidden" name="NewReaction.Reaction" value="Downvote"/>
+                                        <button class="votebtn"> Downvote (@downVoteCount) </button>
+                                    </form>
+                                } else
+                                {
+                                <span class="votebtnn">upvote (@upVoteCount)</span> 
+                                <span class="votebtnn">Downvote (@downVoteCount)</span> 
+                                }
+                            </div>
                         </div>
                     </div>
                 </li>
