@@ -14,8 +14,11 @@ services:
     depends_on: 
       - db
     build: ./
-    #ports:
-    #  - "8081:5273"
+    environment: 
+      ASPNETCORE_URLS: "https://+:443;http://+:80"
+    ports:
+      - "8080:80"
+      - "8081:443"
     #  - "8080:1433"
     #expose:
     #  - "8080"
