@@ -237,9 +237,24 @@ li.topic {
 
 .flwbtn,
 .dwnlbttn,
-.frgtbttn{
+.frgtbttn,
+.votebtn{
   border-radius: 25px;
-  padding: 6px 20px;
+  margin-right:5px;
+  padding:4px 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-transition: all .2s;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  font-weight: 500;
+  border: none;
+}
+.votebtnn{
+  background: #ddd;
+  border-radius: 25px;
+  margin-right:5px;
+  padding:4px 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -moz-transition: all .2s;
@@ -250,7 +265,8 @@ li.topic {
 }
 .flwbtn:hover,
 .download:hover,
-.forgetme:hover {
+.forgetme:hover,
+.votebtn:hover {
   background-color: #cc6e6e;
 }
 .follow {
@@ -283,6 +299,11 @@ a.hashtag{
   width: 100%;
   border: none;
   margin-top:10px;
+}
+.flex-it{
+  display: flex;
+  align-items: baseline;
+  margin-top: 8px;
 }
 /*bootstrap annoyances corrected*/
 .profile-page h4{
