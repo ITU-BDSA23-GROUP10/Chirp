@@ -8,6 +8,7 @@ using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
+using Microsoft.Identity.Client;
 
 [Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
@@ -290,6 +291,36 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             Assert.Equal(followName, retrievedFollow.Name);
             Assert.True(UserFollows);
             Assert.False(FollowDoesntFollowUser);
-            }
+        }     
+    }
+
+    [Fact]
+    public async Task CheckIfLikeByUser() 
+    {
+        string authorName = "nametesttestname";
+        string authorEmail = "test@test.com";
+        string message = "Test";
+
+        // Arrange
+        var factory = new CustomWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+
+        var cheep = new CheepCreateDTO(message, authorName);
+        using (var scope = factory.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+            UserRepository ur = new UserRepository(context);
+            AuthorRepository ar = new AuthorRepository(context);
+            CheepRepository cr = new CheepRepository(context);
+            ReactionRepository rr = new ReactionRepository(context);
+
+            // the user with the cheep
+            await ur.CreateUser(authorName, authorEmail);
+            var user = await ur.GetUserByName(authorName);
+            await ar.CreateAuthor(user!);
+            var author = await ar.GetAuthorByName(authorName);
+            await cr.CreateCheep(cheep, author!);
+
+        }
     }
 }
