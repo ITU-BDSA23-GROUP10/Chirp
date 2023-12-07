@@ -169,6 +169,10 @@ class UITesting
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }
+
+
+
+    
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailAddTest() 
