@@ -249,6 +249,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
             UserRepository ur = new UserRepository(context);
+            FollowsRepository fr = new FollowsRepository(context);
 
             // Creates the user for the follow if it does not exist
             try
@@ -272,7 +273,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
                 var followID = await ur.GetUserIDByName(followName);
 
                 var follow = new FollowDTO(userId, followID);
-                await ur.FollowUser(follow);
+                await fr.FollowUser(follow);
             }
             catch 
             {
@@ -283,8 +284,8 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var retrievedUser = await ur.GetUserByName(authorName);
             var retrievedFollow = await ur.GetUserByName(followName);
 
-            var UserFollows = await ur.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
-            var FollowDoesntFollowUser = await ur.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
+            var UserFollows = await fr.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
+            var FollowDoesntFollowUser = await fr.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
 
             Assert.Equal(authorName, retrievedUser.Name);
             Assert.Equal(followName, retrievedFollow.Name);
