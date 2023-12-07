@@ -17,6 +17,8 @@ public class UserProfileModel : PageModel
     readonly IUserRepository<User> _userService;
     readonly IReactionRepository<Reaction> _reactionService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
+    readonly IFollowsRepository<Follows> _followsService;
+
     [BindProperty]
     public NewEmail NewEmail { get; set; } = new NewEmail { Email = string.Empty};
 
@@ -24,11 +26,12 @@ public class UserProfileModel : PageModel
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-        public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, IReactionRepository<Reaction> reactionService)
+        public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, IReactionRepository<Reaction> reactionService, IFollowsRepository<Follows> followsService)
         {
             _userService = userService;
             _authorService = authorService;
             _reactionService = reactionService;
+            _followsService = followsService;
         }    
 
     public async Task<ActionResult> OnGetAsync()
@@ -80,7 +83,7 @@ public class UserProfileModel : PageModel
             throw new InvalidOperationException("User could not be created.");
         }
         
-        await _userService.DeleteAllFollowers(user.UserId);
+        await _followsService.DeleteAllFollowers(user.UserId);
         await _reactionService.deleteAllUserReactions(user.UserId);
         await _userService.DeleteUser(user);
 
@@ -105,7 +108,7 @@ public class UserProfileModel : PageModel
 
     public async Task findUserFollowingByUserID(int userId)
     {
-        var followingIDs = await _userService.GetFollowedUsersId(userId);
+        var followingIDs = await _followsService.GetFollowedUsersId(userId);
         foreach (var id in followingIDs)
         {
             var fetchedUser = await _userService.GetUserById(id);
@@ -132,7 +135,7 @@ public class UserProfileModel : PageModel
         var userID = await _userService.GetUserIDByName(userName);
         var user = await _userService.GetUserByName(userName);
         var email = user?.Email;
-        var followersIDs = await _userService.GetFollowedUsersId(userID);
+        var followersIDs = await _followsService.GetFollowedUsersId(userID);
         var followers = new List<string>();
         
         foreach (var id in followersIDs)

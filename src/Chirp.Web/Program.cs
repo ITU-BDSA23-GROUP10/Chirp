@@ -40,6 +40,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepRepository<Cheep, Author>, CheepRepository>();
 builder.Services.AddScoped<IAuthorRepository<Author, Cheep, User>, AuthorRepository>();
 builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
+builder.Services.AddScoped<IFollowsRepository<Follows>, FollowsRepository>();
 builder.Services.AddScoped<IReactionRepository<Reaction>, ReactionRepository>();
 builder.Services.AddDbContext<ChirpDBContext>(
     options =>

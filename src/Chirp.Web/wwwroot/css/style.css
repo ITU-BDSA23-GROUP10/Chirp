@@ -250,6 +250,19 @@ li.topic {
   font-weight: 500;
   border: none;
 }
+.votebtnn{
+  background: #ddd;
+  border-radius: 25px;
+  margin-right:5px;
+  padding:4px 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-transition: all .2s;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  font-weight: 500;
+  border: none;
+}
 .flwbtn:hover,
 .download:hover,
 .forgetme:hover,
@@ -290,6 +303,7 @@ a.hashtag{
 .flex-it{
   display: flex;
   align-items: baseline;
+  margin-top: 8px;
 }
 /*bootstrap annoyances corrected*/
 .profile-page h4{
