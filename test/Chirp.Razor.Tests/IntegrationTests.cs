@@ -249,6 +249,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             AuthorRepository ar = new AuthorRepository(context);
             CheepRepository cr = new CheepRepository(context);
             UserRepository ur = new UserRepository(context);
+            //FollowsRepository fr = new
 
             // Creates the user for the follow if it does not exist
             try
