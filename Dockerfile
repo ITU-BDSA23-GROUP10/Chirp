@@ -13,6 +13,10 @@ RUN cd Chirp.Web && sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "S
 #RUN cd Chirp.Web &&  dotnet dev-certs https --clean && dotnet dev-certs https --trust
 RUN cd Chirp.Web && dotnet restore 
 RUN cd Chirp.Web && dotnet build -c Release -o /app
+RUN cd Chirp.Web && cp aspnetapp.pfx /app
+#RUN cd /app && mkdir -p Chirp/Chirp.Web
+RUN cd Chirp.Web && cp -r wwwroot /app
+ADD src/Chirp.Web/aspnetapp.pfx /app
 RUN rm -rf src
 #RUN dotnet tool install --global user-secrets &&
 
@@ -24,12 +28,14 @@ FROM ubuntu:22.04
 WORKDIR /app/build
 
 
-
 COPY --from=build-env /app .
+RUN mkdir -p Chirp/Chirp.Web
+RUN mv wwwroot Chirp/Chirp.Web
 RUN apt-get update && apt-get install -y dotnet-sdk-7.0 && apt-get install -y aspnetcore-runtime-7.0
-RUN dotnet dev-certs https --clean && dotnet dev-certs https --trust
+#RUN dotnet dev-certs https --clean && dotnet dev-certs https --trust
 #RUN cd .. && dotnet dev-certs https --clean && dotnet dev-certs https --trust
-ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
+ENTRYPOINT dotnet dev-certs https --clean --import ./aspnetapp.pfx -p YourGonnaBurnAlright123456 && dotnet Chirp.Web.dll
+#ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
 
 # Exposes the port
 EXPOSE 5273/tcp

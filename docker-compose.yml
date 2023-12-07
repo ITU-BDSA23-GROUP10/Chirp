@@ -15,10 +15,14 @@ services:
       - db
     build: ./
     environment: 
-      ASPNETCORE_URLS: "https://+:443;http://+:80"
+      #- ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=443
     ports:
-      - "8080:80"
-      - "8081:443"
+      - "7102:80"
+      - "5273:443"
+    #volumes: 
+    #  - /home/slug/certs/
     #  - "8080:1433"
     #expose:
     #  - "8080"
