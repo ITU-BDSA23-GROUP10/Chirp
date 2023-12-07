@@ -10,22 +10,27 @@ services:
       - '1433:1433'
     expose: 
       - '1433'
+
   dotnet:
     depends_on: 
       - db
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment: 
-      #- ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=443
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_HTTPS_PORT: 443
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/cert.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password_FILE: /run/secrets/cert_password
     ports:
       - "7102:80"
       - "5273:443"
-    #volumes: 
-    #  - /home/slug/certs/
-    #  - "8080:1433"
-    #expose:
-    #  - "8080"
-    #  - "1433"
-    
-    
+
+    secrets:
+      - cert_password
+    volumes:
+      - './.local:/https/'
+
+secrets:
+  cert_password:
+    file: './.local/cert_password.txt'
