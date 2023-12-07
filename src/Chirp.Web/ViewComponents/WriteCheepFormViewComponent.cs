@@ -68,3 +68,13 @@ public class NewCheep
     [Display(Name = "text")]
     public required string Message {get; set;} = string.Empty;
 }
+
+public class NewReaction
+{
+    public string? Reaction {get; set;} = string.Empty;
+}
+
+public class NewcheepId
+{
+    public int? id {get; set;}
+}

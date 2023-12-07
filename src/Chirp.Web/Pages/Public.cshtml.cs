@@ -5,6 +5,7 @@ using Chirp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
 using Chirp.Web.ViewComponents;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Chirp.Web.Pages;
 
@@ -16,17 +17,29 @@ public class PublicModel : PageModel
     [BindProperty]
     public NewFollow NewFollow { get; set; } = new();
 
+    [BindProperty]
+    public NewcheepId NewcheepId {get; set;} = new();
+        
+    [BindProperty]
+    public NewReaction NewReaction {get; set;} = new();
+
+
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
+    readonly IFollowsRepository<Follows> _followsService;
+
 
     public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();
 
-    public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
+    public PublicModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService, IFollowsRepository<Follows> followsService)
     {
         _cheepService = cheepService;
         _authorService = authorService;
         _userService = userService;
+        _reactionService = reactionService;
+        _followsService = followsService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -83,7 +96,7 @@ public class PublicModel : PageModel
 
     public async Task<bool> CheckIfFollowed(int userId, int authorId)
     {
-        return await _userService.IsFollowing(userId, authorId);
+        return await _followsService.IsFollowing(userId, authorId);
     }
 
     public async Task<int> FindUserIDByName(string userName)
@@ -149,7 +162,7 @@ public class PublicModel : PageModel
 
         var followDTO = new FollowDTO(followerId, followingId);
         
-        await _userService.FollowUser(followDTO);
+        await _followsService.FollowUser(followDTO);
 
         return Redirect("/" + LoggedInUserName);
     }
@@ -170,7 +183,7 @@ public class PublicModel : PageModel
 
             var unfollowDTO = new FollowDTO(followerId, followingId);
                 
-            await _userService.UnfollowUser(unfollowDTO);
+            await _followsService.UnfollowUser(unfollowDTO);
 
             return Redirect("/" + userName);
         }
@@ -192,6 +205,70 @@ public class PublicModel : PageModel
             return null;
         }
     }
+
+    public async Task<int> FindUpvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+    }
+
+    public async Task<int> FindDownvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
+    }
+
+    public async Task<IActionResult> OnPostReaction()
+    {
+        // the id for the user who is reacting
+        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        int cheepId = NewcheepId.id  ?? default(int);
+        string react = NewReaction.Reaction;
+
+        // Checks if the user exists
+        try
+        {
+            if(userId == -1 && User.Identity.Name != null) {
+                await _userService.CreateUser(User.Identity.Name);
+                userId = await _userService.GetUserIDByName(User.Identity.Name); 
+            }
+        } catch (Exception e) 
+        {
+            Console.WriteLine(e.Message);
+            throw new Exception("There was a problem whilst creating the user");
+        }
+        //throw new Exception("UserID:  " + userId + "  ||  cheepID: " + cheepId + "   ||   Reaction: " + NewReaction.Reaction);
+
+        var newreact = new ReactionDTO
+        (
+            cheepId,
+            userId, 
+            react
+        );
+
+        //throw new Exception("UserID:  " + newreact.userId + "  ||  cheepID: " + newreact.cheepId + "   ||   Reaction: " + newreact.reactionType);
+
+        await _reactionService.ReactToCheep(newreact);
+
+        return Redirect("/" + User.Identity.Name);
+    } 
+
+    //hashtags
+    //inspired from hashtag code from worklizard.com
+    public List<string>? GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+"); 
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
+        }
+
+        Message = message;
+        return hashTags.Count > 0 ? hashTags : null;
+    }
 }
 
 public class NewFollow 
@@ -199,3 +276,4 @@ public class NewFollow
     [Display(Name = "author")]
     public string? Author {get; set;} = string.Empty;
 }
+
