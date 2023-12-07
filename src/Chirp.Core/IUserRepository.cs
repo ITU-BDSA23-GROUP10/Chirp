@@ -21,13 +21,4 @@ public interface IUserRepository<User>
 
     Task CreateUser(string name, string? email = null);
     Task UpdateUserEmail(string name, string email);
-    
-    //follower
-    Task FollowUser(FollowDTO followDTO);
-    Task<bool> IsFollowing(int followerId, int followingId);
-    Task UnfollowUser(FollowDTO unfollowDTO);
-    Task<List<int>> GetFollowedUsersId(int userId);
-    Task<List<int>> GetIdsFollowingUser(int userId);
-    Task LoopDeleteFollowers(List<int> followedUsers, int userId);
-    Task DeleteAllFollowers(int userId);
 }

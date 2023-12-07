@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDBContext))]
-    [Migration("20231206120603_addedLikeFunction")]
-    partial class addedLikeFunction
+    [Migration("20231206165710_MovedFollowsToItOwnRepo")]
+    partial class MovedFollowsToItOwnRepo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
