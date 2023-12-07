@@ -1,11 +1,4 @@
 using Microsoft.Playwright;
-using System;
-using System.Threading.Tasks;
-using Ductus.FluentDocker;
-using Microsoft.Extensions.DependencyInjection;
-using Ductus.FluentDocker.Services.Impl;
-using Ductus.FluentDocker.Model.Compose;
-using Ductus.FluentDocker.Services;
 
 namespace PlaywrightTests;
 
@@ -114,17 +107,7 @@ class UITesting
             Headless = false,
         });
 
-        var file = Path.Combine(Directory.GetCurrentDirectory(), "../../.devcontainer/docker-compose.yml");
-        var hosts = new Hosts().Discover();
-        var DockerHost = hosts.FirstOrDefault(x => x.IsNative) ?? hosts.FirstOrDefault(x => x.Name == "default");
-
-        using (var svc = new DockerComposeCompositeService(DockerHost, new DockerComposeConfig
-        {
-        ComposeFilePath = new List<string> { file }, ForceRecreate = true, RemoveOrphans = true,
-        StopOnDispose = true
-        }))
-        {
-        svc.Start();
+        
 
         var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
@@ -146,7 +129,7 @@ class UITesting
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-        }
+        
     
     }
 
