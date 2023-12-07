@@ -9,17 +9,15 @@ WORKDIR /Chirp
 
 # Adds the source code to the container
 ADD src ./
-
-# Restores the dependencies, builds the project and deletes the source code
+# installs sed and adds the connection string to the appsettings.json file after the first {
 RUN apt-get install -y sed
 RUN cd Chirp.Web && sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "Server=db,1433;Initial Catalog=master;User ID=sa;Password=YourGonnaBurnAlright1234;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" },' appsettings.json
 
+# Restores the dependencies, builds the project and deletes the source code
 RUN cd Chirp.Web && dotnet restore 
 RUN cd Chirp.Web && dotnet build -c Release -o /app
-RUN cd Chirp.Web && cp aspnetapp.pfx /app
 
 RUN cd Chirp.Web && cp -r wwwroot /app
-ADD src/Chirp.Web/aspnetapp.pfx /app
 RUN rm -rf src
 
 
@@ -29,7 +27,6 @@ WORKDIR /app/build
 
 
 COPY --from=build-env /app .
-RUN mkdir -p Chirp/Chirp.Web
 
 ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
 

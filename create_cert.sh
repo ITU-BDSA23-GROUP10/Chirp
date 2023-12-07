@@ -6,7 +6,7 @@ mkdir ./.local
 cd ./.local
 
 # Removes the .gitignore file if it exists
-if(-f .gitignore) then
+if(test -f .gitignore) then
     rm .gitignore
 fi
 
@@ -15,7 +15,7 @@ touch .gitignore
 echo "*" >> .gitignore
 
 # Removes the cert.pfx file if it exists
-if(-f ./cert.pfx) then
+if(test -f ./cert.pfx) then
     rm ./cert.pfx
 fi
 
