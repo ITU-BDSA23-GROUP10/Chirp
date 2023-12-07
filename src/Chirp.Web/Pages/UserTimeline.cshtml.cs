@@ -4,6 +4,7 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using Chirp.Web.ViewComponents;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Chirp.Web.Pages;
 
@@ -13,11 +14,19 @@ public class UserTimelineModel : PageModel
     public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty};
     
     [BindProperty]
-    public NewFollow NewFollow { get; set; } = new();
+    public NewFollow NewFollow {get; set;} = new();
+
+    [BindProperty]
+    public NewcheepId NewcheepId {get; set;} = new();
+        
+    [BindProperty]
+    public NewReaction NewReaction {get; set;} = new();
 
     readonly ICheepRepository<Cheep, Author> _cheepService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
+    readonly IReactionRepository<Reaction> _reactionService;
+    readonly IFollowsRepository<Follows> _followsService;
 
     //TODO: Figure out why 2 extra pages are added to the pagination
     private readonly int excessiveCheepsCount = 32*2;
@@ -27,11 +36,13 @@ public class UserTimelineModel : PageModel
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService)
+    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService, IFollowsRepository<Follows> followsService)
     {
         _authorService = authorService;
         _cheepService = cheepService;
         _userService = userService;
+        _reactionService = reactionService;
+        _followsService = followsService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -114,7 +125,7 @@ public class UserTimelineModel : PageModel
 
             var followDTO = new FollowDTO(followerId, followingId);
             
-            await _userService.FollowUser(followDTO);
+            await _followsService.FollowUser(followDTO);
 
             return Redirect("/" + LoggedInUserName);
         }
@@ -137,7 +148,7 @@ public class UserTimelineModel : PageModel
 
         var unfollowDTO = new FollowDTO(followerId, followingId);
             
-        await _userService.UnfollowUser(unfollowDTO);
+        await _followsService.UnfollowUser(unfollowDTO);
 
         return Redirect("/" + userName);
         }    
@@ -145,7 +156,7 @@ public class UserTimelineModel : PageModel
 
     public async Task<bool> CheckIfFollowed(int userId, int authorId)
     {
-        return await _userService.IsFollowing(userId, authorId);
+        return await _followsService.IsFollowing(userId, authorId);
     }
 
     public async Task<int> FindUserIDByName(string userName)
@@ -179,7 +190,7 @@ public class UserTimelineModel : PageModel
                 ViewData["UserExists"] = "false";
             }
             
-            List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
+            List<int> FollowedUsers = await _followsService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
             int followedUsersCheepsCount = 0;
@@ -216,7 +227,7 @@ public class UserTimelineModel : PageModel
 
     public string? GetYouTubeEmbed(string message, out string Message)
     {
-        string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
+        string pattern =  @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]{11})(?:[^\n ]*)(.*)";
         Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
 
         if (match.Success)
@@ -230,5 +241,66 @@ public class UserTimelineModel : PageModel
             Message = message;
             return null;
         }
+    }
+
+    public async Task<int> FindUpvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+    }
+
+    public async Task<int> FindDownvoteCountByCheepID(int id)
+    {
+        return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
+    }
+
+    public async Task<IActionResult> OnPostReaction()
+    {
+        // the id for the user who is reacting
+        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        int cheepId = NewcheepId.id  ?? default(int);
+        string react = NewReaction.Reaction;
+        // Checks if the user exists
+        try
+        {
+            if(userId == -1 && User.Identity.Name != null) {
+                await _userService.CreateUser(User.Identity.Name);
+                userId = await _userService.GetUserIDByName(User.Identity.Name); 
+            }
+        }
+        catch (Exception e) 
+        {
+            Console.WriteLine(e.Message);
+            throw new Exception("There was a problem whilst creating the user");
+        }
+        
+        var newreact = new ReactionDTO
+        (
+            cheepId,
+            userId, 
+            react
+        );
+
+        await _reactionService.ReactToCheep(newreact);
+
+        return Redirect("/" + User.Identity.Name);
+    }
+
+    //hashtags
+    //inspired from hashtag code from worklizard.com
+    public List<string>? GetHashTags(string message, out string Message)
+    {
+        var regex = new Regex(@"(?<=#)\w+"); 
+        var matches = regex.Matches(message);
+        var hashTags = new List<string>();
+
+        foreach (Match match in matches)
+        {
+            var formattedHashtag = $"/hashtag/{match.Value}";
+            hashTags.Add(formattedHashtag);
+            message = message.Replace("#" + match.Value, "");
+        }
+
+        Message = message;
+        return hashTags.Count > 0 ? hashTags : null;
     }
 }

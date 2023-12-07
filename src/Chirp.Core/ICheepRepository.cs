@@ -14,4 +14,5 @@ public interface ICheepRepository<Cheep, Author>
     Task<Cheep?> GetById(int id);
     Task<Tuple<List<CheepDTO>, int>> GetSome(int offset, int limit);
     Task CreateCheep(CheepCreateDTO cheepCreateDTO, Author author);
+    Task<List<CheepDTO>> GetCheepsByHashtag(string hashtag);
 }
