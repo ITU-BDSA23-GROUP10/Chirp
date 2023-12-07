@@ -94,9 +94,6 @@ namespace PlaywrightTests;
 [TestFixture]
 class UITesting 
 {
-    
-      
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginWithUser()
@@ -106,8 +103,6 @@ class UITesting
         {
             Headless = false,
         });
-
-        
 
         var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
@@ -129,10 +124,7 @@ class UITesting
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-        
-    
     }
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
@@ -180,7 +172,6 @@ class UITesting
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailAddTest() 
@@ -217,7 +208,6 @@ class UITesting
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateDuplicateError() 
@@ -258,7 +248,6 @@ class UITesting
 
         await page.GetByText("Email already exists ").ClickAsync();
     }
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateFormattingError() 
@@ -299,7 +288,6 @@ class UITesting
 
         await page.GetByText("Email formatting is incorrect ").ClickAsync();
     }
-
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateChangeSuccessful() 
@@ -340,12 +328,10 @@ class UITesting
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-    
     [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginAndDeleteUser()
     {
-
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
