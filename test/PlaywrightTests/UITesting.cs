@@ -88,7 +88,6 @@ namespace PlaywrightTests;
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }*/
-
 [TestFixture]
 class UITesting 
 {
