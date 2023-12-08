@@ -135,33 +135,43 @@
 @section scripts {
 <script>
     $(document).ready(function() {
-        $(".followForm, .unfollowForm").on('submit', function(e) {
-            e.preventDefault();
-            let form = $(this);
-            let url = form.attr('action');
-            let button = form.find('button');
+    $(".followForm, .unfollowForm").on('submit', function(e) {
+        e.preventDefault();
+        let form = $(this);
+        let url = form.attr('action');
+        let button = form.find('button');
+        
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(response)
+            {
+                if(response.success) {
+                    let newAction = button.hasClass('follow') ? 'Unfollow' : 'Follow';
+                    let newClass = button.hasClass('follow') ? 'unfollow' : 'follow';
+                    let newHandler = button.hasClass('follow') ? 'Unfollow' : 'Follow';
+                    button.text(newAction);
+                    button.removeClass('follow unfollow').addClass(newClass);
+                    
+                    // Update form's asp-page-handler attribute
+                    form.attr('asp-page-handler', newHandler);
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(response)
-                {
-                    if(response.success) {
-                        let newAction = button.hasClass('follow') ? 'Unfollow' : 'Follow';
-                        let newClass = button.hasClass('follow') ? 'unfollow' : 'follow';
-                        button.text(newAction);
-                        button.removeClass('follow unfollow').addClass(newClass);
-                    }
-                },
-                error: function(error) {
-                    console.log('Error:', error);
+                    // Update form's class
+                    form.removeClass('followForm unfollowForm').addClass(newClass + 'Form');
+
+                    // Update form's action attribute
+                    form.attr('action', '/?handler=' + newHandler);
                 }
-            });
-
-            return false;  // prevent form from submitting normally
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
         });
+
+        return false;  // prevent form from submitting normally
     });
+});
 </script>
 }
                                             
