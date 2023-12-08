@@ -97,6 +97,25 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     }
 
     [Fact]
+    public async void UpdateUserEmail()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+    
+        var userService = new UserRepository(context);
+
+        var username = "TestUser";
+        var email = "TestUser@testmail.co.uk";
+        // Act
+        await userService.CreateUser(username);
+        await userService.UpdateUserEmail(username, email);
+
+        // Assert
+        var user = userService.GetUserByEmail(username);
+        Assert.NotNull(user);
+    }
+
+    [Fact]
     public async void GetUserById()
     {
         // Arrange
