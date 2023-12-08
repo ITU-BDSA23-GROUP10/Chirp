@@ -182,7 +182,7 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         // Assert
         var follows = await followService.GetFollowedUsersId(1);
         Assert.Empty(follows);
-        Assert.True(await followService.IsFollowing(1, 2));
+        Assert.True(!await followService.IsFollowing(1, 2));
     }
 
 
