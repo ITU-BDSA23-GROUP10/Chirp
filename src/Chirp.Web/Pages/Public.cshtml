@@ -27,6 +27,7 @@
     </div>
     }
 
+
     @if (Model.DisplayedCheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
@@ -86,14 +87,14 @@
                                     {   
                                         if(isFollowing)
                                         {
-                                            <form asp-page-handler="Unfollow" method="post" id="unfollowForm">
+                                            <form asp-page-handler="Unfollow" method="post" class="unfollowForm">
                                                 <input type="hidden" name="Author" value="@cheep.Author"/>
                                                 <button type="submit" class="flwbtn unfollow"> Unfollow </button>
                                             </form>
                                         }
                                         else
                                         {
-                                            <form asp-page-handler="Follow" method="post" id="followForm">
+                                            <form asp-page-handler="Follow" method="post" class="followForm">
                                                 <input type="hidden" name="author" value="@cheep.Author"/>
                                                 <button type="submit" class="flwbtn follow"> Follow </button>
                                             </form>
@@ -129,5 +130,38 @@
     }
 
     @await Component.InvokeAsync("Pagination")
-    
 </div>
+
+@section scripts {
+<script>
+    $(document).ready(function() {
+        $(".followForm, .unfollowForm").on('submit', function(e) {
+            e.preventDefault();
+            let form = $(this);
+            let url = form.attr('action');
+            let button = form.find('button');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                success: function(response)
+                {
+                    if(response.success) {
+                        let newAction = button.hasClass('follow') ? 'Unfollow' : 'Follow';
+                        let newClass = button.hasClass('follow') ? 'unfollow' : 'follow';
+                        button.text(newAction);
+                        button.removeClass('follow unfollow').addClass(newClass);
+                    }
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+
+            return false;  // prevent form from submitting normally
+        });
+    });
+</script>
+}
+                                            

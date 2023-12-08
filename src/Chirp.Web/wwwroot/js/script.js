@@ -115,18 +115,19 @@ fetch(`${pageName}?handler=Unfollow`, {
 }).catch(e => {
     console.log('There was a problem with the fetch operation: ' + e.message);
 });*/
-
+/*
 var pageName = window.location.pathname;
 
-$('#followForm').submit(function(e) {
+$('.followForm').submit(function(e) {
     e.preventDefault();
+    var form = $(this);
     $.ajax({
         url: `${pageName}?handler=Follow`,
         type: 'POST',
-        data: { author: $('input[name="author"]').val() }, // send form data
+        data: { author: form.find('input[name="author"]').val() },
         success: function(data) {
             if (data.status === 'success') {
-                $('button').text('Unfollow');
+                form.find('button').text('Unfollow');
             } else {
                 console.error('Error:', data.message);
             }
@@ -139,15 +140,16 @@ $('#followForm').submit(function(e) {
 
 // For the unfollow form
 
-$('#unfollowForm').submit(function(e) {
+$('.unfollowForm').submit(function(e) {
     e.preventDefault();
+    var form = $(this);
     $.ajax({
         url: `${pageName}?handler=Unfollow`,
         type: 'POST',
-        data: { author: $('input[name="author"]').val() }, // send form data
+        data: { author: form.find('input[name="author"]').val() },
         success: function(data) {
             if (data.status === 'success') {
-                $('button').text('Follow');
+                form.find('button').text('Follow');
             } else {
                 console.error('Error:', data.message);
             }
@@ -160,4 +162,4 @@ $('#unfollowForm').submit(function(e) {
 
 //errors
 console.log("author " + $('input[name="author"]').val())
-console.log(pageName)
+console.log(pageName)*/

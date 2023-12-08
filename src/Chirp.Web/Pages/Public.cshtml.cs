@@ -131,95 +131,65 @@ public class PublicModel : PageModel
     }
 
     //follow form button
-    public async Task<IActionResult> OnPostFollow([FromBody] NewFollow newFollow) 
+    public async Task<IActionResult> OnPostFollow()
     {
-        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        var LoggedInUserName = User?.Identity?.Name ?? "default";
+        //var LoggedInUserEmail = Add user email here and insert into the create user func
+        var FollowedUserName = NewFollow.Author;
+
+        // Check if followedUserName is null
+        if (FollowedUserName == null)
         {
-            var LoggedInUserName = User?.Identity?.Name ?? "default";
-            //var LoggedInUserEmail =  Add user email here and insert into the create user func
-            var FollowedUserName = NewFollow.Author;
-        
-            // error handling - Check if followedUserName is null
-            if (FollowedUserName == null)
-            {
-                return new JsonResult(new { status = "fail", message = "Followed user does not exist." });
-            }
-            
-            //Check if the user that is logged in exists
-            try
-            {
-                var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
-                
-                if (loggedInUser is null) {
-                    throw new ArgumentException("NewFollow.Author cannot be null or empty");
-                }
-
-                var followerId = await _userService.GetUserIDByName(LoggedInUserName);
-                var followingId = await _userService.GetUserIDByName(FollowedUserName);
-
-                var followDTO = new FollowDTO(followerId, followingId);
-                
-                await _followsService.FollowUser(followDTO);
-
-                // If successful:
-                return new JsonResult(new { status = "success" });
-                // If failed:
-                // return new JsonResult(new { status = "fail", message = "Error message" });
-                //return Redirect("/" + LoggedInUserName);
-            } 
-            catch (Exception e)
-            {
-                return new JsonResult(new { status = "fail", message = "An error occurred: " + e.Message });
-            }
-        } 
-        else
-        {
-            // This is a normal form POST.
-            return Redirect("/");
+            throw new ArgumentNullException("Followed user does not exist.");
         }
-    }
 
-    //unfollow form button
-    public async Task<IActionResult> OnPostUnfollow([FromBody] NewFollow newFollow)
-{
-    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-    {
-        var loggedInUserName = User?.Identity?.Name ?? "default";
-        
         //Check if the user that is logged in exists
         try
         {
-            var loggedInUser = await _userService.GetUserByName(loggedInUserName);
-            
-            if (loggedInUser is null) {
-                throw new ArgumentException("loggedInUser cannot be null or empty");
-            }
-            
-            // error handling - Check if followedUserName is null
-            if (string.IsNullOrEmpty(NewFollow.Author)) {
-                return new JsonResult(new { status = "fail", message = "Followed user does not exist." });
-            }
+        var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
+        if (loggedInUser is null) {
+            throw new Exception("User does not exist");
+        }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            await _userService.CreateUser(LoggedInUserName);
+        }
 
-            var followerId = await _userService.GetUserIDByName(loggedInUserName);
+        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+
+        var followDTO = new FollowDTO(followerId, followingId);
+
+        await _followsService.FollowUser(followDTO);
+
+        //return Redirect("/" + LoggedInUserName);
+        return new JsonResult(new { success = true });
+    }
+
+    //unfollow form button
+    public async Task<IActionResult> OnPostUnfollow()
+    {
+        var userName = User?.Identity?.Name ?? "default";
+        // Convert the username to Id
+        if (string.IsNullOrEmpty(NewFollow.Author))
+        {
+            throw new ArgumentException("NewFollow.Author cannot be null or empty");
+        }
+        else
+        {
+            var followerId = await _userService.GetUserIDByName(userName);
             var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
             var unfollowDTO = new FollowDTO(followerId, followingId);
-            
+
             await _followsService.UnfollowUser(unfollowDTO);
 
-            return new JsonResult(new { status = "success" });
-        } 
-        catch (Exception e)
-        {
-            return new JsonResult(new { status = "fail", message = "An error occurred: " + e.Message });
+            //return Redirect("/" + userName);
+            return new JsonResult(new { success = true });
         }
-    } 
-    else
-    {
-        // This is a normal form POST.
-        return Redirect("/");
     }
-}
     public string? GetYouTubeEmbed(string message, out string Message)
     {
         string pattern = @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]+)(?:[^\n ]*)(.*)";
