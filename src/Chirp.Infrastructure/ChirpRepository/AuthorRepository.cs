@@ -31,16 +31,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         await context.SaveChangesAsync();
     }
 
-    public async Task Reload(Author entity)
-    {
-        await context.Entry(entity).ReloadAsync();
-    }
-
-    public async Task Reload(int authorId)
-    {
-        await Reload(await GetAuthorById(authorId));
-    }
-
     public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
     {
         return DbSetAuthor.Where(predicate);
