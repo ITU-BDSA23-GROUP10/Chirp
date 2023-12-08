@@ -88,14 +88,14 @@
                                         {
                                             <form asp-page-handler="Unfollow" method="post" id="unfollowForm">
                                                 <input type="hidden" name="Author" value="@cheep.Author"/>
-                                                <button type="button" class="flwbtn unfollow"> Unfollow </button>
+                                                <button type="submit" class="flwbtn unfollow"> Unfollow </button>
                                             </form>
                                         }
                                         else
                                         {
                                             <form asp-page-handler="Follow" method="post" id="followForm">
                                                 <input type="hidden" name="author" value="@cheep.Author"/>
-                                                <button type="button" class="flwbtn follow"> Follow </button>
+                                                <button type="submit" class="flwbtn follow"> Follow </button>
                                             </form>
                                         }
                                     }

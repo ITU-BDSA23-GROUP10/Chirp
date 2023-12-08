@@ -131,7 +131,7 @@ public class PublicModel : PageModel
     }
 
     //follow form button
-    public async Task<IActionResult> OnPostFollow() 
+    public async Task<IActionResult> OnPostFollow([FromBody] NewFollow newFollow) 
     {
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
@@ -180,7 +180,7 @@ public class PublicModel : PageModel
     }
 
     //unfollow form button
-    public async Task<IActionResult> OnPostUnfollow()
+    public async Task<IActionResult> OnPostUnfollow([FromBody] NewFollow newFollow)
 {
     if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
     {

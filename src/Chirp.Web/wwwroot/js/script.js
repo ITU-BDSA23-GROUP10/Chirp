@@ -1,3 +1,4 @@
+/*
 //the url we're on
 var pageName = window.location.pathname;
 
@@ -8,20 +9,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (followForm) {
         followForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            followOrUnfollow('Follow', e.target);
+            console.log('Follow form submitted!');
+            followOrUnfollow('Follow', followForm);
         });
     }
     
     if (unfollowForm) {
         unfollowForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            followOrUnfollow('Unfollow', e.target);
+            console.log('Unfollow form submitted!');
+            followOrUnfollow('Unfollow', unfollowForm);
         });
     }
 });
 
 function followOrUnfollow(action, form) {
-    fetch(`/${action}`, {
+    fetch(`${pageName}?handler=${action}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -29,21 +32,23 @@ function followOrUnfollow(action, form) {
         },
         body: JSON.stringify({ author: form.querySelector("input[name='author']").value })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+            return response.json();
+        }
+    })
     .then(data => {
         if (data.status === 'success') {
             const newAction = action === 'Follow' ? 'Unfollow' : 'Follow';
             form.querySelector('button').textContent = newAction;
-
-            // After a successful operation, replace the form's event listener to handle the next action
-            form.removeEventListener('submit');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                followOrUnfollow(newAction, form);
-            });
         } else {
             console.error('Error:', data.message);
         }
+    })
+    .catch(e => {
+        console.log('There was a problem with the fetch operation: ' + e.message);
     });
 }
 
@@ -51,6 +56,16 @@ function followOrUnfollow(action, form) {
 console.log(JSON.stringify({ author: 'Author Name' }));
 console.log(pageName);
 
+fetch(`url`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({ author: form.querySelector("input[name='author']").value })
+})*/
+
+/*
 //fetch stuff
 fetch(`${pageName}?handler=Follow`, {
     method: 'POST',
@@ -85,6 +100,9 @@ fetch(`${pageName}?handler=Unfollow`, {
 }).then(response => response.json()).then(response => {
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+    } else if (response.status === 204 || response.status === 205) {
+        // 204 No Content & 205 Reset Content should not be attempted to parse
+        return;
     } else {
         return response.json();
     }
@@ -96,4 +114,50 @@ fetch(`${pageName}?handler=Unfollow`, {
     }
 }).catch(e => {
     console.log('There was a problem with the fetch operation: ' + e.message);
+});*/
+
+var pageName = window.location.pathname;
+
+$('#followForm').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: `${pageName}?handler=Follow`,
+        type: 'POST',
+        data: { author: $('input[name="author"]').val() }, // send form data
+        success: function(data) {
+            if (data.status === 'success') {
+                $('button').text('Unfollow');
+            } else {
+                console.error('Error:', data.message);
+            }
+        },
+        error: function(e) {
+            console.log('There was a problem with the request: ' + e.message);
+        }
+    });
 });
+
+// For the unfollow form
+
+$('#unfollowForm').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: `${pageName}?handler=Unfollow`,
+        type: 'POST',
+        data: { author: $('input[name="author"]').val() }, // send form data
+        success: function(data) {
+            if (data.status === 'success') {
+                $('button').text('Follow');
+            } else {
+                console.error('Error:', data.message);
+            }
+        },
+        error: function(e) {
+            console.log('There was a problem with the request: ' + e.message);
+        }
+    });
+});
+
+//errors
+console.log("author " + $('input[name="author"]').val())
+console.log(pageName)
