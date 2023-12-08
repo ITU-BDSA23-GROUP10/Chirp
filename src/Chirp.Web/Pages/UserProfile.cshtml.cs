@@ -249,9 +249,9 @@ public class UserProfileModel : PageModel
     {
         // TODO: Set username = User?.Identity?.Name! in the constructor instead of hardcoding all the time
         await _cheepService.Delete(DeleteThisCheep.CheepID);
-        await _authorService.Reload(await _userService.GetUserIDByName(User?.Identity?.Name!));
+        // Re-adds the cheeps to the author.Cheeps
         cheeps = await _authorService.GetAllCheepsByAuthorName(User?.Identity?.Name!);
-        return Page();
+        return Redirect("/Profile");
     }
 }
 
