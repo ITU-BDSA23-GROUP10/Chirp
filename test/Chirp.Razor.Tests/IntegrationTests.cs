@@ -10,6 +10,7 @@ using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Microsoft.Identity.Client;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Web.ViewComponents;
 
 [Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
@@ -255,8 +256,13 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             // Creates the user for the follow if it does not exist
             try
             {
+                var creatingAuthor = await ur.GetUserByName(followName);
                 await ur.CreateUser(followName, followEmail);
-                await ar.CreateAuthor( await ur.GetUserByName(followName) );
+                if(creatingAuthor != null)
+                {
+                    await ar.CreateAuthor(creatingAuthor);
+                }
+                
             }
             catch
             {
@@ -285,7 +291,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var retrievedUser = await ur.GetUserByName(authorName);
             var retrievedFollow = await ur.GetUserByName(followName);
 
-            var UserFollows = await fr.IsFollowing(retrievedUser.UserId, retrievedFollow.UserId);
+            var UserFollows = await fr.IsFollowing(retrievedUser!.UserId, retrievedFollow!.UserId);
             var FollowDoesntFollowUser = await fr.IsFollowing(retrievedFollow.UserId, retrievedUser.UserId);
 
             Assert.Equal(authorName, retrievedUser.Name);
@@ -323,16 +329,16 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             await ar.CreateAuthor(user!);
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
-            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user.UserId).FirstOrDefault();
+            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user!.UserId).FirstOrDefault();
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
             var reactUser = await ur.GetUserByName("CheepLiker");
-            ReactionDTO rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, typeOfReaction);
+            ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, typeOfReaction);
             await rr.ReactToCheep(rd);
             var reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
             
-            Assert.True(reaction.userId == reactUser.UserId);
+            Assert.True(reaction!.userId == reactUser.UserId);
         }
     }
 
@@ -364,24 +370,24 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             await ar.CreateAuthor(user!);
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
-            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user.UserId).FirstOrDefault();
+            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user!.UserId).FirstOrDefault();
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
             var reactUser = await ur.GetUserByName("CheepLiker");
 
             // Creating upvote reaction
-            ReactionDTO rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, firstReaction);
+            ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, firstReaction);
             await rr.ReactToCheep(rd);
             var reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
             
-            Assert.True(reaction.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
+            Assert.True(reaction!.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
 
             // creating downvote reaction
             rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, secoundReaction);
             await rr.ReactToCheep(rd);
             reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
-            Assert.True(reaction.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
+            Assert.True(reaction!.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
         }
     }
 
@@ -413,22 +419,24 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             await ar.CreateAuthor(user!);
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
-            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user.UserId).FirstOrDefault();
+
+            var cheepUser = cr.SearchFor(_cheepUser => _cheepUser.AuthorId == user!.UserId).FirstOrDefault();
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
             var reactUser = await ur.GetUserByName("CheepLiker");
 
             // Creating upvote reaction
-            ReactionDTO rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, reactionToCheep);
+            ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, reactionToCheep);
+
             await rr.ReactToCheep(rd);
-            var reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
+            var reaction = rr.SearchFor(_react => _react.userId == reactUser!.UserId && _react.cheepId == cheepUser!.CheepId).FirstOrDefault();
             //throw new Exception("test test test: " + rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).Count());
             
-            Assert.True(reaction.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
+            Assert.True(reaction!.userId == reactUser!.UserId && reaction.reactionType == rd.reactionType);
 
             // creating upvote reaction on the same cheep
-            rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, reactionToCheep);
+            rd = new ReactionDTO(cheepUser!.CheepId, reactUser.UserId, reactionToCheep);
             await rr.ReactToCheep(rd);
 
             var ShouldbeNothing = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId);
