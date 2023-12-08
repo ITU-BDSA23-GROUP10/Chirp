@@ -213,12 +213,12 @@ public class UserProfileModel : PageModel
         if(!result.IsValid)
         {
             ViewData["EmailError"] = "formatting";
-            return Page();
+            return Redirect("/Profile");
         }
         else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email)
         {
             ViewData["EmailError"] = "duplicate";
-            return Page();
+            return Redirect("/Profile");
         }
 
         try
@@ -233,7 +233,7 @@ public class UserProfileModel : PageModel
             ViewData["EmailError"] = "error";
         }
 
-        return Page();
+        return Redirect("/Profile");
     }
 }
 public class NewEmail 
