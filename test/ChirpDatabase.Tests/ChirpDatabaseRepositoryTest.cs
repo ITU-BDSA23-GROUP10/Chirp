@@ -6,6 +6,7 @@ using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.Diagnostics.Contracts;
+using NuGet.Protocol;
 
 namespace ChirpIntegraiton.Tests;
 
@@ -109,7 +110,7 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         await userService.CreateUser(username);
 
         // Assert
-        Assert.Equal(username, (await userService.GetUserById(1)).Name);
+        Assert.Equal(username, (await userService.GetUserById(1))!.Name);
     }
 
     [Fact]
@@ -128,7 +129,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         // Assert
         await Assert.ThrowsAsync<Exception>(async() => await userService.CreateUser(username));
     }
+    
 
+    // Follows repo tests
     [Fact]
     public async void TwoUsersCanFollowEachOther()
     {
@@ -136,6 +139,7 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         var context = SetupContext(_sqlServer.GetConnectionString());
     
         var userService = new UserRepository(context);
+        var followService = new FollowsRepository(context);
 
         var username1 = "Testuser1";
         var username2 = "Testuser2";
@@ -145,13 +149,40 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         await userService.CreateUser(username2);
         
         var newFollow = new FollowDTO(1, 2);
-        await userService.FollowUser(newFollow);
+        await followService.FollowUser(newFollow);
 
         // Assert
-        var follows = await userService.GetFollowedUsersId(1);
+        var follows = await followService.GetFollowedUsersId(1);
         Assert.NotEmpty(follows);
         Assert.Equal(2, follows[0]);
-        Assert.True(await userService.IsFollowing(1, 2));
+        Assert.True(await followService.IsFollowing(1, 2));
+    }
+
+    [Fact]
+    public async void UsersCanUnfollow()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+    
+        var userService = new UserRepository(context);
+        var followService = new FollowsRepository(context);
+
+        var username1 = "Testuser1";
+        var username2 = "Testuser2";
+
+        // Act
+        await userService.CreateUser(username1);
+        await userService.CreateUser(username2);
+
+        var newFollow = new FollowDTO(1, 2);
+        await followService.FollowUser(newFollow);
+
+        await followService.UnfollowUser(newFollow);
+
+        // Assert
+        var follows = await followService.GetFollowedUsersId(1);
+        Assert.Empty(follows);
+        Assert.True(await followService.IsFollowing(1, 2));
     }
 
 
