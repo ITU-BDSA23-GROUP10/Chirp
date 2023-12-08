@@ -330,3 +330,10 @@ a {
 .pagination {
   display: block;
 }
+/*cheep buttons*/
+.votebtn span,
+.votebtnn span{
+  background: #d3d3d3;
+  padding: 2px 6px;
+  border-radius: 25px;
+}
