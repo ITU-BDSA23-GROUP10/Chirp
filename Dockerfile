@@ -11,7 +11,7 @@ WORKDIR /Chirp
 ADD src ./
 # installs sed and adds the connection string to the appsettings.json file after the first {
 RUN apt-get install -y sed
-RUN cd Chirp.Web && sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "Server=db,1433;Initial Catalog=master;User ID=sa;Password=YourGonnaBurnAlright1234;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" },' appsettings.json
+RUN cd Chirp.Web && sed -ie '/^{/a "ConnectionStrings": { "ConnectionString": "Server=db,1433;Initial Catalog=Chirp;User ID=sa;Password=YourGonnaBurnAlright1234;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" },' appsettings.json
 
 # Restores the dependencies, builds the project and deletes the source code
 RUN cd Chirp.Web && dotnet restore 
