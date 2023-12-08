@@ -28,7 +28,8 @@ WORKDIR /app/build
 
 COPY --from=build-env /app .
 
-ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
+#ENTRYPOINT ["dotnet", "Chirp.Web.dll"]
+CMD chmod +x ./entrypoint.sh && ./entrypoint.sh
 
 EXPOSE 5273/tcp
 
