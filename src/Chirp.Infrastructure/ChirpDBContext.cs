@@ -11,7 +11,6 @@ public class ChirpDBContext : DbContext
     public DbSet<Author> Authors { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Follows> Follows { get; set; }
-
     public DbSet<Reaction> Reactions { get; set; }
     // public string DbPath { get; }
 

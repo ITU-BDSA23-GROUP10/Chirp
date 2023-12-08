@@ -26,6 +26,7 @@ public class UserTimelineModel : PageModel
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IUserRepository<User> _userService;
     readonly IReactionRepository<Reaction> _reactionService;
+    readonly IFollowsRepository<Follows> _followsService;
 
     //TODO: Figure out why 2 extra pages are added to the pagination
     private readonly int excessiveCheepsCount = 32*2;
@@ -35,12 +36,13 @@ public class UserTimelineModel : PageModel
 
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
 
-    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService)
+    public UserTimelineModel(ICheepRepository<Cheep, Author> cheepService, IAuthorRepository<Author, Cheep, User> authorService, IUserRepository<User> userService, IReactionRepository<Reaction> reactionService, IFollowsRepository<Follows> followsService)
     {
         _authorService = authorService;
         _cheepService = cheepService;
         _userService = userService;
         _reactionService = reactionService;
+        _followsService = followsService;
     }
 
     public async Task<IActionResult> OnPost()
@@ -123,7 +125,7 @@ public class UserTimelineModel : PageModel
 
             var followDTO = new FollowDTO(followerId, followingId);
             
-            await _userService.FollowUser(followDTO);
+            await _followsService.FollowUser(followDTO);
 
             return Redirect("/" + LoggedInUserName);
         }
@@ -146,7 +148,7 @@ public class UserTimelineModel : PageModel
 
         var unfollowDTO = new FollowDTO(followerId, followingId);
             
-        await _userService.UnfollowUser(unfollowDTO);
+        await _followsService.UnfollowUser(unfollowDTO);
 
         return Redirect("/" + userName);
         }    
@@ -154,7 +156,7 @@ public class UserTimelineModel : PageModel
 
     public async Task<bool> CheckIfFollowed(int userId, int authorId)
     {
-        return await _userService.IsFollowing(userId, authorId);
+        return await _followsService.IsFollowing(userId, authorId);
     }
 
     public async Task<int> FindUserIDByName(string userName)
@@ -188,7 +190,7 @@ public class UserTimelineModel : PageModel
                 ViewData["UserExists"] = "false";
             }
             
-            List<int> FollowedUsers = await _userService.GetFollowedUsersId(userId);
+            List<int> FollowedUsers = await _followsService.GetFollowedUsersId(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
             int followedUsersCheepsCount = 0;

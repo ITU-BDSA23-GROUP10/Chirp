@@ -48,7 +48,7 @@ jobs:
 
     - name: Apply EF migrations
       run: |
-        # the --output tsv is just formatting (tab-seperated values), json is the default (might change this to json?)
+        # the --output tsv is just formatting (tab-seperated values), json is the default)
         # the az command gets the password and other details directly from azure
         # --query "[0].value" --output tsv
         CONNECTION_STRING=$(az webapp config connection-string list --name $WEB_APP_NAME --resource-group $RESOURCE_GROUP --query "[0].value" --output tsv)
