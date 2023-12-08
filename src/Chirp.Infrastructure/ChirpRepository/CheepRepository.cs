@@ -33,6 +33,11 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         await context.SaveChangesAsync();
     }
 
+    public async Task Delete(int cheepId)
+    {
+        Delete(GetById(cheepId).Result);
+    }
+
     public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
     {
         return DbSet.Where(predicate);
