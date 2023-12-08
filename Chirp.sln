@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E682EB13-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Razor.Tests", "test\Chirp.Razor.Tests\Chirp.Razor.Tests.csproj", "{C8FDAE3C-866F-4219-8689-686902746D6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightTests", "test\PlaywrightTests\PlaywrightTests.csproj", "{E194BE6D-E098-4948-B95E-707A325836E9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChirpDatabase.Tests", "test\ChirpDatabase.Tests\ChirpDatabase.Tests.csproj", "{70614F8D-C988-486D-B8D4-EF1397404157}"
 EndProject
 Global
