@@ -2,12 +2,11 @@
 version: '3.4'
 services:
   db:
-    command: 
-      run: env MSSQL_SA_PASSWORD=cat /msql/msql_password.txt
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       Windows_Authentication: "false"
-      #MSSQL_SA_PASSWORD: "YourGonnaBurnAlright1234"
+      # If you already have a password for another MSQL server image, you can set it here
+      MSSQL_SA_PASSWORD: "YourGonnaBurnAlright1234"
       ACCEPT_EULA: "Y"
     ports:
       - '1433:1433'

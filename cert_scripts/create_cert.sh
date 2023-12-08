@@ -17,21 +17,6 @@ fi
 touch .gitignore
 echo "*" >> .gitignore
 
-# Creates a password file
-if test -f ./cert_password.txt 
-then
-    rm ./cert_password.txt
-fi
-
-# Inspired by this: https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
-touch ./cert_password.txt
-if [ -z "$pss" ]
-then
-    echo "YourGonnaBurnAlright123456" >> ./cert_password.txt
-else
-    echo "$pss" >> ./cert_password.txt
-fi
-
 # Removes the cert.pfx file if it exists
 if test -f ./cert.pfx 
 then
