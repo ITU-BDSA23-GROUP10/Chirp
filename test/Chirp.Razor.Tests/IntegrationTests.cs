@@ -261,8 +261,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
                 if(creatingAuthor != null)
                 {
                     await ar.CreateAuthor(creatingAuthor);
-                }
-                
+                }  
             }
             catch
             {
