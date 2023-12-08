@@ -137,7 +137,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
     }
 
     public async Task<List<Reaction>> GetReactionByUsersId(int userid)
-    {
+    {   
         var usersReaction = await SearchFor(_react => _react.userId == userid).ToListAsync();
 
         return usersReaction;
