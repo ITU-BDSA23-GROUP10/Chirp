@@ -87,16 +87,16 @@
                                     {   
                                         if(isFollowing)
                                         {
-                                            <form asp-page-handler="Unfollow" method="post" class="unfollowForm">
+                                            <form asp-page-handler="Unfollow" method="post" data-author="@cheep.Author" class="unfollowForm">
                                                 <input type="hidden" name="Author" value="@cheep.Author"/>
-                                                <button type="submit" class="flwbtn unfollow"> Unfollow </button>
+                                                <button type="submit" class="flwbtn unfollow" data-author="@cheep.Author"> Unfollow </button>
                                             </form>
                                         }
                                         else
                                         {
-                                            <form asp-page-handler="Follow" method="post" class="followForm">
+                                            <form asp-page-handler="Follow" method="post" data-author="@cheep.Author" class="followForm">
                                                 <input type="hidden" name="author" value="@cheep.Author"/>
-                                                <button type="submit" class="flwbtn follow"> Follow </button>
+                                                <button type="submit" class="flwbtn follow" data-author="@cheep.Author"> Follow </button>
                                             </form>
                                         }
                                     }
@@ -134,13 +134,14 @@
 
 @section scripts {
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $(".followForm, .unfollowForm").on('submit', function(e) {
         e.preventDefault();
         let form = $(this);
         let url = form.attr('action');
         let button = form.find('button');
-        
+        let author = form.data('author'); // Get the author related to this form
+
         $.ajax({
             type: "POST",
             url: url,
@@ -151,24 +152,24 @@
                     let newAction = button.hasClass('follow') ? 'Unfollow' : 'Follow';
                     let newClass = button.hasClass('follow') ? 'unfollow' : 'follow';
                     let newHandler = button.hasClass('follow') ? 'Unfollow' : 'Follow';
-                    button.text(newAction);
-                    button.removeClass('follow unfollow').addClass(newClass);
-                    
-                    // Update form's asp-page-handler attribute
-                    form.attr('asp-page-handler', newHandler);
 
-                    // Update form's class
-                    form.removeClass('followForm unfollowForm').addClass(newClass + 'Form');
+                    // Target all forms and buttons related to the author
+                    $('.followForm[data-author="' + author + '"], .unfollowForm[data-author="' + author + '"]').each(function() {
+                        let thisForm = $(this);
+                        let thisButton = thisForm.find('button');
 
-                    // Update form's action attribute
-                    form.attr('action', '/?handler=' + newHandler);
+                        thisButton.text(newAction);
+                        thisButton.removeClass('follow unfollow').addClass(newClass);
+                        thisForm.attr('asp-page-handler', newHandler);
+                        thisForm.removeClass('followForm unfollowForm').addClass(newClass + 'Form');
+                        thisForm.attr('action', '/?handler=' + newHandler);
+                    });
                 }
             },
             error: function(error) {
                 console.log('Error:', error);
             }
         });
-
         return false;  // prevent form from submitting normally
     });
 });
