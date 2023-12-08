@@ -250,7 +250,19 @@ public class PublicModel : PageModel
 
         await _reactionService.ReactToCheep(newreact);
 
-        return Redirect("/" + User.Identity.Name);
+        // return Redirect("/" + User.Identity.Name);
+        // Retrieve new counts for frontend ajax buttons
+        int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
+        int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
+
+        // return counts with the response
+        return new JsonResult(
+            new
+            {
+                success = true,
+                upVoteCount = upvoteCount,
+                downVoteCount = downvoteCount
+            });
     } 
 
     //hashtags
