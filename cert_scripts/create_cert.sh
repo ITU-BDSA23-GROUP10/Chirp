@@ -1,7 +1,6 @@
 #!/bin/bash
 # This file was partly inspired by what Albert Rise Nielsen : https://github.com/albe2669 had shown me with their own script
 # This script is used to create a certificate for the server
-pss=$1
 
 mkdir ../.local
 
