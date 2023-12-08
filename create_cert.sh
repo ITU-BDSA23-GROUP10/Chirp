@@ -24,12 +24,12 @@ then
 fi
 
 # Inspired by this: https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
-touch ./cer_password.txt
-if [ -z "$pss+x" ]
+touch ./cert_password.txt
+if [ -z "$pss" ]
 then
-    echo "$pss" >> ./cer_password.txt
+    echo "YourGonnaBurnAlright123456" >> ./cert_password.txt
 else
-    echo "YourGonnaBurnAlright123456" >> ./cer_password.txt
+    echo "$pss" >> ./cert_password.txt
 fi
 
 # Removes the cert.pfx file if it exists
