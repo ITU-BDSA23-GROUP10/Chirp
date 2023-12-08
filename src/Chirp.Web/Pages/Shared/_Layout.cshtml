@@ -55,7 +55,7 @@
 </div>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-@RenderSection("scripts", required: false)
-<script src="/js/script.js"></script>
+    <!-- this is to make the AJAX scripts work in UserTimeline.cshtml and Public.cshtml-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @RenderSection("scripts", required: false)
 </html>
