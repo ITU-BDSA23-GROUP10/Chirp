@@ -330,3 +330,13 @@ a {
 .pagination {
   display: block;
 }
+
+.delete-cheep{
+  background-color: #53110c;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 25px;
+  border: none;
+  margin-top: 10px;
+  margin-left: 100px;
+}
