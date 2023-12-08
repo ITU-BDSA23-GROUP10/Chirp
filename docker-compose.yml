@@ -26,5 +26,5 @@ services:
       - "5273:5273"
     volumes:
       - './.local:/https/'
-      - 'cert_scripts:/cert_scripts'
+      - './cert_scripts:/cert_scripts'
     
