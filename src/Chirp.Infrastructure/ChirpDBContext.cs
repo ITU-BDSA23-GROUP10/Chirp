@@ -31,13 +31,16 @@ public class ChirpDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Cheeps
-        modelBuilder.Entity<Cheep>( cheep =>
+        modelBuilder.Entity<Cheep>(cheep =>
         {
             cheep.Property(ch => ch.CheepId).ValueGeneratedOnAdd();
             cheep.HasKey(ch => ch.CheepId);
             cheep.Property(ch => ch.Text).HasMaxLength(160);
+            cheep.HasOne(ch => ch.Author)
+                .WithMany(au => au.Cheeps)
+                .HasForeignKey(ch => ch.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
-
         // Users
         modelBuilder.Entity<User>( user =>
         {

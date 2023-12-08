@@ -9,6 +9,8 @@ public interface IAuthorRepository<Author, Cheep, User>
 {
     Task Insert(Author entity);
     Task Delete(Author entity);
+    Task Reload(Author entity);
+    Task Reload(int authorId);
     IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
     Task<Author> GetAuthorWithCheeps(string authorName);
     Task<int> GetCheepsCountsFromAuthorId(int id);
