@@ -10,10 +10,15 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 The project is fully dockerized as can be seen by the Dockerfile and docker-compose.yml file in the main Chirp directory
 To run the project with docker you must first download docker and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)
 
-After installing docker you can run the bash script found in Chirp called create_cert.sh or run the dotnet dev-cert commands found in there making sure to put the cert inside a folder called .local in Chirp
+After installing docker you can run the bash script (and an equivalent powershell script with the .ps1 extension) found in Chirp called create_cert.sh or run the dotnet dev-cert commands found in there making sure to put the cert inside a folder called .local in Chirp
 
 To run the bash file you can simply do this in a terminal from the Chirp folder
 $ chmod +x create_cert.sh && ./create_cert
+
+To run the powershell script you can run (if you have problems with execution policies use the command below the first one ): 
+$ PowerShell.exe -File create_cert.ps1 
+USE ONLY IF YOU HAVE POLICY ISSUES:
+$ PowerShell.exe -File create_cert.ps1 -ExecutionPolicy Bypass
 
 After doing this you can run the program using docker compose up in your terminal from the Chirp folder. This will boot the database and program at the same time
 If you are on an OS that allows you to --trust the cert then you should be able to connect to the application using https://localhost:5273 if you are not on an OS that allows for this (sadly most linux distros seem to not be allowed to do this) you have to either create a trusted cert file on an OS that allows for it or make an exception in your browser when first opening the site. Most browsers will warn you when entering the site. You can click the advanced button and then accept on firefox for example. This will be remembered for future use so you only have to do this once.
