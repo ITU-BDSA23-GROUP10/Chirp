@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
-using System.Diagnostics.Contracts;
-using NuGet.Protocol;
 
 namespace ChirpIntegraiton.Tests;
 
