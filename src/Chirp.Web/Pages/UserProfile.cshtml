@@ -134,6 +134,13 @@
                                     <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
                                     <small>&mdash; @cheep.Timestamp</small>
                                     <p>@cheep.Message</p>
+
+                                    <div class="flex-it">
+                                        <form asp-page-handler="Delete" method="post">
+                                            <input type="hidden" name="Id" value="@cheep.id"/>
+                                            <button class="delete">Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                                     
                         </li>
