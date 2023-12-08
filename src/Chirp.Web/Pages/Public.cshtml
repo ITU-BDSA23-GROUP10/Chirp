@@ -102,15 +102,15 @@
                                     }
 
                                     // reaction
-                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id" class="vote-btn">
                                         <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
                                         <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
-                                        <button class="votebtn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
+                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
                                     </form>
-                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id" class="vote-btn">
                                         <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
                                         <input type="hidden" name="NewReaction.Reaction" value="Downvote" data-id="@cheep.id"/>
-                                        <button class="votebtn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>
+                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>
                                     </form>
                                 }
                                 else
@@ -177,7 +177,7 @@ $(document).ready(function() {
 });
 //upvote and downvote
 $(document).ready(function() {
-    $("form").on('submit', function(e) {
+    $(".vote-btn").on('submit', function(e) {
         e.preventDefault();
         let form = $(this);
         let url = form.attr('action');
