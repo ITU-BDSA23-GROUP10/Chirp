@@ -136,8 +136,8 @@
                                     <p>@cheep.Message</p>
                                 </div>
                                 <div>
-                                    <form asp-page-handler="Delete" method="post">
-                                        <input type="hidden" name="Id" value="@cheep.id"/>
+                                    <form asp-page-handler="DeleteCheep" method="post">
+                                        <input type="hidden" name="CheepId" value="@cheep.id"/>
                                         <button class="delete-cheep">Delete</button>
                                     </form>
                                 </div>
