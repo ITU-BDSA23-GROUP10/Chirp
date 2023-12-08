@@ -259,8 +259,8 @@ li.topic {
   font-weight: 500;
   border: none;
 }
-.votebtnn{
-  background: #ddd;
+div.page ul.cheeps p.votebtnn{
+  background: #f0f0f0;
   border-radius: 25px;
   margin-right:5px;
   padding:4px 12px;
