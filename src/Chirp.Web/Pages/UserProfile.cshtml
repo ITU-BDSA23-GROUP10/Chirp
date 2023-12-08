@@ -24,28 +24,28 @@
                 <p> Email: @ViewData["UserEmail"]</p> 
                 <h4> Update your email:</h4>
 
-                @if((ViewData["EmailError"] as string) == "formatting") //(ViewData["EmailError"] == "formatting")
+                @if((ViewData["EmailError"] as string) == "formatting")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email formatting is incorrect
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "duplicate") //(ViewData["EmailError"] == "duplicate")
+                else if((ViewData["EmailError"] as string) == "duplicate")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email already exists
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "success")//(ViewData["EmailError"] == "success")
+                else if((ViewData["EmailError"] as string) == "success")
                 {
                     <div class="alert alert-success" role="alert">
                         Email successfully updated
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "error")//(ViewData["EmailError"] == "error")
+                else if((ViewData["EmailError"] as string) == "error")
                 {
                     <div class="alert alert-danger" role="alert">
                         Error updating email
@@ -59,28 +59,28 @@
             }
             else
             {  
-                @if((ViewData["EmailError"] as string) == "formatting")//(ViewData["EmailError"] == "formatting")
+                @if((ViewData["EmailError"] as string) == "formatting")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email formatting is incorrect
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "duplicate")// (ViewData["EmailError"] == "duplicate")
+                else if((ViewData["EmailError"] as string) == "duplicate")
                 {
                     <div class="alert alert-warning" role="alert">
                         Email already exists
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "success")//(ViewData["EmailError"] == "success")
+                else if((ViewData["EmailError"] as string) == "success")
                 {
                     <div class="alert alert-success" role="alert">
                         Email successfully updated
                     </div>
                     ViewData["EmailError"] = null;
                 }
-                else if((ViewData["EmailError"] as string) == "error")//(ViewData["EmailError"] == "error")
+                else if((ViewData["EmailError"] as string) == "error")
                 {
                     <div class="alert alert-danger" role="alert">
                         Error updating email
