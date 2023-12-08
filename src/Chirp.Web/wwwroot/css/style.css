@@ -317,6 +317,13 @@ a.hashtag{
   align-items: baseline;
   margin-top: 8px;
 }
+/*user profile page*/
+.pad12 {
+  padding:12px;
+}
+.gray-bg{
+  background:#f7f7f7;
+}
 /*bootstrap remnants*/
 :root {
     --bs-success-text-emphasis: #0a3622;

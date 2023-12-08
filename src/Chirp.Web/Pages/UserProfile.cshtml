@@ -17,7 +17,7 @@
     {
         
     <h2> @User.Identity.Name's profile </h2>
-        <div class="profile-user">
+        <div class="profile-user pad12 gray-bg">
             <p> Username: @User.Identity.Name</p>
             @if(ViewData["UserEmail"] != null) {
 
@@ -95,21 +95,21 @@
             }
         </div>
 
-        <div class="profile-download">
+        <div class="profile-download pad12">
             <h4> Download user data: </h4>
             <form asp-page-handler="DownloadData" method="post"> 
                 <button class="dwnlbttn download"> Download Data </button>
             </form>
         </div>
 
-        <div class="profile-delete"> 
+        <div class="profile-delete pad12"> 
             <h4> Delete user data: </h4>
             <form asp-page-handler="ForgetMe" method="post">
                 <input type="hidden" name="User" value="@User.Identity.Name"/>
                 <button class="frgtbttn forgetme"> Forget Me </button>
             </form>
         </div>
-        <div class="profile-follow">
+        <div class="profile-follow pad12">
             <h4>Following: </h4>
             @foreach (var UserFollow in Model.following)
             {
@@ -120,7 +120,7 @@
                 </ul>
             }
         </div>
-        <div class="profile-cheeps">
+        <div class="profile-cheeps pad12">
             <h4>@User.Identity.Name's Cheeps:</h4>
             @if (Model.cheeps?.Any() == true)
             {
