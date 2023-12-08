@@ -13,7 +13,7 @@ fi
 
 cd ..
 
-env ASPNETCORE_Kestrel__Certificates__Default__Password=$pass
+env =$pass
 
 exec dotnet Chirp.Web.dll
 

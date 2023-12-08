@@ -2,15 +2,19 @@
 version: '3.4'
 services:
   db:
+    command: 
+      run: env MSSQL_SA_PASSWORD=cat /msql/msql_password.txt
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       Windows_Authentication: "false"
-      MSSQL_SA_PASSWORD: "YourGonnaBurnAlright1234"
+      #MSSQL_SA_PASSWORD: "YourGonnaBurnAlright1234"
       ACCEPT_EULA: "Y"
     ports:
       - '1433:1433'
     expose: 
       - '1433'
+    volumes:
+      - './.local:/msql'
   # And the Kestral certificate stuff was a helpful effort from Albert Rise Nielsen : https://github.com/albe2669
   dotnet:
     depends_on: 
@@ -19,12 +23,11 @@ services:
     environment: 
       ASPNETCORE_URLS: https://+:5273;http://+:7102
       ASPNETCORE_HTTPS_PORT: 5273
-      ASPNETCORE_Kestrel__Certificates__Default__Password_FILE: /https/cert_password.txt
+      ASPNETCORE_Kestrel__Certificates__Default__Password_FILE: YourGonnaBurnAlright123456
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/cert.pfx
     ports:
       - "7102:7102"
       - "5273:5273"
     volumes:
       - './.local:/https/'
-      - './cert_scripts:/cert_scripts'
     
