@@ -331,12 +331,20 @@ a {
   display: block;
 }
 
-.delete-cheep{
-  background-color: #53110c;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 25px;
-  border: none;
-  margin-top: 10px;
-  margin-left: 100px;
+div.page ul.cheeps p {
+margin: 0;
+padding: 5px 0;
+word-break: break-all;
+}
+
+.delete-cheep {
+background-color: #53110c;
+color: white;
+padding: 4px 8px;
+border-radius: 25px;
+border: none;
+}
+
+.profile-page .activity div:last-child {
+margin-left: auto;
 }
