@@ -6,10 +6,14 @@ body {
 
 a {
   color: #26776F;
+  text-decoration: none;
 }
 
 a:hover {
   color: #333;
+}
+button {
+  cursor:pointer;
 }
 
 input[type="text"],
@@ -36,6 +40,11 @@ input[type="submit"] {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   color: white;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
 div.page {
@@ -290,6 +299,8 @@ a.hashtag{
   font-size: 14px;
   border-radius: 25px;
   color: #222;
+  margin-bottom: 10px;
+  display: inline-block;
 }
 .share-cheep{
   display: flex;
@@ -300,36 +311,19 @@ a.hashtag{
   width: 100%;
   border: none;
   margin-top:10px;
+  padding: 5px;
 }
 .flex-it{
   display: flex;
   align-items: baseline;
   margin-top: 8px;
 }
-/*bootstrap annoyances corrected*/
-.profile-page h4{
-  margin-block-start: 0;
-  margin-block-end: 0;
-  font-size: 1.4em;
+/*user profile page*/
+.pad12 {
+  padding:12px;
 }
-
-.profile-user,
-.profile-download,
-.profile-delete,
-.profile-follow,
-.profile-cheeps{
-  margin-top: 20px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-a {
-  text-decoration: none;
-}
-.pagination {
-  display: block;
+.gray-bg{
+  background:#f7f7f7;
 }
 
 .delete-cheep {
@@ -342,4 +336,43 @@ border: none;
 
 .profile-page .activity div:last-child {
 margin-left: auto;
+}
+
+/*bootstrap remnants*/
+:root {
+    --bs-success-text-emphasis: #0a3622;
+    --bs-warning-text-emphasis: #664d03;
+    --bs-danger-text-emphasis: #58151c;
+    --bs-success-bg-subtle: #d1e7dd;
+    --bs-danger-bg-subtle: #ff9f9f;
+    --bs-warning-bg-subtle:#f0ad4e;
+}
+
+.alert {
+  --bs-alert-bg: transparent;
+  --bs-alert-padding-x: 1rem;
+  --bs-alert-padding-y: 1rem;
+  --bs-alert-margin-bottom: 1rem;
+  --bs-alert-color: inherit;
+  --bs-alert-link-color: inherit;
+  position: relative;
+  padding: var(--bs-alert-padding-y) var(--bs-alert-padding-x);
+  margin-bottom: var(--bs-alert-margin-bottom);
+  color: var(--bs-alert-color);
+  background-color: var(--bs-alert-bg);
+}
+.alert-success {
+  --bs-alert-color: var(--bs-success-text-emphasis);
+  --bs-alert-bg: var(--bs-success-bg-subtle);
+  --bs-alert-link-color: var(--bs-success-text-emphasis);
+}
+.alert-warning {
+  --bs-alert-color: var(--bs-warning-text-emphasis);
+  --bs-alert-bg: var(--bs-warning-bg-subtle);
+  --bs-alert-link-color: var(--bs-warning-text-emphasis);
+}
+.alert-danger {
+  --bs-alert-color: var(--bs-danger-text-emphasis);
+  --bs-alert-bg: var(--bs-danger-bg-subtle);
+  --bs-alert-link-color: var(--bs-danger-text-emphasis);
 }
