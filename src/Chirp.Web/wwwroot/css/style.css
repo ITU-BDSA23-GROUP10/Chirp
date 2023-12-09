@@ -122,7 +122,8 @@ div.page ul.cheeps li a {
 div.page ul.cheeps p {
   margin: 0;
   padding: 5px 0;
-}
+  word-break: break-all;
+  }
 
 div.page ul.cheeps li img {
   margin-right:15px;
@@ -329,12 +330,6 @@ a {
 }
 .pagination {
   display: block;
-}
-
-div.page ul.cheeps p {
-margin: 0;
-padding: 5px 0;
-word-break: break-all;
 }
 
 .delete-cheep {
