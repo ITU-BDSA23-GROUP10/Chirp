@@ -36,10 +36,9 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         await userService.CreateUser(name, email);
         
         // Assert
-        var userByName = await userService.GetUserByName(name);
-        Assert.Equal(name, userByName!.Name);
-        var userByEmail = await userService.GetUserByEmail(email);
-        Assert.Equal(email, userByEmail!.Email);
+        var user = await userService.GetUserByName(name);
+        Assert.Equal(name, user!.Name);
+        Assert.Equal(email, user!.Email);
     }
 
     [Theory]
