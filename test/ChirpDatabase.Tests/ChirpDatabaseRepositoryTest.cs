@@ -4,9 +4,8 @@ using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
-using Chirp.Infrastructure.Models;
 
-namespace ChirpIntegraiton.Tests;
+namespace ChirpDatabase.Tests;
 
 public class ChirpDatabaseRepositoryTest : IAsyncLifetime
 {
