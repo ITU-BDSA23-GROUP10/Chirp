@@ -58,6 +58,7 @@ public class ChirpDBContext : DbContext
             // code from https://stackoverflow.com/a/2912896
             follows.HasKey(_follow => new { _follow.FollowerId, _follow.FollowingId });
             follows.HasIndex(_follow => new { _follow.FollowerId, _follow.FollowingId }).IsUnique();
+        });
 
         // Authors
         modelBuilder.Entity<Author>( author =>
@@ -79,5 +80,5 @@ public class ChirpDBContext : DbContext
             reactions.HasKey(_react => new {_react.cheepId, _react.userId});
             reactions.HasIndex(_react => new {_react.cheepId, _react.userId}).IsUnique();
         });
-    });
-}}
+    }
+}
