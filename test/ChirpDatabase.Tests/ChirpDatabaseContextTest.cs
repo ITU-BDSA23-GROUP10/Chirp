@@ -7,19 +7,12 @@ using Chirp.Infrastructure.Models;
 
 namespace ChirpDatabase.Tests;
 
-public class ChripDatabaseContextTest : IAsyncLifetime
+public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 {
-    private readonly MsSqlContainer _sqlServer = new MsSqlBuilder()
-        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-        .Build();
-
-    public Task InitializeAsync()
+    private DatabaseFixture fixture;
+    public ChripDatabaseContextTest(DatabaseFixture _fixture)
     {
-        return _sqlServer.StartAsync();
-    }
-    public Task DisposeAsync()
-    {
-        return _sqlServer.DisposeAsync().AsTask();
+        fixture = _fixture;
     }
 
     private static ChirpDBContext SetupContext(string ConnectionString)
@@ -33,7 +26,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         return context;
     }
 
-
     // Users tests
     [Theory]
     [InlineData("Cowboy", "WeeellHeeell@Yeehaw.com")]
@@ -41,7 +33,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateUser(string username, string? email)
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         // Act
         var user = new User()
@@ -63,7 +55,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateInvalidUser_ThrowsException(string name, string email)
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         // Act
         var normalUser = new User()
@@ -91,7 +83,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateAuthor()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         var username = "Jackson";
         
@@ -122,7 +114,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateCheep()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         var username = "Jackson";
 
@@ -159,7 +151,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateInvalidCheep_ThrowsException()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         var username = "Jackson";
 
@@ -196,7 +188,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateFollow()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         // Act
         var user1 = new User()
@@ -231,7 +223,7 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     public async void CreateReaction()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        var context = SetupContext(fixture.ConnectionString);
 
         var username = "Jackson";
 
