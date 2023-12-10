@@ -154,4 +154,39 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         var DBcheep = await context.Cheeps.Where(_cheep => _cheep.Text == "Cheep message").FirstOrDefaultAsync();
         Assert.NotNull(DBcheep);
     }
+
+    [Fact]
+    public async void CreateInvalidCheep_ThrowsException()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var username = "Jackson";
+
+        // Act
+        var user = new User()
+        {
+            Name = username,
+            Email = null,
+        };
+        context.Users.Add(user);
+
+        var author = new Author()
+        {
+            User = user,
+            Cheeps = new List<Cheep>(),
+        };
+        context.Authors.Add(author);
+
+        var cheep = new Cheep()
+        {
+            Author = author,
+            Text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,",
+            TimeStamp = DateTime.Now,
+        };
+        context.Cheeps.Add(cheep);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+    }
 }
