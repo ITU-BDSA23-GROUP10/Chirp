@@ -16,7 +16,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
     private readonly IReactionRepository<Reaction> reactionService;
     public ChirpDatabaseRepositoryTest(DatabaseFixture _fixture)
     {
-        var context = SetupContext(_fixture.ConnectionString);
+        var context = _fixture.GetContext();
         userService = new UserRepository(context);
         authorService = new AuthorRepository(context);
         cheepService = new CheepRepository(context);

@@ -8,20 +8,10 @@ namespace ChirpDatabase.Tests;
 public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 {
     private readonly ChirpDBContext context;
+
     public ChripDatabaseContextTest(DatabaseFixture _fixture)
     {
-        context = SetupContext(_fixture.ConnectionString);
-    }
-
-    private static ChirpDBContext SetupContext(string ConnectionString)
-    {
-        var contextOptions = new DbContextOptionsBuilder<ChirpDBContext>()
-            .UseSqlServer(ConnectionString)
-            .Options;
-        var context = new ChirpDBContext(contextOptions);
-        context.Database.Migrate();
-
-        return context;
+        context = _fixture.GetContext();
     }
 
     // Users tests
