@@ -224,4 +224,52 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         var DBfollow = await context.Follows.Where(_follow => _follow.FollowerId == 1).FirstOrDefaultAsync();
         Assert.NotNull(DBfollow);
     }
+
+
+    // React test
+    [Fact]
+    public async void CreateReaction()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var username = "Jackson";
+
+        // Act
+        var user = new User()
+        {
+            Name = username,
+            Email = null,
+        };
+        context.Users.Add(user);
+
+        var author = new Author()
+        {
+            User = user,
+            Cheeps = new List<Cheep>(),
+        };
+        context.Authors.Add(author);
+
+        var cheep = new Cheep()
+        {
+            Author = author,
+            Text = "Cheep message",
+            TimeStamp = DateTime.Now,
+        };
+        context.Cheeps.Add(cheep);
+        await context.SaveChangesAsync();
+
+        var reaction = new Reaction()
+        {
+            cheepId = cheep.CheepId,
+            userId = user.UserId,
+            reactionType = "Upvote",
+        };
+        context.Reactions.Add(reaction);
+        await context.SaveChangesAsync();
+
+        // Assert
+        var DBreaction = await context.Reactions.Where(_reaction => _reaction.cheepId == cheep.CheepId && _reaction.userId == user.UserId).FirstOrDefaultAsync();
+        Assert.NotNull(DBreaction);
+    }
 }
