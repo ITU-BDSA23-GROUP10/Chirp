@@ -33,6 +33,8 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         return context;
     }
 
+
+    // Users tests
     [Theory]
     [InlineData("Cowboy", "WeeellHeeell@Yeehaw.com")]
     [InlineData("Jackson", null)]
@@ -81,5 +83,36 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+    }
+
+
+    // Author tests
+    [Fact]
+    public async void CreateAuthor()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var username = "Jackson";
+        
+        // Act
+        var user = new User()
+        {
+            Name = username,
+            Email = null,
+        };
+        context.Users.Add(user);
+
+        var author = new Author()
+        {
+            User = user,
+            Cheeps = new List<Cheep>(),
+        };
+        context.Authors.Add(author);
+        await context.SaveChangesAsync();
+
+        // Assert
+        var DBauthor = await context.Authors.Where(_author => _author.User.Name == username).FirstOrDefaultAsync();
+        Assert.NotNull(DBauthor);
     }
 }
