@@ -9,12 +9,10 @@ namespace ChirpDatabase.Tests;
 public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 {
     private readonly ChirpDBContext context;
-    private readonly AsyncPadlock padlock;
 
     public ChripDatabaseContextTest(DatabaseFixture _fixture)
     {
         context = _fixture.GetContext();
-        padlock = _fixture.padlock;
     }
 
     // Users tests
@@ -29,16 +27,10 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             Name = username,
             Email = email ?? null,
         };
-        try
-        {
-            await padlock.Lock();
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
 
         // Assert
         var DBuser = await context.Users.Where(_user => _user.Name == username).FirstOrDefaultAsync();
@@ -56,17 +48,12 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             Name = name,
             Email = email,
         };
-        try
-        {
-            await padlock.Lock();
-            context.Users.Add(user);
-            // Assert
-            await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+
+        context.Users.Add(user);
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+        context.Users.Remove(user);
+
     }
 
     [Theory]
@@ -86,21 +73,14 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             Email = email,
         };
 
-        try 
-        {
-            await padlock.Lock();
-            context.Users.Add(normalUser);
-            await context.SaveChangesAsync();
-            
-            context.Users.Add(user);
+        context.Users.Add(normalUser);
+        await context.SaveChangesAsync();
+        
+        context.Users.Add(user);
 
-            // Assert
-            await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+
     }
 
 
@@ -116,16 +96,9 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             User = user!,
             Cheeps = new List<Cheep>(),
         };
-        try
-        {
-            await padlock.Lock();
-            context.Authors.Add(author);
-            await context.SaveChangesAsync();
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+
+        context.Authors.Add(author);
+        await context.SaveChangesAsync();
 
         // Assert
         var DBauthor = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync();
@@ -148,17 +121,9 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             Text = message,
             TimeStamp = DateTime.Now,
         };
-
-        try
-        {
-            await padlock.Lock();
-            context.Cheeps.Add(cheep);
-            await context.SaveChangesAsync();
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+        
+        context.Cheeps.Add(cheep);
+        await context.SaveChangesAsync();
 
         // Assert
         var DBcheep = await context.Cheeps.Where(_cheep => _cheep.Text == "Cheep message").FirstOrDefaultAsync();
@@ -179,18 +144,11 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             TimeStamp = DateTime.Now,
         };
 
-        try
-        {
-            await padlock.Lock();
-            context.Cheeps.Add(cheep);
-            // Assert
-            await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
-            context.Remove(cheep);
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+        context.Cheeps.Add(cheep);
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+        context.Remove(cheep);
+
     }
 
 
@@ -205,16 +163,10 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             FollowerId = 1,
             FollowingId = 2,
         };
-        try
-        {
-            await padlock.Lock();
-            context.Follows.Add(follow);
-            await context.SaveChangesAsync();
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+
+        context.Follows.Add(follow);
+        await context.SaveChangesAsync();
+
 
         // Assert
         var DBfollow = await context.Follows.Where(_follow => _follow.FollowerId == 1).FirstOrDefaultAsync();
@@ -236,17 +188,9 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             userId = user!.UserId,
             reactionType = "Upvote",
         };
-
-        try
-        {
-            await padlock.Lock();
-            context.Reactions.Add(reaction);
-            await context.SaveChangesAsync();
-        }
-        finally
-        {
-            padlock.Dispose();
-        }
+        
+        context.Reactions.Add(reaction);
+        await context.SaveChangesAsync();
 
         // Assert
         var DBreaction = await context.Reactions.Where(_reaction => _reaction.cheepId == cheep.CheepId && _reaction.userId == user.UserId).FirstOrDefaultAsync();
