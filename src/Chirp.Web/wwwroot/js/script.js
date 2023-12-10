@@ -29,6 +29,27 @@ $(document).ready(function() {
                         thisForm.removeClass('followForm unfollowForm').addClass(newClass + 'Form');
                         thisForm.attr('action', '/?handler=' + newHandler);
                     });
+
+                    // notification
+                    // Determine action for the notification
+                    let action = button.hasClass('follow') ? "You have unfollowed" : "You have followed";
+
+                    // Set the action message and author name
+                    $('#action-message').text(action);
+                    $('#author').text(author);
+                    $('#notification').show();
+
+                    // Show/hide the follow message based on the action
+                    if(action === "You have followed") {
+                        $('#follow-message').show();
+                    } else {
+                        $('#follow-message').hide();
+                    }
+
+                    // Hide the popup after 5 seconds
+                    setTimeout(function() {
+                        $('#notification').hide();
+                    }, 7000);
                 }
             },
             error: function(error) {
