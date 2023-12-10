@@ -17,6 +17,7 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     {
         return _sqlServer.StartAsync();
     }
+
     public Task DisposeAsync()
     {
         return _sqlServer.DisposeAsync().AsTask();
@@ -32,7 +33,6 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         
         return context;
     }
-
 
     // UserRepo tests
     [Theory]
@@ -83,7 +83,6 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         var context = SetupContext(_sqlServer.GetConnectionString());
     
         var userService = new UserRepository(context);
-
         var username = "TestUser";
        
         // Act
@@ -103,6 +102,7 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
 
         var username = "TestUser";
         var email = "TestUser@testmail.co.uk";
+
         // Act
         await userService.CreateUser(username);
         await userService.UpdateUserEmail(username, email);
@@ -146,7 +146,6 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         await Assert.ThrowsAsync<Exception>(async() => await userService.CreateUser(username));
     }
     
-
     // Follows repo tests
     [Fact]
     public async void TwoUsersCanFollowEachOther()
@@ -200,7 +199,6 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         Assert.Empty(follows);
         Assert.True(!await followService.IsFollowing(1, 2));
     }
-
 
     // AuthorRepo test
     [Fact]
@@ -316,7 +314,6 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         Assert.Equal(32, cheeps.Item1.Count);
     }
 
-
     // CheepRepo tests
     [Theory]
     [InlineData("Obi-Wan", "Hello there")]
@@ -417,8 +414,4 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
         var cheeps = cheepService.GetAll();
         Assert.Equal(0, cheeps.Item2);
     }
-
-
-    // ReactionRepo tests
-
 }

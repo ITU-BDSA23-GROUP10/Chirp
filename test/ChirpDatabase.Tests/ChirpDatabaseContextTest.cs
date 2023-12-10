@@ -33,7 +33,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         return context;
     }
 
-
     // Users tests
     [Theory]
     [InlineData("Cowboy", "WeeellHeeell@Yeehaw.com")]
@@ -85,7 +84,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
     }
 
-
     // Author tests
     [Fact]
     public async void CreateAuthor()
@@ -115,7 +113,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         var DBauthor = await context.Authors.Where(_author => _author.User.Name == username).FirstOrDefaultAsync();
         Assert.NotNull(DBauthor);
     }
-
 
     // Cheep tests
     [Fact]
@@ -190,7 +187,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
     }
 
-
     // Follow tests
     [Fact]
     public async void CreateFollow()
@@ -224,7 +220,6 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         var DBfollow = await context.Follows.Where(_follow => _follow.FollowerId == 1).FirstOrDefaultAsync();
         Assert.NotNull(DBfollow);
     }
-
 
     // React test
     [Fact]
