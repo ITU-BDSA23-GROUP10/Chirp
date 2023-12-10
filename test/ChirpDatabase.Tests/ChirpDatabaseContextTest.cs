@@ -115,4 +115,43 @@ public class ChripDatabaseContextTest : IAsyncLifetime
         var DBauthor = await context.Authors.Where(_author => _author.User.Name == username).FirstOrDefaultAsync();
         Assert.NotNull(DBauthor);
     }
+
+
+    // Cheep tests
+    [Fact]
+    public async void CreateCheep()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        var username = "Jackson";
+
+        // Act
+        var user = new User()
+        {
+            Name = username,
+            Email = null,
+        };
+        context.Users.Add(user);
+
+        var author = new Author()
+        {
+            User = user,
+            Cheeps = new List<Cheep>(),
+        };
+        context.Authors.Add(author);
+
+        var cheep = new Cheep()
+        {
+            Author = author,
+            Text = "Cheep message",
+            TimeStamp = DateTime.Now,
+        };
+        context.Cheeps.Add(cheep);
+        await context.SaveChangesAsync();
+
+        // Assert
+        var DBcheep = await context.Cheeps.Where(_cheep => _cheep.Text == "Cheep message").FirstOrDefaultAsync();
+        Assert.NotNull(DBcheep);
+    }
 }
