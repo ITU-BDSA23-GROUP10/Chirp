@@ -10,6 +10,7 @@ namespace ChirpDatabase.Tests;
 public class DatabaseFixture : IAsyncLifetime
 {
     private ChirpDBContext? Context;
+    public readonly AsyncPadlock padlock = new();
     private readonly MsSqlContainer _sqlServer = new MsSqlBuilder()
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
         .Build();

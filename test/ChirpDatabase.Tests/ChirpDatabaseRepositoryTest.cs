@@ -5,6 +5,7 @@ using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Chirp.Web;
 
 namespace ChirpDatabase.Tests;
 
@@ -16,6 +17,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
     private readonly ICheepRepository<Cheep, Author> cheepService;
     private readonly IFollowsRepository<Follows> followService;
     private readonly IReactionRepository<Reaction> reactionService;
+    private readonly AsyncPadlock padlock;
     public ChirpDatabaseRepositoryTest(DatabaseFixture _fixture)
     {
         var context = _fixture.GetContext();
@@ -24,6 +26,8 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         cheepService = new CheepRepository(context);
         followService = new FollowsRepository(context);
         reactionService = new ReactionRepository(context);
+
+        padlock = _fixture.padlock;
     }
 
     // UserRepo tests
@@ -232,18 +236,25 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
     public async void Create100CheepsWith100DifferentAuthors_ReadMostResent32()
     {
         // Act
-        for (int i = 0; i < 100; i++)
+        try {
+            await padlock.Lock();
+            for (int i = 0; i < 100; i++)
+            {
+                var authorName = "Test author " + i;
+                await userService.CreateUser(authorName);
+
+                var user = await userService.GetUserByName(authorName);
+                await authorService.CreateAuthor(user!);
+
+                var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
+                var author =  await authorService.GetAuthorByName(authorName);
+                
+                await cheepService.CreateCheep(cheep, author!);
+            }
+        }
+        finally
         {
-            var authorName = "Test author " + i;
-            await userService.CreateUser(authorName);
-
-            var user = await userService.GetUserByName(authorName);
-            await authorService.CreateAuthor(user!);
-
-            var cheep = new CheepCreateDTO("Test message for author " + i, authorName);
-            var author =  await authorService.GetAuthorByName(authorName);
-            
-            await cheepService.CreateCheep(cheep, author!);
+            padlock.Dispose();
         }
 
         // Assert
