@@ -191,5 +191,37 @@ public class ChripDatabaseContextTest : IAsyncLifetime
     }
 
 
-    // 
+    // Follow tests
+    [Fact]
+    public async void CreateFollow()
+    {
+        // Arrange
+        var context = SetupContext(_sqlServer.GetConnectionString());
+
+        // Act
+        var user1 = new User()
+        {
+            Name = "User1",
+            Email = null,
+        };
+        context.Users.Add(user1);
+        var user2 = new User()
+        {
+            Name = "User2",
+            Email = null,
+        };
+        context.Users.Add(user2);
+
+        var follow = new Follows()
+        {
+            FollowerId = 1,
+            FollowingId = 2,
+        };
+        context.Follows.Add(follow);
+        await context.SaveChangesAsync();
+
+        // Assert
+        var DBfollow = await context.Follows.Where(_follow => _follow.FollowerId == 1).FirstOrDefaultAsync();
+        Assert.NotNull(DBfollow);
+    }
 }
