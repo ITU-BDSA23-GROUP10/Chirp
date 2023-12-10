@@ -1,25 +1,27 @@
 using Testcontainers.MsSql;
-using Bogus;
 using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
+using Chirp.Infrastructure.Models;
 
 namespace ChirpDatabase.Tests;
 
-public class ChirpDatabaseRepositoryTest : IAsyncLifetime
+public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
 {
-    private readonly MsSqlContainer _sqlServer = new MsSqlBuilder()
-        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-        .Build();
-
-    public Task InitializeAsync()
+    private readonly IUserRepository<User> userService;
+    private readonly IAuthorRepository<Author, Cheep, User> authorService;
+    private readonly ICheepRepository<Cheep, Author> cheepService;
+    private readonly IFollowsRepository<Follows> followService;
+    private readonly IReactionRepository<Reaction> reactionService;
+    public ChirpDatabaseRepositoryTest(DatabaseFixture _fixture)
     {
-        return _sqlServer.StartAsync();
-    }
-    public Task DisposeAsync()
-    {
-        return _sqlServer.DisposeAsync().AsTask();
+        var context = SetupContext(_fixture.ConnectionString);
+        userService = new UserRepository(context);
+        authorService = new AuthorRepository(context);
+        cheepService = new CheepRepository(context);
+        followService = new FollowsRepository(context);
+        reactionService = new ReactionRepository(context);
     }
 
     private static ChirpDBContext SetupContext(string ConnectionString)
@@ -41,9 +43,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateUserWithEmail(string name, string email)
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         // Act
         await userService.CreateUser(name, email);
@@ -60,9 +62,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void DeleteUser(string name, string email)
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         // Act
         await userService.CreateUser(name, email);
@@ -80,9 +82,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void GetIdOfUserByName()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         var username = "TestUser";
        
@@ -97,9 +99,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void UpdateUserEmail()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         var username = "TestUser";
         var email = "TestUser@testmail.co.uk";
@@ -116,9 +118,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void GetUserById()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         var username = "TestUser";
 
@@ -133,9 +135,9 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateUser_NameExists()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
+        
 
         var username = "TestUser";
         
@@ -152,10 +154,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void TwoUsersCanFollowEachOther()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
-        var followService = new FollowsRepository(context);
+        
+        
 
         var username1 = "Testuser1";
         var username2 = "Testuser2";
@@ -178,10 +180,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void UsersCanUnfollow()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
     
-        var userService = new UserRepository(context);
-        var followService = new FollowsRepository(context);
+        
+        
 
         var username1 = "Testuser1";
         var username2 = "Testuser2";
@@ -207,10 +209,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateAuthor()
     {
         // Arrage
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var userService = new UserRepository(context);
-        var authorService = new AuthorRepository(context);
+        
+        
 
         var authorName = "Obi-Wan";
         
@@ -228,10 +230,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void DeleteUserAlsoDeletesAuthor()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var userService = new UserRepository(context);
-        var authorService = new AuthorRepository(context);
+        
+        
 
         var authorName = "Test1";
         await userService.CreateUser(authorName);
@@ -250,10 +252,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateAuthor_AlreadyExists()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var authorService = new AuthorRepository(context);
-        var userService = new UserRepository(context);
+        
+        
         
         var username = "Obi-wan";
         // Act
@@ -269,10 +271,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void GetAuthorByName()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var authorService = new AuthorRepository(context);
-        var userService = new UserRepository(context);
+        
+        
 
         var username = "Testuser";
 
@@ -291,11 +293,11 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void GetCheepsByAuthorOnlyGetsTheLimitOfCheeps() 
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var authorService = new AuthorRepository(context);
-        var userService = new UserRepository(context);
-        var cheepService = new CheepRepository(context);
+        
+        
+        
         
         var username = "Testuser";
         // Act
@@ -324,11 +326,11 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateValidCheepInDatabase_WhereAuthorExists(string authorName, string message)
     {   
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var cheepService = new CheepRepository(context);
-        var authorService = new AuthorRepository(context);
-        var userService = new UserRepository(context);
+        
+        
+        
 
         // Act
         await userService.CreateUser(authorName);
@@ -350,10 +352,10 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateValidCheep_WhereAuthorDoesntExist()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var cheepService = new CheepRepository(context);
-        var authorService = new AuthorRepository(context);
+        
+        
 
         // Act
         var cheep = new CheepCreateDTO("Test", "TestAuthor");
@@ -366,11 +368,11 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void Create100CheepsWith100DifferentAuthors_ReadMostResent32()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var cheepService = new CheepRepository(context);
-        var authorService = new AuthorRepository(context);
-        var userService = new UserRepository(context);
+        
+        
+        
 
         // Act
         for (int i = 0; i < 100; i++)
@@ -399,11 +401,11 @@ public class ChirpDatabaseRepositoryTest : IAsyncLifetime
     public async void CreateInvalidCheep()
     {
         // Arrange
-        var context = SetupContext(_sqlServer.GetConnectionString());
+        
 
-        var userService = new UserRepository(context);
-        var authorService = new AuthorRepository(context);
-        var cheepService = new CheepRepository(context);
+        
+        
+        
 
         var authorName = "Obi-Wan";
         // Act

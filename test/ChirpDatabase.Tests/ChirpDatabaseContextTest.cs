@@ -1,18 +1,16 @@
-using Testcontainers.MsSql;
-using Bogus;
+// Code inspired by https://blog.jetbrains.com/dotnet/2023/10/24/how-to-use-testcontainers-with-dotnet-unit-tests/
 using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Chirp.Core;
 using Chirp.Infrastructure.Models;
 
 namespace ChirpDatabase.Tests;
 
 public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 {
-    private DatabaseFixture fixture;
+    private readonly ChirpDBContext context;
     public ChripDatabaseContextTest(DatabaseFixture _fixture)
     {
-        fixture = _fixture;
+        context = SetupContext(_fixture.ConnectionString);
     }
 
     private static ChirpDBContext SetupContext(string ConnectionString)
@@ -22,7 +20,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
             .Options;
         var context = new ChirpDBContext(contextOptions);
         context.Database.Migrate();
-        
+
         return context;
     }
 
@@ -32,9 +30,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [InlineData("Jackson", null)]
     public async void CreateUser(string username, string? email)
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
         // Act
         var user = new User()
         {
@@ -50,22 +45,11 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     }
 
     [Theory]
-    [InlineData("Jackson", "EEEEEEEEEEEEEEEEEEEEMMMMMMMMMMMMMMMMMMAAAAAAAAAAAIIIIIIILLLLLLL@TTTHHHIIISSSIIIISSSAAAAMMMMAAIIILLL.com")]
-    [InlineData("Simon", "NormalMail@gmail.com")]
-    public async void CreateInvalidUser_ThrowsException(string name, string email)
+    [InlineData("MyEmailIsTooLong", "EEEEEEEEEEEEEEEEEEEEMMMMMMMMMMMMMMMMMMAAAAAAAAAAAIIIIIIILLLLLLL@TTTHHHIIISSSIIIISSSAAAAMMMMAAIIILLL.com")]
+    public async void CreateUserWithInvalidEmail_ThrowsException(string name, string email)
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
+        
         // Act
-        var normalUser = new User()
-        {
-            Name = "Simon",
-            Email = "Email@gmail.com",
-        };
-        context.Users.Add(normalUser);
-        await context.SaveChangesAsync();
-
         var user = new User()
         {
             Name = name,
@@ -77,66 +61,66 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
     }
 
+    [Theory]
+    [InlineData("Simon", "NormalMail@gmail.com")]
+    public async void CreateUserWithSameName_ThrowsException(string name, string email)
+    {
+        
+        // Act
+        var normalUser = new User()
+        {
+            Name = name,
+            Email = email,
+        };
+        context.Users.Add(normalUser);
+        await context.SaveChangesAsync();
+
+        var user = new User()
+        {
+            Name = name,
+            Email = email,
+        };
+        context.Users.Add(user);
+
+        // Assert
+        await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
+    }
+
 
     // Author tests
     [Fact]
     public async void CreateAuthor()
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
-        var username = "Jackson";
         
         // Act
-        var user = new User()
-        {
-            Name = username,
-            Email = null,
-        };
-        context.Users.Add(user);
-
+        var user = await context.Users.Where(_user => _user.UserId == 1).FirstOrDefaultAsync(); // Get user from CreateUser test
         var author = new Author()
         {
-            User = user,
+            User = user!,
             Cheeps = new List<Cheep>(),
         };
         context.Authors.Add(author);
         await context.SaveChangesAsync();
 
         // Assert
-        var DBauthor = await context.Authors.Where(_author => _author.User.Name == username).FirstOrDefaultAsync();
+        var DBauthor = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync();
         Assert.NotNull(DBauthor);
     }
 
 
     // Cheep tests
-    [Fact]
-    public async void CreateCheep()
+    [Theory]
+    [InlineData("Cheep message")]
+    public async void CreateCheep(string message)
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
-        var username = "Jackson";
-
+        
         // Act
-        var user = new User()
-        {
-            Name = username,
-            Email = null,
-        };
-        context.Users.Add(user);
-
-        var author = new Author()
-        {
-            User = user,
-            Cheeps = new List<Cheep>(),
-        };
-        context.Authors.Add(author);
+        var author = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync(); // Author from CreateAuthor test
 
         var cheep = new Cheep()
         {
-            Author = author,
-            Text = "Cheep message",
+            Author = author!,
+            Text = message,
             TimeStamp = DateTime.Now,
         };
         context.Cheeps.Add(cheep);
@@ -150,29 +134,13 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [Fact]
     public async void CreateInvalidCheep_ThrowsException()
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
-        var username = "Jackson";
-
+        
         // Act
-        var user = new User()
-        {
-            Name = username,
-            Email = null,
-        };
-        context.Users.Add(user);
-
-        var author = new Author()
-        {
-            User = user,
-            Cheeps = new List<Cheep>(),
-        };
-        context.Authors.Add(author);
+        var author = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync(); // Author from CreateAuthor test
 
         var cheep = new Cheep()
         {
-            Author = author,
+            Author = author!,
             Text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,",
             TimeStamp = DateTime.Now,
         };
@@ -187,23 +155,8 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [Fact]
     public async void CreateFollow()
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
+        
         // Act
-        var user1 = new User()
-        {
-            Name = "User1",
-            Email = null,
-        };
-        context.Users.Add(user1);
-        var user2 = new User()
-        {
-            Name = "User2",
-            Email = null,
-        };
-        context.Users.Add(user2);
-
         var follow = new Follows()
         {
             FollowerId = 1,
@@ -222,39 +175,19 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [Fact]
     public async void CreateReaction()
     {
-        // Arrange
-        var context = SetupContext(fixture.ConnectionString);
-
-        var username = "Jackson";
-
+        
         // Act
-        var user = new User()
+        var cheep = await context.Cheeps.Where(_cheep => _cheep.CheepId == 1).FirstOrDefaultAsync();
+        var user = await context.Users.Where(_user => _user.UserId == 1).FirstOrDefaultAsync();
+        if (cheep is null || user is null)
         {
-            Name = username,
-            Email = null,
-        };
-        context.Users.Add(user);
-
-        var author = new Author()
-        {
-            User = user,
-            Cheeps = new List<Cheep>(),
-        };
-        context.Authors.Add(author);
-
-        var cheep = new Cheep()
-        {
-            Author = author,
-            Text = "Cheep message",
-            TimeStamp = DateTime.Now,
-        };
-        context.Cheeps.Add(cheep);
-        await context.SaveChangesAsync();
+            throw new Exception("Cheep: " + cheep + " User: " + user);
+        }
 
         var reaction = new Reaction()
         {
-            cheepId = cheep.CheepId,
-            userId = user.UserId,
+            cheepId = cheep!.CheepId,
+            userId = user!.UserId,
             reactionType = "Upvote",
         };
         context.Reactions.Add(reaction);
