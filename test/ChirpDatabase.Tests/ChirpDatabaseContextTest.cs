@@ -31,7 +31,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-
         // Assert
         var DBuser = await context.Users.Where(_user => _user.Name == username).FirstOrDefaultAsync();
         Assert.NotNull(DBuser);
@@ -41,7 +40,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [InlineData("MyEmailIsTooLong", "EEEEEEEEEEEEEEEEEEEEMMMMMMMMMMMMMMMMMMAAAAAAAAAAAIIIIIIILLLLLLL@TTTHHHIIISSSIIIISSSAAAAMMMMAAIIILLL.com")]
     public async void CreateUserWithInvalidEmail_ThrowsException(string name, string email)
     {
-        
         // Act
         var user = new User()
         {
@@ -53,14 +51,12 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
         context.Users.Remove(user);
-
     }
 
     [Theory]
     [InlineData("Simon", "NormalMail@gmail.com")]
     public async void CreateUserWithSameName_ThrowsException(string name, string email)
     {
-        
         // Act
         var normalUser = new User()
         {
@@ -80,14 +76,12 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
-
     }
 
     // Author tests
     [Fact]
     public async void CreateAuthor()
     {
-        
         // Act
         var user = await context.Users.Where(_user => _user.UserId == 2).FirstOrDefaultAsync(); // Get user from seeded data. UserId 1 is allready used
         var author = new Author()
@@ -109,7 +103,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [InlineData("New cheep here")]
     public async void CreateCheep(string message)
     {
-        
         // Act
         var author = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync(); // Author from CreateAuthor test
 
@@ -131,7 +124,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
     [Fact]
     public async void CreateInvalidCheep_ThrowsException()
     {
-        
         // Act
         var author = await context.Authors.Where(_author => _author.AuthorId == 1).FirstOrDefaultAsync(); // Author from CreateAuthor test
 
@@ -146,14 +138,12 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         // Assert
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
         context.Remove(cheep);
-
     }
 
     // Follow tests
     [Fact]
     public async void CreateFollow()
     {
-        
         // Act
         var follow = new Follows()
         {
@@ -163,7 +153,6 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 
         context.Follows.Add(follow);
         await context.SaveChangesAsync();
-
 
         // Assert
         var DBfollow = await context.Follows.Where(_follow => _follow.FollowerId == 1).FirstOrDefaultAsync();
