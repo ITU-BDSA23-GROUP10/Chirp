@@ -19,39 +19,11 @@
     <h2> @User.Identity.Name's profile </h2>
         <div class="profile-user pad12 gray-bg">
             <p> Username: @User.Identity.Name</p>
-            @if(ViewData["UserEmail"] != null) {
+            @if(TempData.Peek("UserEmail") != null) // Use TempData.Peek to read the value without marking it for deletion, otherwise the TempData value is deleted on the next request
+            {
+                <p> Email: @TempData.Peek("UserEmail")?.ToString()</p>
 
-                <p> Email: @ViewData["UserEmail"]</p> 
                 <h4> Update your email:</h4>
-
-                @if((ViewData["EmailError"] as string) == "formatting")
-                {
-                    <div class="alert alert-warning" role="alert">
-                        Email formatting is incorrect
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "duplicate")
-                {
-                    <div class="alert alert-warning" role="alert">
-                        Email already exists
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "success")
-                {
-                    <div class="alert alert-success" role="alert">
-                        Email successfully updated
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "error")
-                {
-                    <div class="alert alert-danger" role="alert">
-                        Error updating email
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
                 <form asp-page-handler="AddUpdateEmail" method="post">
                     <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
                     <input type="submit" value="Add Email">
@@ -59,39 +31,26 @@
             }
             else
             {  
-                @if((ViewData["EmailError"] as string) == "formatting")
-                {
-                    <div class="alert alert-warning" role="alert">
-                        Email formatting is incorrect
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "duplicate")
-                {
-                    <div class="alert alert-warning" role="alert">
-                        Email already exists
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "success")
-                {
-                    <div class="alert alert-success" role="alert">
-                        Email successfully updated
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-                else if((ViewData["EmailError"] as string) == "error")
-                {
-                    <div class="alert alert-danger" role="alert">
-                        Error updating email
-                    </div>
-                    ViewData["EmailError"] = null;
-                }
-
                 <form asp-page-handler="AddUpdateEmail" method="post">
                     <input style="float: left" type="text" name="email" value="Example@Example.com" asp-for="NewEmail.Email" />
                     <input type="submit" value="Add Email">
                 </form>
+            }
+            @*email update/failure messages*@
+            @if(TempData.Peek("EmailError") != null)
+            {
+                var message = TempData["EmailError"]?.ToString();
+
+                //display the specific class for the alert message
+                var alertClass  = message == "Email successfully updated" ? "alert-success"
+                                : message == "Email formatting is incorrect" ? "alert-warning" 
+                                : message == "Duplicate email, that email already exists" ? "alert-warning" 
+                                : message == "Error updating email" ? "alert-danger" 
+                                : "alert-info"; // Default case
+
+                <div class="alert @alertClass" role="alert">
+                    @message
+                </div>
             }
         </div>
 
@@ -135,7 +94,13 @@
                                     <small>&mdash; @cheep.Timestamp</small>
                                     <p>@cheep.Message</p>
                                 </div>
-                                    
+                                <div>
+                                    <form asp-page-handler="DeleteCheep" method="post">
+                                        <input type="hidden" name="CheepId" value="@cheep.id"/>
+                                        <button class="delete-cheep">Delete</button>
+                                    </form>
+                                </div>
+                            </div>    
                         </li>
                     }
                 </ul>
