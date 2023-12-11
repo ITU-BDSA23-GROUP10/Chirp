@@ -33,6 +33,11 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         await context.SaveChangesAsync();
     }
 
+    public async Task Delete(int cheepId)
+    {
+        await Delete(GetById(cheepId).Result);
+    }
+
     public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
     {
         return DbSet.Where(predicate);
@@ -43,7 +48,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return (DbSet, DbSet.Count());
     }
 
-    public async Task<Cheep?> GetById(int id)
+    public async Task<Cheep> GetById(int id)
     {
         return await DbSet.FindAsync(id);
     }
