@@ -44,7 +44,7 @@ You can check if the docker container is running by using this in a terminal. Lo
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
 
 ## Run from release
-You can also download the latest release build for your platform and use the included executables (e.g Chirp-vX.X.X-linux-x64 for linux based systems). You can run these through your terminal or CommandLine tools depending on your OS or by double clicking the executables in the folder if your OS allows for that.
+You can download the latest release build for your platform and use the included executables (e.g Chirp-vX.X.X-linux-x64 for linux based systems). You can run these through your terminal or CommandLine tools depending on your OS or by double clicking the executables in the folder if your OS allows for that.
 
 ### Linux Example:
 First you must unzip the directory using your unzipper of choice and go into that directory using  
