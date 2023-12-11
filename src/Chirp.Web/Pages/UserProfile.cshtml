@@ -94,7 +94,13 @@
                                     <small>&mdash; @cheep.Timestamp</small>
                                     <p>@cheep.Message</p>
                                 </div>
-                                    
+                                <div>
+                                    <form asp-page-handler="DeleteCheep" method="post">
+                                        <input type="hidden" name="CheepId" value="@cheep.id"/>
+                                        <button class="delete-cheep">Delete</button>
+                                    </form>
+                                </div>
+                            </div>    
                         </li>
                     }
                 </ul>

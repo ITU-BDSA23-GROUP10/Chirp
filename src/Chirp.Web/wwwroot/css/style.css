@@ -131,7 +131,8 @@ div.page ul.cheeps li a {
 div.page ul.cheeps p {
   margin: 0;
   padding: 5px 0;
-}
+  word-break: break-all;
+  }
 
 div.page ul.cheeps li img {
   margin-right:15px;
@@ -324,6 +325,19 @@ a.hashtag{
 .gray-bg{
   background:#f7f7f7;
 }
+
+.delete-cheep {
+background-color: #53110c;
+color: white;
+padding: 4px 8px;
+border-radius: 25px;
+border: none;
+}
+
+.profile-page .activity div:last-child {
+margin-left: auto;
+}
+
 /*bootstrap remnants*/
 :root {
   --bs-success-text-emphasis: #0a3622;
@@ -333,6 +347,7 @@ a.hashtag{
   --bs-danger-bg-subtle: #ff9f9f;
   --bs-warning-bg-subtle:#f0ad4e;
 }
+
 .alert {
 --bs-alert-bg: transparent;
 --bs-alert-padding-x: 1rem;

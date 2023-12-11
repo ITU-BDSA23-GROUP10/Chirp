@@ -18,20 +18,29 @@ public class UserProfileModel : PageModel
     readonly IReactionRepository<Reaction> _reactionService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
     readonly IFollowsRepository<Follows> _followsService;
+    readonly ICheepRepository<Cheep, Author> _cheepService;
 
     [BindProperty]
     public NewEmail NewEmail { get; set; } = new NewEmail { Email = string.Empty};
+
+    [BindProperty]
+    public DeleteCheep DeleteThisCheep { get; set; } = new();
 
     public List<User> following { get; set; } = new List<User>();
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-        public UserProfileModel(IUserRepository<User> userService, IAuthorRepository<Author, Cheep, User> authorService, IReactionRepository<Reaction> reactionService, IFollowsRepository<Follows> followsService)
+        public UserProfileModel(IUserRepository<User> userService,
+        IAuthorRepository<Author, Cheep, User> authorService,
+        IReactionRepository<Reaction> reactionService,
+        IFollowsRepository<Follows> followsService,
+        ICheepRepository<Cheep, Author> cheepService)
         {
             _userService = userService;
             _authorService = authorService;
             _reactionService = reactionService;
             _followsService = followsService;
+            _cheepService = cheepService;
         }    
 
     public async Task<ActionResult> OnGetAsync()
@@ -238,13 +247,30 @@ public class UserProfileModel : PageModel
 
         return Redirect("/Profile");
     }
+
+    public async Task<IActionResult> OnPostDeleteCheep()
+    {
+        // TODO: Set username = User?.Identity?.Name! in the constructor instead of hardcoding all the time
+        await _cheepService.Delete(DeleteThisCheep.CheepID);
+        // Re-adds the cheeps to the author.Cheeps
+        cheeps = await _authorService.GetAllCheepsByAuthorName(User?.Identity?.Name!);
+        return Redirect("/Profile");
+    }
 }
+
 public class NewEmail 
 {
     //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
     [Required]
     [Display(Name = "email")]
     public required string Email {get; set;}
+}
+
+public class DeleteCheep
+{
+    [Required]
+    [Display(Name = "CheepId")]
+    public int CheepID {get; set;} = -1;
 }
 
 public class EmailValidator : AbstractValidator<NewEmail>
