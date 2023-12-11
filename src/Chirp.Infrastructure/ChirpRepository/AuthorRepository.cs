@@ -197,6 +197,6 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
     // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
     // {
     //     throw new NotImplementedException();
-    // }
+    // } bear
     #endregion
 }
