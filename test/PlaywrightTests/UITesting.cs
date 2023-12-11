@@ -1,18 +1,14 @@
 using Microsoft.Playwright;
-using System;
-using System.Threading.Tasks;
 
 namespace PlaywrightTests;
-
-
 //run these test
 //remember in order to use the pwsh command you need to update powershell (with net8.0) with: dotnet tool update --global PowerShell
 //pwsh bin/Debug/net8.0/playwright.ps1 codegen https://localhost:5273 --ignore-https-errors
 
-[Parallelizable(ParallelScope.Self)]
-[TestFixture]
-class Program
-{
+// [Parallelizable(ParallelScope.Self)]
+// [TestFixture]
+// class Program
+// {
     // TODO: Dockerise tests so they run properly.
 
     /*[Test]
@@ -45,7 +41,7 @@ class Program
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
 
     }
-
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
     {
@@ -92,10 +88,10 @@ class Program
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }*/
-    [Parallelizable(ParallelScope.Self)]
 [TestFixture]
-class Program
+class UITesting 
 {
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginWithUser()
     {
@@ -104,6 +100,7 @@ class Program
         {
             Headless = false,
         });
+
         var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
         var page = await context.NewPageAsync();
@@ -124,9 +121,8 @@ class Program
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-
     }
-
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
     {
@@ -173,8 +169,7 @@ class Program
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }
-
-    // Should this be multiple tests?
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailAddTest() 
     {
@@ -210,7 +205,7 @@ class Program
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateDuplicateError() 
     {
@@ -250,7 +245,7 @@ class Program
 
         await page.GetByText("Email already exists ").ClickAsync();
     }
-
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateFormattingError() 
     {
@@ -290,6 +285,7 @@ class Program
 
         await page.GetByText("Email formatting is incorrect ").ClickAsync();
     }
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateChangeSuccessful() 
     {
@@ -329,11 +325,10 @@ class Program
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-    
+    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginAndDeleteUser()
     {
-
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
