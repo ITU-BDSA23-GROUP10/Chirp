@@ -40,7 +40,8 @@ jobs:
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
     - name: Ensure browsers are installed
-      run: pwsh test/PlaywrightTests/bin/Debug/net7.0/playwright.ps1 install --with-deps --ignore-https-errors
+      run: pwsh playwright.ps1 install --with-deps --ignore-https-errors
+      working-directory: test/PlaywrightTests/bin/Debug/net7.0
 
     - name: generate certificates
       run: chmod +x create_cert.sh && ./create_cert.sh
