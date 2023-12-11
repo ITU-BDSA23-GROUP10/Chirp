@@ -212,9 +212,6 @@ public class UserProfileModel : PageModel
         
         //TempData maintains the data when you move from one action to another action
         //usefull when you want to retain requests with http redirects
-        //we use .Keep on it so the TempData value isn't lost, and can
-        //be .Peek()'ed (showed) in the html
-        //https://stackoverflow.com/questions/21252888/tempdata-keep-vs-peek
         if(!result.IsValid)
         {
             TempData["EmailError"] = "Email formatting is incorrect";
