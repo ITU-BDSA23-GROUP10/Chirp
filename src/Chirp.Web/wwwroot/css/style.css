@@ -389,8 +389,9 @@ a.hashtag{
   right: 20px;
   background: #333;
   color: #fff;
-  padding: 10px;
+  padding: 22px;
   border-radius: 5px;
+  border-left: 4px solid #777;
 }
 .flw-notifc p{
   margin: 6px 0 0;
@@ -404,7 +405,8 @@ a.hashtag{
   background: #777;
   padding: 4px;
   border-radius: 50%;
-  margin-right: 7px;
+  margin-right: 12px;
+  fill: #FFD700;
 }
 /*shared from https://animista.net/play/attention/pulsate/heartbeat*/
 .slide-in-blurred-bottom {
