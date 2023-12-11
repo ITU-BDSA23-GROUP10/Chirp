@@ -47,7 +47,7 @@ jobs:
       working-directory: test/PlaywrightTests
 
     - name: Ensure browsers are installed
-      run: pwsh playwright.ps1 install --with-deps --ignore-https-errors
+      run: pwsh playwright.ps1 install --with-deps
       working-directory: test/PlaywrightTests/bin/Debug/net7.0
 
     - name: generate certificates
