@@ -193,7 +193,7 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostAddUpdateEmail()
     {
-        if(!User?.Identity?.IsAuthenticated ?? false)
+        if(User?.Identity?.IsAuthenticated ?? false)
         {
             var userName = User?.Identity?.Name ?? "default";
             var user = await _userService.GetUserByName(userName);
@@ -201,7 +201,7 @@ public class UserProfileModel : PageModel
 
             if(email != null)
             {
-                ViewData["UserEmail"] = email;
+                TempData["UserEmail"] = email;
             }
         }
 
@@ -210,14 +210,19 @@ public class UserProfileModel : PageModel
 
         var duplicateEmail = await _userService.GetUserByEmail(NewEmail.Email);
         
+        //TempData maintains the data when you move from one action to another action
+        //usefull when you want to retain requests with http redirects
+        //we use .Keep on it so the TempData value isn't lost, and can
+        //be .Peek()'ed (showed) in the html
+        //https://stackoverflow.com/questions/21252888/tempdata-keep-vs-peek
         if(!result.IsValid)
         {
-            ViewData["EmailError"] = "formatting";
+            TempData["EmailError"] = "Email formatting is incorrect";
             return Redirect("/Profile");
         }
         else if (duplicateEmail != null && duplicateEmail.Email == NewEmail.Email)
         {
-            ViewData["EmailError"] = "duplicate";
+            TempData["EmailError"] = "Duplicate email, that email already exists";
             return Redirect("/Profile");
         }
 
@@ -225,12 +230,13 @@ public class UserProfileModel : PageModel
         {
             var userName = User?.Identity?.Name ?? "default";
             await _userService.UpdateUserEmail(userName, NewEmail.Email);
-            ViewData["EmailError"] = "success";
+            TempData["UserEmail"] = NewEmail.Email;  // Update TempData with the new email
+            TempData["EmailError"] = "Email successfully updated";
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            ViewData["EmailError"] = "error";
+            TempData["EmailError"] = "Error updating email";
         }
 
         return Redirect("/Profile");
