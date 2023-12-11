@@ -131,7 +131,8 @@ div.page ul.cheeps li a {
 div.page ul.cheeps p {
   margin: 0;
   padding: 5px 0;
-}
+  word-break: break-all;
+  }
 
 div.page ul.cheeps li img {
   margin-right:15px;
@@ -343,44 +344,57 @@ a.hashtag{
 .gray-bg{
   background:#f7f7f7;
 }
+
+.delete-cheep {
+background-color: #53110c;
+color: white;
+padding: 4px 8px;
+border-radius: 25px;
+border: none;
+}
+
+.profile-page .activity div:last-child {
+margin-left: auto;
+}
+
 /*bootstrap remnants*/
 :root {
-    --bs-success-text-emphasis: #0a3622;
-    --bs-warning-text-emphasis: #664d03;
-    --bs-danger-text-emphasis: #58151c;
-    --bs-success-bg-subtle: #d1e7dd;
-    --bs-danger-bg-subtle: #ff9f9f;
-    --bs-warning-bg-subtle:#f0ad4e;
+  --bs-success-text-emphasis: #0a3622;
+  --bs-warning-text-emphasis: #664d03;
+  --bs-danger-text-emphasis: #58151c;
+  --bs-success-bg-subtle: #d1e7dd;
+  --bs-danger-bg-subtle: #ff9f9f;
+  --bs-warning-bg-subtle:#f0ad4e;
 }
+
 .alert {
-  --bs-alert-bg: transparent;
-  --bs-alert-padding-x: 1rem;
-  --bs-alert-padding-y: 1rem;
-  --bs-alert-margin-bottom: 1rem;
-  --bs-alert-color: inherit;
-  --bs-alert-link-color: inherit;
-  position: relative;
-  padding: var(--bs-alert-padding-y) var(--bs-alert-padding-x);
-  margin-bottom: var(--bs-alert-margin-bottom);
-  color: var(--bs-alert-color);
-  background-color: var(--bs-alert-bg);
+--bs-alert-bg: transparent;
+--bs-alert-padding-x: 1rem;
+--bs-alert-padding-y: 1rem;
+--bs-alert-margin-bottom: 1rem;
+--bs-alert-color: inherit;
+--bs-alert-link-color: inherit;
+position: relative;
+padding: 15px;
+margin:10px 0;
+color: var(--bs-alert-color);
+background-color: var(--bs-alert-bg);
 }
 .alert-success {
-  --bs-alert-color: var(--bs-success-text-emphasis);
-  --bs-alert-bg: var(--bs-success-bg-subtle);
-  --bs-alert-link-color: var(--bs-success-text-emphasis);
+--bs-alert-color: var(--bs-success-text-emphasis);
+--bs-alert-bg: var(--bs-success-bg-subtle);
+--bs-alert-link-color: var(--bs-success-text-emphasis);
 }
 .alert-warning {
-  --bs-alert-color: var(--bs-warning-text-emphasis);
-  --bs-alert-bg: var(--bs-warning-bg-subtle);
-  --bs-alert-link-color: var(--bs-warning-text-emphasis);
+--bs-alert-color: var(--bs-warning-text-emphasis);
+--bs-alert-bg: var(--bs-warning-bg-subtle);
+--bs-alert-link-color: var(--bs-warning-text-emphasis);
 }
 .alert-danger {
   --bs-alert-color: var(--bs-danger-text-emphasis);
   --bs-alert-bg: var(--bs-danger-bg-subtle);
   --bs-alert-link-color: var(--bs-danger-text-emphasis);
 }
-
 /*follow notification*/
 .flw-notifc {
   display: none;
