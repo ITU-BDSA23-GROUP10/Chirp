@@ -56,7 +56,6 @@ jobs:
 
     - name: Start program as a docker container
       run: docker compose up -d
-      working-directory: Chirp
 
     - name: Wait for the program to start
       run: sleep 60
