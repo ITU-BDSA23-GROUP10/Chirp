@@ -14,7 +14,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - run: dotnet build
+    
 
     - name: Install Powershell
       run: dotnet tool install --global Powershell --version 7.3.9
@@ -40,7 +40,11 @@ jobs:
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
     - name: Install Playwright
-      run: dotnet add test/PlaywrightTests package Microsoft.Playwright --version 1.40.0 
+      run: dotnet add test/PlaywrightTests package Microsoft.Playwright --version 1.40.0  && dotnet add test/PlaywrightTests package Microsoft.Playwright.NUnit --version 1.39.0
+
+    - name: Build project
+      run: dotnet build
+      working-directory: test/PlaywrightTests
 
     - name: Ensure browsers are installed
       run: pwsh playwright.ps1 install --with-deps --ignore-https-errors
