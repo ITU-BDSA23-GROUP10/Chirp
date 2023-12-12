@@ -27,7 +27,7 @@
 
                                 List<string> hashTags;
                                 string MessageWithHashtags;
-                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);    
+                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags)!;    
                             }
 
                             @if (embedUrl != null)

@@ -8,7 +8,7 @@ namespace Chirp.Web.Pages;
 
 public class HashtagModel : PageModel
 {
-    public string TagName { get; set; }
+    public string? TagName { get; set; }
     readonly ICheepRepository<Cheep, Author> _cheepService;
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
