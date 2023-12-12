@@ -5,5 +5,5 @@ namespace Chirp.Infrastructure.Models;
 public record Reaction {   
     public int cheepId { get; set; }
     public int userId { get; set; }
-    public string reactionType { get; set; }
+    public string reactionType { get; set; } = null!;
 }

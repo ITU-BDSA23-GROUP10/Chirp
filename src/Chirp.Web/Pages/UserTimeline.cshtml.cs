@@ -256,9 +256,9 @@ public class UserTimelineModel : PageModel
     public async Task<IActionResult> OnPostReaction()
     {
         // the id for the user who is reacting
-        var userId = await _userService.GetUserIDByName(User.Identity.Name);
+        var userId = await _userService.GetUserIDByName(User.Identity!.Name!);
         int cheepId = NewcheepId.id  ?? default(int);
-        string react = NewReaction.Reaction;
+        string react = NewReaction.Reaction!;
         // Checks if the user exists
         try
         {

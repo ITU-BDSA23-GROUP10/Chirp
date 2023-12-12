@@ -70,14 +70,14 @@ public class ReactionRepository : IReactionRepository<Reaction>
             {
                 cheepId = reactionDTO.cheepId,
                 userId = reactionDTO.userId,
-                reactionType = reactionDTO.reactionType,
+                reactionType = reactionDTO.reactionType!
             };
             await InsertReaction(newReaction);
             return;
         }
         
         // Delete reaction if reactiontype is the same as existing
-        if (reactionDTO.reactionType.Equals(reaction.reactionType))
+        if (reactionDTO.reactionType!.Equals(reaction.reactionType))
         {
             await DeleteReaction(reaction);
             return;
@@ -132,7 +132,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task<Reaction?> GetReactionByUserAndCheep(int userid, int cheepid)
     {
-        var reaction = SearchFor(_react => _react.userId == userid && _react.cheepId == cheepid).FirstOrDefault();
+        var reaction = await SearchFor(_react => _react.userId == userid && _react.cheepId == cheepid).FirstOrDefaultAsync();
         return reaction;
     }
 
