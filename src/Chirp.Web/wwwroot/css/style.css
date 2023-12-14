@@ -176,8 +176,8 @@ div.page div.cheepbox input[type="text"] {
 div.page div.cheepbox input[type="submit"] {
   width: 70px;
   margin: 5px 0 0;
-  border-radius: 12px;
-  padding: 2px 10px;
+  border-radius: 25px;
+  padding: 6px 12px;
 }
 
 div.message {
@@ -260,11 +260,11 @@ li.topic {
   font-weight: 500;
   border: none;
 }
-.votebtnn{
-  background: #ddd;
+div.page ul.cheeps p.votebtnn{
+  background: #f0f0f0;
   border-radius: 25px;
   margin-right:5px;
-  padding:4px 12px;
+  padding:6px 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -moz-transition: all .2s;
@@ -275,9 +275,11 @@ li.topic {
 }
 .flwbtn:hover,
 .download:hover,
-.forgetme:hover,
-.votebtn:hover {
+.forgetme:hover {
   background-color: #cc6e6e;
+}
+.votebtn:hover {
+  background-color: #ddd;
 }
 .follow {
   background-color: #26776F;
@@ -315,8 +317,25 @@ a.hashtag{
 }
 .flex-it{
   display: flex;
-  align-items: baseline;
+  align-items: center;
   margin-top: 8px;
+}
+.profile-user,
+.profile-download,
+.profile-delete,
+.profile-follow,
+.profile-cheeps{
+  margin-top: 20px;
+}
+.pagination {
+  display: block;
+}
+/*cheep buttons*/
+.votebtn span,
+.votebtnn span{
+  background: #d3d3d3;
+  padding: 2px 6px;
+  border-radius: 25px;
 }
 /*user profile page*/
 .pad12 {
@@ -372,7 +391,79 @@ background-color: var(--bs-alert-bg);
 --bs-alert-link-color: var(--bs-warning-text-emphasis);
 }
 .alert-danger {
---bs-alert-color: var(--bs-danger-text-emphasis);
---bs-alert-bg: var(--bs-danger-bg-subtle);
---bs-alert-link-color: var(--bs-danger-text-emphasis);
+  --bs-alert-color: var(--bs-danger-text-emphasis);
+  --bs-alert-bg: var(--bs-danger-bg-subtle);
+  --bs-alert-link-color: var(--bs-danger-text-emphasis);
+}
+/*follow notification*/
+.flw-notifc {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #333;
+  color: #fff;
+  padding: 22px;
+  border-radius: 5px;
+  border-left: 4px solid #777;
+}
+.flw-notifc p{
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #aaa;
+}
+.flw-notifc .flex-it {
+  margin:0
+}
+.flw-notifc svg{
+  background: #777;
+  padding: 4px;
+  border-radius: 50%;
+  margin-right: 12px;
+  fill: #FFD700;
+}
+/*shared from https://animista.net/play/attention/pulsate/heartbeat*/
+.slide-in-blurred-bottom {
+	-webkit-animation: slide-in-blurred-bottom 0.6s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+	        animation: slide-in-blurred-bottom 0.6s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+}
+@-webkit-keyframes slide-in-blurred-bottom {
+  0% {
+    -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-blurred-bottom {
+  0% {
+    -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
 }
