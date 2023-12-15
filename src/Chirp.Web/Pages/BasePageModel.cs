@@ -8,9 +8,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.Pages
 {
-    //this contains all methods collectively used in UserTimeline.cshtml.cs and Public.cshtml.cs
-    //the methods are then used in the UserTimeline.cshtml and Public.cshtml
-    //todo add UserProfile and Hashtag pages
+    //this contains all methods collectively used in UserTimeline.cshtml.cs, Public.cshtml.cs, HashTag.cshtml.cs
+    //the methods are then used in the respective pages cshtml
     public class BasePageModel : PageModel
     {
         [BindProperty]
@@ -38,7 +37,7 @@ namespace Chirp.Web.Pages
         public List<CheepDTO> UserCheeps { get; set; } = new List<CheepDTO>();
         //DisplayedCheeps is used in public.cshtml
         public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();
-        //Cheeps is used in timeline.cshtml
+        //Cheeps is used in timeline.cshtml and Hashtags.cshtml
         public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
         public BasePageModel(
             ICheepRepository<Cheep, Author> cheepService,
@@ -64,7 +63,7 @@ namespace Chirp.Web.Pages
                 await padlock.Lock();
                 var author = await _authorService.GetAuthorByName(userName);
 
-                // Create new author if it doesn't exist in database allready
+                // Create new author if it doesn't exist in database already
                 if (author is null) 
                 {
                     var user = await _userService.GetUserByName(userName);
@@ -141,7 +140,7 @@ namespace Chirp.Web.Pages
 
             await _followsService.FollowUser(followDTO);
 
-            //return Redirect("/" + LoggedInUserName);
+            //return it as Json for the Ajax script, so only the form/button will reload
             return new JsonResult(new { success = true });
         }
 
@@ -149,7 +148,7 @@ namespace Chirp.Web.Pages
         public async Task<IActionResult> OnPostUnfollow()
         {
             var userName = User?.Identity?.Name ?? "default";
-            // Convert the username to Id
+
             if (string.IsNullOrEmpty(NewFollow.Author))
             {
                 throw new ArgumentException("NewFollow.Author cannot be null or empty");
@@ -163,7 +162,6 @@ namespace Chirp.Web.Pages
 
                 await _followsService.UnfollowUser(unfollowDTO);
 
-                //return Redirect("/" + userName);
                 return new JsonResult(new { success = true });
             }
         }

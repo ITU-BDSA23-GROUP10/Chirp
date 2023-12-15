@@ -1,12 +1,13 @@
 @model IEnumerable<Chirp.Core.CheepDTO>
 @{
-    //The IEnumerable<Chirp.Core.CheepDTO> allows us to iterate over 
-    //a collection of CheepDTO objects. This means we can handle multiple 
+    //The IEnumerable<Chirp.Core.CheepDTO> (src\Chirp.Web\ViewComponents\CheepListViewComponent.cs) allows us
+    //to iterate over a collection of CheepDTO objects. This means we can handle multiple 
     //cheeps at once in our view (which is why we use it for displaying this list of cheeps)
-    //the viewbag is dynamic and stores a reference to BasePageModel so we can get our methods
+    //the viewbag is dynamically loaded and stores a reference to BasePageModel so we can get our methods
     var baseModel = (Chirp.Web.Pages.BasePageModel)ViewBag.BaseModel;
 }
 
+@*List of cheeps loop*@
 @foreach (var cheep in Model)
 {
     // use baseModel to access methods
@@ -41,6 +42,7 @@
 
                     <p style="white-space: pre-line">@MessageWithHashtags</p>
 
+                    @*Hashtags*@
                     @if(hashTags != null)
                     {
                         foreach(var hashTag in hashTags)
@@ -49,6 +51,7 @@
                             <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
                         }
                     }
+                    
                     
                     <div class="flex-it">
                         @if (User?.Identity is not null && User.Identity.IsAuthenticated)
@@ -61,6 +64,7 @@
                             } 
                             else if(userId != authorId)
                             {   
+                                @*Follow and Unfollow forms*@
                                 if(isFollowing)
                                 {
                                     <form asp-page-handler="Unfollow" method="post" data-author="@cheep.Author" class="unfollowForm">
@@ -77,7 +81,7 @@
                                 }
                             }
 
-                            // reaction
+                            @*Reaction forms (upvote and downvote)*@
                             <form asp-page-handler="Reaction" class="reaction" method="post" data-id="@cheep.id">
                                 <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
                                 <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
