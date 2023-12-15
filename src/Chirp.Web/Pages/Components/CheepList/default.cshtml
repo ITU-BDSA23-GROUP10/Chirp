@@ -78,12 +78,12 @@
                             }
 
                             // reaction
-                            <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                            <form asp-page-handler="Reaction" class="reaction" method="post" data-id="@cheep.id">
                                 <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
                                 <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
                                 <button class="votebtn vote-btn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
                             </form>
-                            <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                            <form asp-page-handler="Reaction" class="reaction" method="post" data-id="@cheep.id">
                                 <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
                                 <input type="hidden" name="NewReaction.Reaction" value="Downvote" data-id="@cheep.id"/>
                                 <button class="votebtn vote-btn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>

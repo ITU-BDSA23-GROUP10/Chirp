@@ -61,7 +61,7 @@ $(document).ready(function() {
 });
 //upvote and downvote
 $(document).ready(function() {
-    $(".vote-btn").on('submit', function(e) {
+    $(document).on('submit', '.reaction', function(e) {
         e.preventDefault();
         let form = $(this);
         let url = form.attr('action');
