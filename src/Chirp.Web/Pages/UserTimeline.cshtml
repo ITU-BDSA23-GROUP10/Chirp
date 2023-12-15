@@ -12,7 +12,8 @@
     <h2> @routeName's Timeline </h2>
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
-    {
+    { 
+        //TODO potentially not needed anymore
         @if((TempData["CheepTooShort"] as string) == "true")
         {
             <div class="alert alert-warning" role="alert">
@@ -28,12 +29,13 @@
         </div>
     }
 
+    @*start cheep loop*@
     @if (Model.Cheeps?.Any() == true)
     {
         <ul id="messagelist" class="cheeps">
             @{
                 //this is a foreach loop component with the list of cheeps
-                //can be seen or altered through Components/CheepList/default.cshtml
+                //can be seen or altered through src\Chirp.Web\Pages\Components\CheepList\default.cshtml
                 ViewBag.BaseModel = Model;
              
                 @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
@@ -42,10 +44,14 @@
     }
     else
     {
-    <em>There are no cheeps so far.</em>
+        <em>There are no cheeps so far.</em>
     }
 
      @await Component.InvokeAsync("Pagination", ViewData["Author"])   
 </div>
 
+@*
+follow notification popup
+can be seen or altered through src\Chirp.Web\Pages\Components\FollowNotification\default.cshtml
+*@
 @await Component.InvokeAsync("FollowNotification")

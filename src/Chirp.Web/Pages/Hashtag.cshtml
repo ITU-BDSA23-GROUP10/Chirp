@@ -14,7 +14,7 @@
         <ul id="messagelist" class="cheeps">
             @{
                 //this is a foreach loop component with the list of cheeps
-                //can be seen or altered through Components/CheepList/default.cshtml
+                //can be seen or altered through src\Chirp.Web\Pages\Components\CheepList\default.cshtml
                 ViewBag.BaseModel = Model;
              
                 @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
