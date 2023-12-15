@@ -1,9 +1,9 @@
 @model IEnumerable<Chirp.Core.CheepDTO>
 @{
-    //the viewbag stores a reference to BasePageModel so we can get our methods
     //The IEnumerable<Chirp.Core.CheepDTO> allows us to iterate over 
     //a collection of CheepDTO objects. This means we can handle multiple 
     //cheeps at once in our view (which is why we use it for displaying this list of cheeps)
+    //the viewbag is dynamic and stores a reference to BasePageModel so we can get our methods
     var baseModel = (Chirp.Web.Pages.BasePageModel)ViewBag.BaseModel;
 }
 
