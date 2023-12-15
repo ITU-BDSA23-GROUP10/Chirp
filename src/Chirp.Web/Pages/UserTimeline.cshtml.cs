@@ -22,10 +22,7 @@ public class UserTimelineModel : BasePageModel
         var userName = User?.Identity?.Name ?? "default";
         var userId = await _userService.GetUserIDByName(author);
 
-        if (userName == author) // logged-in user's page
-        {
-            ViewData["Author"] = author;
-        }
+        ViewData["Author"] = author;
         ViewData["Page"] = page;
 
         int limit = PagesData.CheepsPerPage;
@@ -35,14 +32,6 @@ public class UserTimelineModel : BasePageModel
         try
         {
             await padlock.Lock();
-            
-            if(userId != -1) 
-            {
-                ViewData["UserExists"] = "true";
-            } else 
-            {   
-                ViewData["UserExists"] = "false";
-            }
             
             List<int> FollowedUsers = await _followsService.GetFollowedUsersId(userId);
 
