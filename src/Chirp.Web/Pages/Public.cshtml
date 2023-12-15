@@ -11,20 +11,19 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-    @if((ViewData["CheepTooShort"] as string) == "true")
-    {
-        <div class="alert alert-warning" role="alert">
-            Your cheep is too short!
+        @if((TempData["CheepTooShort"] as string) == "true")
+        {
+            <div class="alert alert-warning" role="alert">
+                Your cheep is too short!
+            </div>
+        }
+        <div class="cheepbox">
+                <h3>What's on your mind @(User.Identity.Name)?</h3>
+                <form class="share-cheep" method="post">
+                        <textarea type="text" asp-for="NewCheep.Message"></textarea>
+                        <input type="submit" value="Share">
+                </form>
         </div>
-        ViewData["CheepTooShort"] = "false";
-    }
-    <div class="cheepbox">
-            <h3>What's on your mind @(User.Identity.Name)?</h3>
-            <form class="share-cheep" method="post">
-                    <textarea type="text" asp-for="NewCheep.Message"></textarea>
-                    <input type="submit" value="Share">
-            </form>
-    </div>
     }
 
     <!-- start cheep loop -->

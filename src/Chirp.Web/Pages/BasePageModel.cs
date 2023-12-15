@@ -52,220 +52,220 @@ namespace Chirp.Web.Pages
         }
         
         public async Task<IActionResult> OnPost()
-    {
-        AsyncPadlock padlock = new();
-        var userName = User?.Identity?.Name ?? "default";
-
-        try
         {
-            await padlock.Lock();
-            var author = await _authorService.GetAuthorByName(userName);
+            AsyncPadlock padlock = new();
+            var userName = User?.Identity?.Name ?? "default";
 
-            // Create new author if it doesn't exist in database allready
-            if (author is null) 
+            try
             {
-                var user = await _userService.GetUserByName(userName);
+                await padlock.Lock();
+                var author = await _authorService.GetAuthorByName(userName);
 
-                if (user is null) {
-                    await _userService.CreateUser(userName);
-                    user = await _userService.GetUserByName(userName)
-                        ?? throw new InvalidOperationException("author could not be created.");
+                // Create new author if it doesn't exist in database allready
+                if (author is null) 
+                {
+                    var user = await _userService.GetUserByName(userName);
+
+                    if (user is null) {
+                        await _userService.CreateUser(userName);
+                        user = await _userService.GetUserByName(userName)
+                            ?? throw new InvalidOperationException("author could not be created.");
+                    }
+
+                    await _authorService.CreateAuthor(user);
+                    author = await _authorService.GetAuthorByName(userName);
                 }
 
-                await _authorService.CreateAuthor(user);
-                author = await _authorService.GetAuthorByName(userName);
+                if (author is null) 
+                {
+                    throw new InvalidOperationException("author could not be created.");
+                }
+
+            if(NewCheep.Message is null || NewCheep.Message.Length < 1)
+            {
+                TempData["CheepTooShort"] = "true";
+                return Page();
+            }
+            else 
+            {
+                TempData["CheepTooShort"] = "false";
+                
+                var cheep = new CheepCreateDTO(NewCheep.Message, userName);
+                await _cheepService.CreateCheep(cheep, author);
             }
 
-            if (author is null) 
+            }
+            finally
             {
-                throw new InvalidOperationException("author could not be created.");
+                padlock.Dispose();
             }
 
-        if(NewCheep.Message is null || NewCheep.Message.Length < 1)
-        {
-            ViewData["CheepTooShort"] = "true";
-            return Page();
-        }
-        else 
-        {
-            ViewData["CheepTooShort"] = "false";
-            
-            var cheep = new CheepCreateDTO(NewCheep.Message, userName);
-            await _cheepService.CreateCheep(cheep, author);
+            return Redirect("/" + userName);
         }
 
-        }
-        finally
+        //follow form button
+        public async Task<IActionResult> OnPostFollow()
         {
-            padlock.Dispose();
-        }
+            var LoggedInUserName = User?.Identity?.Name ?? "default";
+            var FollowedUserName = NewFollow.Author;
 
-        return Redirect("/" + userName);
-    }
-
-    //follow form button
-    public async Task<IActionResult> OnPostFollow()
-    {
-        var LoggedInUserName = User?.Identity?.Name ?? "default";
-        var FollowedUserName = NewFollow.Author;
-
-        // Check if followedUserName is null
-        if (FollowedUserName == null)
-        {
-            throw new ArgumentNullException("Followed user does not exist.");
-        }
-
-        //Check if the user that is logged in exists
-        try
-        {
-            var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
-            
-            if (loggedInUser is null)
+            // Check if followedUserName is null
+            if (FollowedUserName == null)
             {
-                throw new Exception("User does not exist");
-            }    
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            await _userService.CreateUser(LoggedInUserName);
-        }
+                throw new ArgumentNullException("Followed user does not exist.");
+            }
 
-        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
-        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+            //Check if the user that is logged in exists
+            try
+            {
+                var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
+                
+                if (loggedInUser is null)
+                {
+                    throw new Exception("User does not exist");
+                }    
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await _userService.CreateUser(LoggedInUserName);
+            }
 
-        var followDTO = new FollowDTO(followerId, followingId);
+            var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+            var followingId = await _userService.GetUserIDByName(FollowedUserName);
 
-        await _followsService.FollowUser(followDTO);
+            var followDTO = new FollowDTO(followerId, followingId);
 
-        //return Redirect("/" + LoggedInUserName);
-        return new JsonResult(new { success = true });
-    }
+            await _followsService.FollowUser(followDTO);
 
-    //unfollow form button
-    public async Task<IActionResult> OnPostUnfollow()
-    {
-        var userName = User?.Identity?.Name ?? "default";
-        // Convert the username to Id
-        if (string.IsNullOrEmpty(NewFollow.Author))
-        {
-            throw new ArgumentException("NewFollow.Author cannot be null or empty");
-        }
-        else
-        {
-            var followerId = await _userService.GetUserIDByName(userName);
-            var followingId = await _userService.GetUserIDByName(NewFollow.Author);
-
-            var unfollowDTO = new FollowDTO(followerId, followingId);
-
-            await _followsService.UnfollowUser(unfollowDTO);
-
-            //return Redirect("/" + userName);
+            //return Redirect("/" + LoggedInUserName);
             return new JsonResult(new { success = true });
         }
-    }
 
-    public async Task<bool> CheckIfFollowed(int userId, int authorId)
-    {
-        return await _followsService.IsFollowing(userId, authorId);
-    }
-
-    public async Task<int> FindUserIDByName(string userName)
-    {
-        return await _userService.GetUserIDByName(userName);
-    }
-
-
-    public string? GetYouTubeEmbed(string message, out string Message)
-    {
-        string pattern =  @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]{11})(?:[^\n ]*)(.*)";
-        Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
-
-        if (match.Success)
+        //unfollow form button
+        public async Task<IActionResult> OnPostUnfollow()
         {
-            var videoId = match.Groups[6].Value.Substring(0, 11);
-            Message = match.Groups[1].Value.Trim() + " " + match.Groups[7].Value.Trim();
-            return $"https://www.youtube.com/embed/{videoId}";
-        }
-        else
-        {
-            Message = message;
-            return null;
-        }
-    }
+            var userName = User?.Identity?.Name ?? "default";
+            // Convert the username to Id
+            if (string.IsNullOrEmpty(NewFollow.Author))
+            {
+                throw new ArgumentException("NewFollow.Author cannot be null or empty");
+            }
+            else
+            {
+                var followerId = await _userService.GetUserIDByName(userName);
+                var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
-    public async Task<int> FindUpvoteCountByCheepID(int id)
-    {
-        return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
-    }
+                var unfollowDTO = new FollowDTO(followerId, followingId);
 
-    public async Task<int> FindDownvoteCountByCheepID(int id)
-    {
-        return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
-    }
+                await _followsService.UnfollowUser(unfollowDTO);
 
-    public async Task<IActionResult> OnPostReaction()
-    {
-        // the id for the user who is reacting
-        var userId = await _userService.GetUserIDByName(User.Identity.Name);
-        int cheepId = NewcheepId.id  ?? default(int);
-        string react = NewReaction.Reaction;
-
-        // Checks if the user exists
-        try
-        {
-            if(userId == -1 && User.Identity.Name != null) {
-                await _userService.CreateUser(User.Identity.Name);
-                userId = await _userService.GetUserIDByName(User.Identity.Name); 
+                //return Redirect("/" + userName);
+                return new JsonResult(new { success = true });
             }
         }
-        catch (Exception e) 
+
+        public async Task<bool> CheckIfFollowed(int userId, int authorId)
         {
-            Console.WriteLine(e.Message);
-            throw new Exception("There was a problem whilst creating the user");
+            return await _followsService.IsFollowing(userId, authorId);
         }
 
-        var newreact = new ReactionDTO
-        (
-            cheepId,
-            userId, 
-            react
-        );
+        public async Task<int> FindUserIDByName(string userName)
+        {
+            return await _userService.GetUserIDByName(userName);
+        }
 
-        await _reactionService.ReactToCheep(newreact);
 
-        // Retrieve new counts for frontend ajax buttons
-        int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
-        int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
+        public string? GetYouTubeEmbed(string message, out string Message)
+        {
+            string pattern =  @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]{11})(?:[^\n ]*)(.*)";
+            Match match = Regex.Match(message, pattern, RegexOptions.Singleline);
 
-        // return counts with the response
-        return new JsonResult(
-            new
+            if (match.Success)
             {
-                success = true,
-                upVoteCount = upvoteCount,
-                downVoteCount = downvoteCount
-            });
-    }
-
-    //hashtags
-    //inspired from hashtag code from worklizard.com
-    public List<string>? GetHashTags(string message, out string Message)
-    {
-        var regex = new Regex(@"(?<=#)\w+"); 
-        var matches = regex.Matches(message);
-        var hashTags = new List<string>();
-
-        foreach (Match match in matches)
-        {
-            var formattedHashtag = $"/hashtag/{match.Value}";
-            hashTags.Add(formattedHashtag);
-            message = message.Replace("#" + match.Value, "");
+                var videoId = match.Groups[6].Value.Substring(0, 11);
+                Message = match.Groups[1].Value.Trim() + " " + match.Groups[7].Value.Trim();
+                return $"https://www.youtube.com/embed/{videoId}";
+            }
+            else
+            {
+                Message = message;
+                return null;
+            }
         }
 
-        Message = message;
-        return hashTags.Count > 0 ? hashTags : null;
-    }
+        public async Task<int> FindUpvoteCountByCheepID(int id)
+        {
+            return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
+        }
+
+        public async Task<int> FindDownvoteCountByCheepID(int id)
+        {
+            return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
+        }
+
+        public async Task<IActionResult> OnPostReaction()
+        {
+            // the id for the user who is reacting
+            var userId = await _userService.GetUserIDByName(User.Identity.Name);
+            int cheepId = NewcheepId.id  ?? default(int);
+            string react = NewReaction.Reaction;
+
+            // Checks if the user exists
+            try
+            {
+                if(userId == -1 && User.Identity.Name != null) {
+                    await _userService.CreateUser(User.Identity.Name);
+                    userId = await _userService.GetUserIDByName(User.Identity.Name); 
+                }
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception("There was a problem whilst creating the user");
+            }
+
+            var newreact = new ReactionDTO
+            (
+                cheepId,
+                userId, 
+                react
+            );
+
+            await _reactionService.ReactToCheep(newreact);
+
+            // Retrieve new counts for frontend ajax buttons
+            int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
+            int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
+
+            // return counts with the response
+            return new JsonResult(
+                new
+                {
+                    success = true,
+                    upVoteCount = upvoteCount,
+                    downVoteCount = downvoteCount
+                });
+        }
+
+        //hashtags
+        //inspired from hashtag code from worklizard.com
+        public List<string>? GetHashTags(string message, out string Message)
+        {
+            var regex = new Regex(@"(?<=#)\w+"); 
+            var matches = regex.Matches(message);
+            var hashTags = new List<string>();
+
+            foreach (Match match in matches)
+            {
+                var formattedHashtag = $"/hashtag/{match.Value}";
+                hashTags.Add(formattedHashtag);
+                message = message.Replace("#" + match.Value, "");
+            }
+
+            Message = message;
+            return hashTags.Count > 0 ? hashTags : null;
+        }
     }
 }
 public class NewFollow 
