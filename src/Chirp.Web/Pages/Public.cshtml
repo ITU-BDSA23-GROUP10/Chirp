@@ -11,13 +11,6 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-        //TODO potentially not needed anymore
-        @if((TempData["CheepTooShort"] as string) == "true")
-        {
-            <div class="alert alert-warning" role="alert">
-                Your cheep is too short!
-            </div>
-        }
         <div class="cheepbox">
                 <h3>What's on your mind @(User.Identity.Name)?</h3>
                 <form class="share-cheep" method="post">

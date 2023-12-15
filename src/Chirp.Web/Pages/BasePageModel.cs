@@ -82,19 +82,9 @@ namespace Chirp.Web.Pages
                 {
                     throw new InvalidOperationException("author could not be created.");
                 }
-
-            if(NewCheep.Message is null || NewCheep.Message.Length < 1)
-            {
-                TempData["CheepTooShort"] = "true";
-                return Page();
-            }
-            else 
-            {
-                TempData["CheepTooShort"] = "false";
                 
                 var cheep = new CheepCreateDTO(NewCheep.Message, userName);
                 await _cheepService.CreateCheep(cheep, author);
-            }
 
             }
             finally

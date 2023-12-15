@@ -7,7 +7,7 @@
     var baseModel = (Chirp.Web.Pages.BasePageModel)ViewBag.BaseModel;
 }
 
-@*List of cheeps loop*@
+@*Cheeps loop*@
 @foreach (var cheep in Model)
 {
     // use baseModel to access methods
@@ -19,6 +19,7 @@
     var authorId = baseModel.FindUserIDByName(@cheep.Author).Result;
     var isFollowing = baseModel.CheckIfFollowed(userId, authorId).Result;
 
+    @*The inside elements of the cheep*@
     <li>
         <div class="activity">
             <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
