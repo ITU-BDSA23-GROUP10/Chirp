@@ -15,7 +15,6 @@ public class PublicModel : BasePageModel
         : base(cheepService, authorService, userService, reactionService, followsService)
         {
         }
-        
     public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
     {
         ViewData["Page"] = page;

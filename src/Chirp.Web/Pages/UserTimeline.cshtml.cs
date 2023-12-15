@@ -15,7 +15,6 @@ public class UserTimelineModel : BasePageModel
         : base(cheepService, authorService, userService, reactionService, followsService)
         {
         }
-        
     //get method with pagination
     public async Task<ActionResult> OnGetAsync(string author, [FromQuery(Name = "page")] int page = 1)
     {

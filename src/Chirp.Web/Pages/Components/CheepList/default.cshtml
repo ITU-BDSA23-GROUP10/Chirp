@@ -1,0 +1,101 @@
+@model IEnumerable<Chirp.Core.CheepDTO>
+@{
+    //the viewbag stores a reference to BasePageModel so we can get our methods
+    //The IEnumerable<Chirp.Core.CheepDTO> allows us to iterate over 
+    //a collection of CheepDTO objects. This means we can handle multiple 
+    //cheeps at once in our view (which is why we use it for displaying this list of cheeps)
+    var baseModel = (Chirp.Web.Pages.BasePageModel)ViewBag.BaseModel;
+}
+
+@foreach (var cheep in Model)
+{
+    // use baseModel to access methods
+    var upVoteCount = baseModel.FindUpvoteCountByCheepID(cheep.id).Result;
+    var downVoteCount = baseModel.FindDownvoteCountByCheepID(cheep.id).Result;
+    //get the user id and check whether or not the user is following
+    var userName = User?.Identity?.Name ?? "default";                 
+    var userId = baseModel.FindUserIDByName(userName).Result;
+    var authorId = baseModel.FindUserIDByName(@cheep.Author).Result;
+    var isFollowing = baseModel.CheckIfFollowed(userId, authorId).Result;
+
+    <li>
+        <div class="activity">
+            <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
+                <div>
+                    <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
+                    <small>&mdash; @cheep.Timestamp</small>
+                    @*YouTube Link Check and Embed, hashtags*@
+                    @{
+                        string Message;
+                        var embedUrl = baseModel.GetYouTubeEmbed(cheep.Message, out Message);
+
+                        List<string> hashTags;
+                        string MessageWithHashtags;
+                        hashTags = baseModel.GetHashTags(Message, out MessageWithHashtags);    
+                    
+                        if (embedUrl != null)
+                        {
+                            <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        }
+                    }
+
+                    <p style="white-space: pre-line">@MessageWithHashtags</p>
+
+                    @if(hashTags != null)
+                    {
+                        foreach(var hashTag in hashTags)
+                        {
+                            var displayTag = hashTag.Replace("/hashtag/", "#");
+                            <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
+                        }
+                    }
+                    
+                    <div class="flex-it">
+                        @if (User?.Identity is not null && User.Identity.IsAuthenticated)
+                        {  
+                            // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
+                            //@if() Add if statement to check if you are following that person
+                            if(userId == authorId)
+                            {
+                                //no form is shown since the logged in user shouldnt follow themselves
+                            } 
+                            else if(userId != authorId)
+                            {   
+                                if(isFollowing)
+                                {
+                                    <form asp-page-handler="Unfollow" method="post" data-author="@cheep.Author" class="unfollowForm">
+                                        <input type="hidden" name="Author" value="@cheep.Author"/>
+                                        <button type="submit" class="flwbtn unfollow" data-author="@cheep.Author"> Unfollow </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-page-handler="Follow" method="post" data-author="@cheep.Author" class="followForm">
+                                        <input type="hidden" name="author" value="@cheep.Author"/>
+                                        <button type="submit" class="flwbtn follow" data-author="@cheep.Author"> Follow </button>
+                                    </form>
+                                }
+                            }
+
+                            // reaction
+                            <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                                <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
+                                <button class="votebtn vote-btn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
+                            </form>
+                            <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
+                                <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
+                                <input type="hidden" name="NewReaction.Reaction" value="Downvote" data-id="@cheep.id"/>
+                                <button class="votebtn vote-btn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <p class="votebtnn">Upvoted <span>@upVoteCount</span></p> 
+                            <p class="votebtnn">Downvoted <span>@downVoteCount</span></p> 
+                        }
+                    </div>    
+                </div>
+        </div>
+    </li>
+}

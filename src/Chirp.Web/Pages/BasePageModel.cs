@@ -8,6 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.Pages
 {
+    //this contains all methods collectively used in UserTimeline.cshtml.cs and Public.cshtml.cs
+    //the methods are then used in the UserTimeline.cshtml and Public.cshtml
+    //todo add UserProfile and Hashtag pages
     public class BasePageModel : PageModel
     {
         [BindProperty]
