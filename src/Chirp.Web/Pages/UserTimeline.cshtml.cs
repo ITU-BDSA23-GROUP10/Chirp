@@ -98,60 +98,65 @@ public class UserTimelineModel : PageModel
     }
 
     //follow form button
-    public async Task<IActionResult> OnPostFollow() 
+    public async Task<IActionResult> OnPostFollow()
     {
         var LoggedInUserName = User?.Identity?.Name ?? "default";
         var FollowedUserName = NewFollow.Author;
 
-        if (string.IsNullOrEmpty(FollowedUserName))
+        // Check if followedUserName is null
+        if (FollowedUserName == null)
         {
-            throw new ArgumentException("FollowedUserName cannot be null or empty");
+            throw new ArgumentNullException("Followed user does not exist.");
         }
-        else
+
+        //Check if the user that is logged in exists
+        try
         {
-            //Check if the user that is logged in exists
-            try {
-                var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
-                if (loggedInUser is null) {
-                    throw new Exception("User does not exist");
-                }
-            } catch (Exception e) {
-                Console.WriteLine(e.Message);
-                await _userService.CreateUser(LoggedInUserName);
-            }
-
-            var followerId = await _userService.GetUserIDByName(LoggedInUserName);
-            var followingId = await _userService.GetUserIDByName(FollowedUserName);
-
-            var followDTO = new FollowDTO(followerId, followingId);
+            var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
             
-            await _followsService.FollowUser(followDTO);
-
-            return Redirect("/" + LoggedInUserName);
+            if (loggedInUser is null)
+            {
+                throw new Exception("User does not exist");
+            }    
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            await _userService.CreateUser(LoggedInUserName);
+        }
+
+        var followerId = await _userService.GetUserIDByName(LoggedInUserName);
+        var followingId = await _userService.GetUserIDByName(FollowedUserName);
+
+        var followDTO = new FollowDTO(followerId, followingId);
+
+        await _followsService.FollowUser(followDTO);
+
+        //return Redirect("/" + LoggedInUserName);
+        return new JsonResult(new { success = true });
     }
 
     //unfollow form button
     public async Task<IActionResult> OnPostUnfollow()
     {
-        string userName = User?.Identity?.Name ?? "default";
-
+        var userName = User?.Identity?.Name ?? "default";
+        // Convert the username to Id
         if (string.IsNullOrEmpty(NewFollow.Author))
         {
             throw new ArgumentException("NewFollow.Author cannot be null or empty");
         }
         else
         {
-        // Convert the username to Id
-        var followerId = await _userService.GetUserIDByName(userName);
-        var followingId = await _userService.GetUserIDByName(NewFollow.Author);
+            var followerId = await _userService.GetUserIDByName(userName);
+            var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
-        var unfollowDTO = new FollowDTO(followerId, followingId);
-            
-        await _followsService.UnfollowUser(unfollowDTO);
+            var unfollowDTO = new FollowDTO(followerId, followingId);
 
-        return Redirect("/" + userName);
-        }    
+            await _followsService.UnfollowUser(unfollowDTO);
+
+            //return Redirect("/" + userName);
+            return new JsonResult(new { success = true });
+        }
     }
 
     public async Task<bool> CheckIfFollowed(int userId, int authorId)
@@ -259,6 +264,7 @@ public class UserTimelineModel : PageModel
         var userId = await _userService.GetUserIDByName(User.Identity.Name);
         int cheepId = NewcheepId.id  ?? default(int);
         string react = NewReaction.Reaction;
+
         // Checks if the user exists
         try
         {
@@ -272,7 +278,7 @@ public class UserTimelineModel : PageModel
             Console.WriteLine(e.Message);
             throw new Exception("There was a problem whilst creating the user");
         }
-        
+
         var newreact = new ReactionDTO
         (
             cheepId,
@@ -282,7 +288,18 @@ public class UserTimelineModel : PageModel
 
         await _reactionService.ReactToCheep(newreact);
 
-        return Redirect("/" + User.Identity.Name);
+        // Retrieve new counts for frontend ajax buttons
+        int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
+        int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
+
+        // return counts with the response
+        return new JsonResult(
+            new
+            {
+                success = true,
+                upVoteCount = upvoteCount,
+                downVoteCount = downvoteCount
+            });
     }
 
     //hashtags
