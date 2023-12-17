@@ -9,38 +9,45 @@
 }
 
 <div>
-    <h2> @routeName's Timeline </h2>
-
-    @if (User.Identity is not null && User.Identity.IsAuthenticated)
-    { 
-        <div class="cheepbox">
-                <h3>What's on your mind @(User.Identity.Name)?</h3>
-                <form class="share-cheep" method="post">
-                        <textarea type="text" asp-for="NewCheep.Message" required></textarea>
-                        <input type="submit" value="Share">
-                </form>
-        </div>
-    }
-
-    @*start cheep loop*@
-    @if (Model.Cheeps?.Any() == true)
+    @if((ViewData["UserExists"] as string) == "true")
     {
-        <ul id="messagelist" class="cheeps">
-            @{
-                //this is a foreach loop component with the list of cheeps
-                //can be seen or altered through src\Chirp.Web\Pages\Components\CheepList\default.cshtml
-                ViewBag.BaseModel = Model;
-             
-                @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
-            }
-        </ul>
-    }
-    else
-    {
-        <em>There are no cheeps so far.</em>
-    }
+        <h2> @routeName's Timeline </h2>
 
-     @await Component.InvokeAsync("Pagination", ViewData["Author"])   
+        @if (User.Identity is not null && User.Identity.IsAuthenticated)
+        { 
+            <div class="cheepbox">
+                    <h3>What's on your mind @(User.Identity.Name)?</h3>
+                    <form class="share-cheep" method="post">
+                            <textarea type="text" asp-for="NewCheep.Message" required></textarea>
+                            <input type="submit" value="Share">
+                    </form>
+            </div>
+        }
+
+        @*start cheep loop*@
+        @if (Model.Cheeps?.Any() == true)
+        {
+            <ul id="messagelist" class="cheeps">
+                @{
+                    //this is a foreach loop component with the list of cheeps
+                    //can be seen or altered through src\Chirp.Web\Pages\Components\CheepList\default.cshtml
+                    ViewBag.BaseModel = Model;
+                
+                    @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
+                }
+            </ul>
+        }
+        else
+        {
+            <em>There are no cheeps so far.</em>
+        }
+        @await Component.InvokeAsync("Pagination", ViewData["Author"])
+    }
+    else 
+    {
+        <h2> User @routeName does not exist </h2>
+        <a href="/"> Go back to the home page </a>
+    } 
 </div>
 
 @*

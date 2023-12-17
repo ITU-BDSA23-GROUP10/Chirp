@@ -31,6 +31,14 @@ public class UserTimelineModel : BasePageModel
         try
         {
             await padlock.Lock();
+
+            if(userId != -1) 
+            {
+                ViewData["UserExists"] = "true";
+            } else 
+            {   
+                ViewData["UserExists"] = "false";
+            }
             
             List<int> FollowedUsers = await _followsService.GetFollowedUsersId(userId);
 
