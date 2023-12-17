@@ -21,13 +21,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     #region IReactionRepository<Reaction> Members
 
-    public async Task InsertReaction(Reaction entity)
+    private async Task InsertReaction(Reaction entity)
     {
         DbSetReaction.Add(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteReaction(Reaction entity)
+    private async Task DeleteReaction(Reaction entity)
     {
         DbSetReaction.Remove(entity);
         await context.SaveChangesAsync();

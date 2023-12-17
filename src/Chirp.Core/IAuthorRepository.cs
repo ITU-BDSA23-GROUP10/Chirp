@@ -7,9 +7,7 @@ namespace Chirp.Core;
 
 public interface IAuthorRepository<Author, Cheep, User>
 {
-    Task Insert(Author entity);
     Task Delete(Author entity);
-    IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate);
     Task<Author> GetAuthorWithCheeps(string authorName);
     Task<int> GetCheepsCountsFromAuthorId(int id);
     Task<Author?> GetAuthorByName(string name);

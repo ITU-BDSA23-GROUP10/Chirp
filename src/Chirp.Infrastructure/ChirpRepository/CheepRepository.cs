@@ -21,13 +21,13 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     #region ICheepRepository<Cheep, Author> Members
 
-    public async Task Insert(Cheep entity)
+    private async Task Insert(Cheep entity)
     {
         DbSet.Add(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task Delete(Cheep entity)
+    private async Task Delete(Cheep entity)
     {
         DbSet.Remove(entity);
         await context.SaveChangesAsync();
@@ -38,7 +38,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         await Delete(GetById(cheepId).Result);
     }
 
-    public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
+    private IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
     {
         return DbSet.Where(predicate);
     }
