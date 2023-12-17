@@ -25,8 +25,10 @@
     {
         <ul id="messagelist" class="cheeps">
             @{
-                //this is a foreach loop component with the list of cheeps
-                //can be seen or altered through src\Chirp.Web\Pages\Components\CheepList\default.cshtml
+                // this is a foreach loop component with the list of cheeps
+                // It's used for displaying the cheeps on the webpage
+                // The component can be altered if needed
+                // See the CheepList component for more details
                 ViewBag.BaseModel = Model;
              
                 @await Component.InvokeAsync("CheepList", new { cheeps = Model.DisplayedCheeps })
@@ -37,12 +39,18 @@
     {
         <em>There are no cheeps so far.</em>
     }
-
+    
+    @*
+    Pagination
+    The component can be altered if needed
+    See the Pagination component for more details
+    *@
     @await Component.InvokeAsync("Pagination")
 </div>
 
 @*
 follow notification popup
-can be seen or altered through src\Chirp.Web\Pages\Components\FollowNotification\default.cshtml
+The component can be altered if needed
+See the FollowNotification component for more details
 *@
 @await Component.InvokeAsync("FollowNotification")
