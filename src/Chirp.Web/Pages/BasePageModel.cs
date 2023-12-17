@@ -2,14 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
-using Chirp.Web.ViewComponents;
 using System.Text.RegularExpressions;
-using System.ComponentModel.DataAnnotations;
+using Chirp.Web.ClassModels;
 
 namespace Chirp.Web.Pages
 {
     //this contains all methods collectively used in UserTimeline.cshtml.cs, Public.cshtml.cs, HashTag.cshtml.cs
-    //the methods are then used in the respective pages cshtml
+    //the methods are then used in the connected html pages
     public class BasePageModel : PageModel
     {
         [BindProperty]
@@ -258,9 +257,4 @@ namespace Chirp.Web.Pages
             return hashTags.Count > 0 ? hashTags : null;
         }
     }
-}
-public class NewFollow 
-{
-    [Display(Name = "author")]
-    public string? Author {get; set;} = string.Empty;
 }

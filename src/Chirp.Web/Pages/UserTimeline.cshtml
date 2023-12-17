@@ -14,14 +14,10 @@
         <h2> @routeName's Timeline </h2>
 
         @if (User.Identity is not null && User.Identity.IsAuthenticated)
-        { 
-            <div class="cheepbox">
-                    <h3>What's on your mind @(User.Identity.Name)?</h3>
-                    <form class="share-cheep" method="post">
-                            <textarea type="text" asp-for="NewCheep.Message" required></textarea>
-                            <input type="submit" value="Share">
-                    </form>
-            </div>
+        {
+            // This is the form to post cheeps
+            // See the WriteCheepForm component for more details
+            @await Component.InvokeAsync("WriteCheepForm", new { newCheep = Model.NewCheep })
         }
 
         @*start cheep loop*@

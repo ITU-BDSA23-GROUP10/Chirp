@@ -35,7 +35,8 @@ public class UserTimelineModel : BasePageModel
             if(userId != -1) 
             {
                 ViewData["UserExists"] = "true";
-            } else 
+            }
+            else 
             {   
                 ViewData["UserExists"] = "false";
             }

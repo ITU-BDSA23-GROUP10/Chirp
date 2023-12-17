@@ -1,80 +1,13 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Chirp.Core;
-using Chirp.Infrastructure.Models;
+using Chirp.Web.ClassModels;
 
-namespace Chirp.Web.ViewComponents;
-public class WriteCheepFormViewComponent : ViewComponent
+namespace Chirp.Web.ViewComponents
 {
-    private readonly IAuthorRepository<Author, Cheep, User> _authorService;
-    private readonly ICheepRepository<Cheep, Author>  _cheepService;
-
-    protected NewCheep NewestCheep { get; set; } = new NewCheep { Message = string.Empty };
-
-
-    public WriteCheepFormViewComponent(IAuthorRepository<Author, Cheep, User> authorService, ICheepRepository<Cheep, Author> cheepService)
+    public class WriteCheepFormViewComponent : ViewComponent
     {
-        _authorService = authorService;
-        _cheepService = cheepService;
-    }
-
-    public async Task<IViewComponentResult> InvokeAsync(string userName, string newCheepMessage)
-    {
-        AsyncPadlock padlock = new();
-        CheepCreateDTO cheep;
-        Author author;
-
-        try
+        public IViewComponentResult Invoke(NewCheep newCheep)
         {
-            await padlock.Lock();
-            author = await _authorService.GetAuthorByName(userName)
-                ?? throw new InvalidOperationException("author could not be created.");
-
-            if (author is null)
-            {
-                //await _authorService.CreateAuthor(userName);
-                author = await _authorService.GetAuthorByName(userName)
-                    ?? throw new InvalidOperationException("author could not be created.");
-            }
-
-            if(newCheepMessage is null || newCheepMessage.Length < 1)
-            {
-                ViewData["CheepTooShort"] = "true";
-                padlock.Dispose();
-                return View(NewestCheep);
-            } else 
-            {
-                ViewData["CheepTooShort"] = "false";
-                cheep = new CheepCreateDTO(newCheepMessage, userName);
-                await _cheepService.CreateCheep(cheep, author);
-            }
-
+            return View(newCheep);
         }
-        finally
-        {
-            NewestCheep.Message = newCheepMessage;
-            padlock.Dispose();
-        }
-
-        return View(NewestCheep);
     }
-}
-
-public class NewCheep 
-{
-    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
-    [Required]
-    [MaxLength(160)]
-    [Display(Name = "text")]
-    public required string Message {get; set;} = string.Empty;
-}
-
-public class NewReaction
-{
-    public string? Reaction {get; set;} = string.Empty;
-}
-
-public class NewcheepId
-{
-    public int? id {get; set;}
 }

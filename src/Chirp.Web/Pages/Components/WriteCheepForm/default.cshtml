@@ -1,12 +1,9 @@
-﻿@using Chirp.Web.ViewComponents;
-@{
-    string message = Model.Message;
-}
+﻿@model Chirp.Web.ClassModels.NewCheep
 
 <div class="cheepbox">
-        <h3>What's on your mind?</h3>
-        <form method="post">
-                <input style="float: left" type="text" name="message" value="@message" required/>
-                <input type="submit" value="Share">
-        </form>
+    <h3>What's on your mind @(User.Identity.Name)?</h3>
+    <form class="share-cheep" method="post">
+            <textarea type="text" asp-for="Message" required></textarea>
+            <input type="submit" value="Share">
+    </form>
 </div>
