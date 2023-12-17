@@ -89,34 +89,36 @@
                                     {   
                                         if(isFollowing)
                                         {
-                                            <form asp-page-handler="Unfollow" method="post">
+                                            <form asp-page-handler="Unfollow" method="post" data-author="@cheep.Author" class="unfollowForm">
                                                 <input type="hidden" name="Author" value="@cheep.Author"/>
-                                                <button class="flwbtn unfollow"> Unfollow </button>
+                                                <button type="submit" class="flwbtn unfollow" data-author="@cheep.Author"> Unfollow </button>
                                             </form>
                                         }
                                         else
                                         {
-                                            <form asp-page-handler="Follow" method="post" >
+                                            <form asp-page-handler="Follow" method="post" data-author="@cheep.Author" class="followForm">
                                                 <input type="hidden" name="author" value="@cheep.Author"/>
-                                                <button class="flwbtn follow"> Follow </button>
+                                                <button type="submit" class="flwbtn follow" data-author="@cheep.Author"> Follow </button>
                                             </form>
                                         }
                                     }
-                                    <form asp-page-handler="Reaction" method="post" >
+
+                                    // reaction
+                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
                                         <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                        <input type="hidden" name="NewReaction.Reaction" value="Upvote"/>
-                                        <button class="votebtn"> Upvote (@upVoteCount) </button>
+                                        <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
+                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
                                     </form>
-                                    <form asp-page-handler="Reaction" method="post" >
+                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id">
                                         <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                        <input type="hidden" name="NewReaction.Reaction" value="Downvote"/>
-                                        <button class="votebtn"> Downvote (@downVoteCount) </button>
+                                        <input type="hidden" name="NewReaction.Reaction" value="Downvote" data-id="@cheep.id"/>
+                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>
                                     </form>
                                 }
                                 else
                                 {
-                                    <span class="votebtnn"> Upvote (@upVoteCount)</span> 
-                                    <span class="votebtnn"> Downvote (@downVoteCount)</span> 
+                                    <p class="votebtnn">upvoted <span>@upVoteCount</span></p> 
+                                    <p class="votebtnn">Downvoted <span>@downVoteCount</span></p> 
                                 }
                             </div>    
                         </div>
@@ -136,4 +138,19 @@
         <h2> User @routeName does not exist </h2>
         <a href="/"> Go back to the home page </a>
     }
+</div>
+
+<!-- follow notification -->
+<div id="notification" class="flw-notifc slide-in-blurred-bottom">
+    <!--bootstrap bell icon-->
+    <div class="flex-it">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+        </svg>
+        <div>
+            <span id="action-message"></span>
+            <span id="author"></span>
+            <p id="follow-message">View their cheeps on your own timeline!</p>
+        </div>
+    </div>
 </div>

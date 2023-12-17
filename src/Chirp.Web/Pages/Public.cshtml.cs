@@ -131,25 +131,26 @@ public class PublicModel : PageModel
     }
 
     //follow form button
-    public async Task<IActionResult> OnPostFollow() 
+    public async Task<IActionResult> OnPostFollow()
     {
         var LoggedInUserName = User?.Identity?.Name ?? "default";
-        //var LoggedInUserEmail =  Add user email here and insert into the create user func
         var FollowedUserName = NewFollow.Author;
-        
+
         // Check if followedUserName is null
         if (FollowedUserName == null)
         {
             throw new ArgumentNullException("Followed user does not exist.");
         }
-        
+
         //Check if the user that is logged in exists
         try
         {
             var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
-            if (loggedInUser is null) {
+            
+            if (loggedInUser is null)
+            {
                 throw new Exception("User does not exist");
-            }
+            }    
         }
         catch (Exception e)
         {
@@ -161,10 +162,11 @@ public class PublicModel : PageModel
         var followingId = await _userService.GetUserIDByName(FollowedUserName);
 
         var followDTO = new FollowDTO(followerId, followingId);
-        
+
         await _followsService.FollowUser(followDTO);
 
-        return Redirect("/" + LoggedInUserName);
+        //return Redirect("/" + LoggedInUserName);
+        return new JsonResult(new { success = true });
     }
 
     //unfollow form button
@@ -182,10 +184,11 @@ public class PublicModel : PageModel
             var followingId = await _userService.GetUserIDByName(NewFollow.Author);
 
             var unfollowDTO = new FollowDTO(followerId, followingId);
-                
+
             await _followsService.UnfollowUser(unfollowDTO);
 
-            return Redirect("/" + userName);
+            //return Redirect("/" + userName);
+            return new JsonResult(new { success = true });
         }
     }
     public string? GetYouTubeEmbed(string message, out string Message)
@@ -230,12 +233,12 @@ public class PublicModel : PageModel
                 await _userService.CreateUser(User.Identity.Name);
                 userId = await _userService.GetUserIDByName(User.Identity.Name); 
             }
-        } catch (Exception e) 
+        }
+        catch (Exception e) 
         {
             Console.WriteLine(e.Message);
             throw new Exception("There was a problem whilst creating the user");
         }
-        //throw new Exception("UserID:  " + userId + "  ||  cheepID: " + cheepId + "   ||   Reaction: " + NewReaction.Reaction);
 
         var newreact = new ReactionDTO
         (
@@ -248,8 +251,19 @@ public class PublicModel : PageModel
 
         await _reactionService.ReactToCheep(newreact);
 
-        return Redirect("/" + User.Identity.Name);
-    } 
+        // Retrieve new counts for frontend ajax buttons
+        int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
+        int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
+
+        // return counts with the response
+        return new JsonResult(
+            new
+            {
+                success = true,
+                upVoteCount = upvoteCount,
+                downVoteCount = downvoteCount
+            });
+    }
 
     //hashtags
     //inspired from hashtag code from worklizard.com
