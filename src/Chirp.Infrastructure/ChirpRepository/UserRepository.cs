@@ -79,7 +79,7 @@ public class UserRepository : IUserRepository<User>
 
         if (user is not null)
         {
-            throw new Exception("User already exists");
+            throw new Exception("User '" + name + "' already exists");
         }
 
         if (user is null)
