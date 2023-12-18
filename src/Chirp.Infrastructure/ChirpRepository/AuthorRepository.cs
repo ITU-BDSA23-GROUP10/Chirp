@@ -112,9 +112,9 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
     }
 
-    public async Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit)
+    public async Task<List<CheepDTO>> GetCheepsByAuthorId(List<int> ids, int offset, int limit)
     {
-        var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
+        var authorEntity = await SearchFor(_author => ids.Contains(_author.User.UserId)).FirstOrDefaultAsync();
 
         if (authorEntity is null)
         {

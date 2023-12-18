@@ -42,12 +42,13 @@ public class UserTimelineModel : BasePageModel
             }
             
             List<int> FollowedUsers = await _followsService.GetFollowedUsersId(userId);
+            FollowedUsers.Add(userId);
 
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
             int followedUsersCheepsCount = 0;
 
             foreach(int id in FollowedUsers) {
-                followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(id, offset, limit));
+                followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(FollowedUsers, offset, limit));
                 followedUsersCheepsCount += await _authorService.GetCheepsCountsFromAuthorId(id);
             }
 
