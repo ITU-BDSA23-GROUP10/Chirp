@@ -47,10 +47,9 @@ public class UserTimelineModel : BasePageModel
             List<CheepDTO> followingCheeps = new List<CheepDTO>();
             int followedUsersCheepsCount = 0;
 
-            // foreach(int id in FollowedUsers) {
-            //     followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(FollowedUsers, offset, limit));
-            //     followedUsersCheepsCount += await _authorService.GetCheepsCountsFromAuthorId(id);
-            // }
+            foreach(int id in FollowedUsers) {
+                followedUsersCheepsCount += await _authorService.GetCheepsCountsFromAuthorId(id);
+            }
             followingCheeps.AddRange(await _authorService.GetCheepsByAuthorId(FollowedUsers, offset, limit));
 
             if (userName == author) // logged-in user's page
@@ -59,7 +58,7 @@ public class UserTimelineModel : BasePageModel
                 Cheeps.Clear();
                 //Cheeps.AddRange(UserCheeps);
                 Cheeps.AddRange(followingCheeps);
-                ViewData["CheepsCount"] = Cheeps.Count;
+                ViewData["CheepsCount"] = followedUsersCheepsCount;
             }
             else // other users' pages
             {
