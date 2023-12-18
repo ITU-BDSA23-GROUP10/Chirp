@@ -54,9 +54,7 @@ public class UserTimelineModel : BasePageModel
 
             if (userName == author) // logged-in user's page
             {
-                //(UserCheeps, int cheepsCount) = await _authorService.GetCheepsByAuthor(author, offset, limit);
                 Cheeps.Clear();
-                //Cheeps.AddRange(UserCheeps);
                 Cheeps.AddRange(followingCheeps);
                 ViewData["CheepsCount"] = followedUsersCheepsCount;
             }

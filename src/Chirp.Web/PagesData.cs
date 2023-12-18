@@ -1,7 +1,7 @@
 namespace Chirp.Web;
 
 public class PagesData {
-
+        //pagination
         public static int CheepsPerPage = 32;
         public int CurrentPage { get; set; } = 1;
         public int TotalPages  { get; set; } = 1;

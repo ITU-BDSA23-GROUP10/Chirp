@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.BindableClasses
 {
+    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
     public class NewFollow 
     {
         [Display(Name = "author")]
@@ -9,7 +10,6 @@ namespace Chirp.Web.BindableClasses
     }
     public class NewCheep 
     {
-        //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
         [Required]
         [MaxLength(160)]
         [Display(Name = "text")]
@@ -25,7 +25,6 @@ namespace Chirp.Web.BindableClasses
     }
     public class NewEmail 
     {
-        //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
         [Required]
         [Display(Name = "email")]
         public required string Email {get; set;}
