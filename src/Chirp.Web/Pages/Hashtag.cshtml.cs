@@ -15,7 +15,7 @@ public class HashtagModel : BasePageModel
         : base(cheepService, authorService, userService, reactionService, followsService)
         {
         }
-    public string TagName { get; set; }
+    public string TagName { get; set; } = string.Empty;
     public async Task<ActionResult> OnGetAsync(string tagName)
     {
         try
