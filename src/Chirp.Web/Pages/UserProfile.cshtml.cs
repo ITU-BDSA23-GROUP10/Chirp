@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
-using Chirp.Web.ClassModels;
+using Chirp.Web.BindableClasses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;

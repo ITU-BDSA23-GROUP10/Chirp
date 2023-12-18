@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Chirp.Web.ClassModels;
+using Chirp.Web.BindableClasses;
 
 namespace Chirp.Web.ViewComponents
 {

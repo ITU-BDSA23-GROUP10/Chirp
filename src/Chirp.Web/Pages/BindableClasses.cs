@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using FluentValidation;
 
-namespace Chirp.Web.ClassModels
+namespace Chirp.Web.BindableClasses
 {
     public class NewFollow 
     {
@@ -36,12 +35,5 @@ namespace Chirp.Web.ClassModels
         [Required]
         [Display(Name = "CheepId")]
         public int CheepID {get; set;} = -1;
-    }
-    public class EmailValidator : AbstractValidator<NewEmail>
-    {
-        public EmailValidator()
-        {
-            RuleFor(x => x.Email).EmailAddress();
-        }
     }
 }

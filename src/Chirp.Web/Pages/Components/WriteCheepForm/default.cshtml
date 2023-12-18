@@ -1,7 +1,7 @@
-﻿@model Chirp.Web.ClassModels.NewCheep
+﻿@model Chirp.Web.BindableClasses.NewCheep
 
 <div class="cheepbox">
-    <h3>What's on your mind @(User.Identity.Name)?</h3>
+    <h3>What's on your mind @(User!.Identity!.Name)?</h3>
     <form class="share-cheep" method="post">
             <textarea type="text" asp-for="Message" required></textarea>
             <input type="submit" value="Share">

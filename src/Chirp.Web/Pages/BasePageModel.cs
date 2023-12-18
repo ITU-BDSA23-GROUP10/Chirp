@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
 using System.Text.RegularExpressions;
-using Chirp.Web.ClassModels;
+using Chirp.Web.BindableClasses;
 
 namespace Chirp.Web.Pages
 {
