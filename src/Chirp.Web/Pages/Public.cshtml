@@ -11,117 +11,23 @@
 
     @if (User.Identity is not null && User.Identity.IsAuthenticated)
     {
-    @if((ViewData["CheepTooShort"] as string) == "true")
-    {
-        <div class="alert alert-warning" role="alert">
-            Your cheep is too short!
-        </div>
-        ViewData["CheepTooShort"] = "false";
-    }
-    <div class="cheepbox">
-            <h3>What's on your mind @(User.Identity.Name)?</h3>
-            <form class="share-cheep" method="post">
-                    <textarea type="text" asp-for="NewCheep.Message"></textarea>
-                    <input type="submit" value="Share">
-            </form>
-    </div>
+        // This is the form to post cheeps
+        // See the WriteCheepForm component for more details
+        @await Component.InvokeAsync("WriteCheepForm", new { newCheep = Model.NewCheep })
     }
 
-    <!-- start cheep loop -->
+    @*start cheep loop*@
     @if (Model.DisplayedCheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.DisplayedCheeps)
-            {
-                var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
-                var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result;
-                <li>
-                    <div class="activity">
-                        <img src="https://avatars.githubusercontent.com/@cheep.Author"/>
-                        <div>
-                            <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
-                            <small>&mdash; @cheep.Timestamp</small>
-                            <!-- YouTube Link Check and Embed, hashtags -->
-                            @{
-                                string Message;
-                                var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
-
-                                List<string> hashTags;
-                                string MessageWithHashtags;
-                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags)!;    
-                            }
-
-                            @if (embedUrl != null)
-                            {
-                                <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            }
-
-                            <p style="white-space: pre-line">@MessageWithHashtags</p>
-
-                            @if(hashTags != null)
-                            {
-                                foreach(var hashTag in hashTags)
-                                {
-                                    var displayTag = hashTag.Replace("/hashtag/", "#");
-                                    <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
-                                }
-                            }
-
-                            <div class="flex-it">
-                                @if (User?.Identity is not null && User.Identity.IsAuthenticated)
-                                {  
-                                    //get the id of the logged in user
-                                    var userName = User?.Identity?.Name ?? "default";                
-                                    var userId = Model.FindUserIDByName(userName).Result;
-                                    var authorId = Model.FindUserIDByName(@cheep.Author).Result;
-                                    var isFollowing = Model.CheckIfFollowed(userId, authorId).Result;
-                                    @* var upVoteCount = Model.FindUpvoteCountByCheepID(cheep.id).Result;
-                                    var downVoteCount = Model.FindDownvoteCountByCheepID(cheep.id).Result; *@
-                                    // Inspired by StackOverflow user: https://stackoverflow.com/a/59721230
-                                    //@if() Add if statement to check if you are following that person
-                                    if(userId == authorId)
-                                    {
-                                        //no form is shown since the logged in user shouldnt follow themselves
-                                    }
-                                    else if(userId != authorId)
-                                    {   
-                                        if(isFollowing)
-                                        {
-                                            <form asp-page-handler="Unfollow" method="post" data-author="@cheep.Author" class="unfollowForm">
-                                                <input type="hidden" name="Author" value="@cheep.Author"/>
-                                                <button type="submit" class="flwbtn unfollow" data-author="@cheep.Author"> Unfollow </button>
-                                            </form>
-                                        }
-                                        else
-                                        {
-                                            <form asp-page-handler="Follow" method="post" data-author="@cheep.Author" class="followForm">
-                                                <input type="hidden" name="author" value="@cheep.Author"/>
-                                                <button type="submit" class="flwbtn follow" data-author="@cheep.Author"> Follow </button>
-                                            </form>
-                                        }
-                                    }
-
-                                    // reaction
-                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id" class="vote-btn">
-                                        <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                        <input type="hidden" name="NewReaction.Reaction" value="Upvote" data-id="@cheep.id"/>
-                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Upvote <span>@upVoteCount</span> </button>
-                                    </form>
-                                    <form asp-page-handler="Reaction" method="post" data-id="@cheep.id" class="vote-btn">
-                                        <input type="hidden" name="NewcheepId.id" value="@cheep.id"/>
-                                        <input type="hidden" name="NewReaction.Reaction" value="Downvote" data-id="@cheep.id"/>
-                                        <button class="votebtn vote-btn" data-id="@cheep.id"> Downvote <span>@downVoteCount</span> </button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <p class="votebtnn">upvoted <span>@upVoteCount</span></p> 
-                                    <p class="votebtnn">Downvoted <span>@downVoteCount</span></p> 
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </li>
+            @{
+                // this is a foreach loop component with the list of cheeps
+                // It's used for displaying the cheeps on the webpage
+                // The component can be altered if needed
+                // See the CheepList component for more details
+                ViewBag.BaseModel = Model;
+             
+                @await Component.InvokeAsync("CheepList", new { cheeps = Model.DisplayedCheeps })
             }
         </ul>
     }
@@ -129,21 +35,18 @@
     {
         <em>There are no cheeps so far.</em>
     }
-
+    
+    @*
+    Pagination
+    The component can be altered if needed
+    See the Pagination component for more details
+    *@
     @await Component.InvokeAsync("Pagination")
 </div>
 
-<!-- follow notification -->
-<div id="notification" class="flw-notifc slide-in-blurred-bottom">
-    <!--bootstrap bell icon-->
-    <div class="flex-it">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-        </svg>
-        <div>
-            <span id="action-message"></span>
-            <span id="author"></span>
-            <p id="follow-message">View their cheeps on your own timeline!</p>
-        </div>
-    </div>
-</div>
+@*
+follow notification popup
+The component can be altered if needed
+See the FollowNotification component for more details
+*@
+@await Component.InvokeAsync("FollowNotification")
