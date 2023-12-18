@@ -335,7 +335,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var reactUser = await ur.GetUserByName("CheepLiker");
             ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, typeOfReaction);
             await rr.ReactToCheep(rd);
-            var reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
+            var reaction = await rr.GetReactionByUserAndCheep(reactUser!.UserId, cheepUser!.CheepId);
             
             Assert.True(reaction!.userId == reactUser.UserId);
         }
@@ -378,14 +378,14 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             // Creating upvote reaction
             ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, firstReaction);
             await rr.ReactToCheep(rd);
-            var reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
+            var reaction = await rr.GetReactionByUserAndCheep(reactUser!.UserId, cheepUser!.CheepId);
             
             Assert.True(reaction!.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
 
             // creating downvote reaction
             rd = new ReactionDTO(cheepUser.CheepId, reactUser.UserId, secoundReaction);
             await rr.ReactToCheep(rd);
-            reaction = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).FirstOrDefault();
+            reaction = await rr.GetReactionByUserAndCheep(reactUser!.UserId, cheepUser!.CheepId);
             Assert.True(reaction!.userId == reactUser.UserId && reaction.reactionType == rd.reactionType);
         }
     }
@@ -429,8 +429,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             ReactionDTO rd = new ReactionDTO(cheepUser!.CheepId, reactUser!.UserId, reactionToCheep);
 
             await rr.ReactToCheep(rd);
-            var reaction = rr.SearchFor(_react => _react.userId == reactUser!.UserId && _react.cheepId == cheepUser!.CheepId).FirstOrDefault();
-            //throw new Exception("test test test: " + rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId).Count());
+            var reaction = await rr.GetReactionByUserAndCheep(reactUser!.UserId, cheepUser!.CheepId);
             
             Assert.True(reaction!.userId == reactUser!.UserId && reaction.reactionType == rd.reactionType);
 
@@ -438,14 +437,9 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             rd = new ReactionDTO(cheepUser!.CheepId, reactUser.UserId, reactionToCheep);
             await rr.ReactToCheep(rd);
 
-            var ShouldbeNothing = rr.SearchFor(_react => _react.userId == reactUser.UserId && _react.cheepId == cheepUser.CheepId);
+            var ShouldbeNothing = await rr.GetReactionByUserAndCheep(reactUser!.UserId, cheepUser!.CheepId);
             
-            bool reactionfound = false;
-            if(ShouldbeNothing.Count() != 0)
-            {
-                reactionfound = true;
-            }
-            Assert.True(reactionfound == false);
+            Assert.Null(ShouldbeNothing);
         }
     }
 }

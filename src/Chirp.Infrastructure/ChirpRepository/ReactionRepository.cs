@@ -40,7 +40,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate)
+    private IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate)
     {
         return DbSetReaction.Where(predicate);
     }
