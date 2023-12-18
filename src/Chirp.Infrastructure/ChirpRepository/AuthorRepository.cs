@@ -121,22 +121,22 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
             return new List<CheepDTO>();
         }
 
-        List<CheepDTO> cheeps = await DbSetAuthor.Entry(authorEntity)
-                    .Collection(_author => _author.Cheeps)
-                    .Query()
-                    .OrderByDescending(_cheep => _cheep.TimeStamp)
-                    .Skip(offset).Take(limit)
-                    .Select(_cheep => new CheepDTO
-                    (
-                        _cheep.CheepId,
-                        _cheep.Author.User.Name,
-                        _cheep.Text,
-                        _cheep.TimeStamp
-                    ))
-                    .ToListAsync()
-                    ?? new List<CheepDTO>();
+        var cheeps = DbSetAuthor.Where(_author =>  ids.Contains(_author.User.UserId))
+                            .SelectMany(_author2 => _author2.Cheeps)
+                            .OrderByDescending(_cheep => _cheep.TimeStamp)
+                            .Skip(offset)
+                            .Take(limit)
+                            .Select(_cheep => new CheepDTO
+                            (
+                                _cheep.CheepId,
+                                _cheep.Author.User.Name,
+                                _cheep.Text,
+                                _cheep.TimeStamp
+                            ))
+                            .ToList();
+                                
 
-        return new List<CheepDTO>(cheeps);
+        return cheeps;
     }
 
     public async Task<List<CheepDTO>> GetAllCheepsByAuthorName(string authorName)
