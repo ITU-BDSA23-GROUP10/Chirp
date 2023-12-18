@@ -1,0 +1,27 @@
+@startuml
+header Sequence Diagram for Github Actions
+title Build, Test & Release Sequence Diagram (build_test_release.yml)
+
+== Checkout Branch (main) ==
+Workflow -> Github: Request: Checkout Branch (main)
+activate Github
+Github -> Github: Checkout to branch (main)
+return Response: Checkout Branch (main)
+
+== Setup Dotnet SDK ==
+
+Workflow -> Github: Request: Setup Dotnet SDK (actions/setup-dotnet@v3)
+activate Github
+Github -> Github: Sets up a dotnet environment
+return Response: Dotnet environment
+
+== Publish Project (win, linux, mac)==
+
+== Release Project (win, linux, mac)==
+
+Workflow -> Github: Request: Publish Project (win, linux, mac)
+activate Github
+Github -> Github: Creates a release
+return Response: Sucess acknowledgement
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+header UML Activity Diagram for Github Actions
+title Build And Test Workflow (build_and_test.yml)
+start
+:Checkout Github Branch (The Branch that got pushed to);
+
+
+if(Succes) then (No)
+    #pink:Error;
+    kill
+else (Yes)
+endif
+
+
+:Setup Dotnet 7 SDK;
+
+if(Succes) then (No)
+    #pink:Error;
+    kill
+else (Yes)
+endif
+
+:Restore dependencies (dotnet restore);
+
+if(Succes) then (No)
+    #pink:Error;
+    kill
+else (Yes)
+endif
+
+:Build (dotnet build);
+
+if(Succes) then (No)
+    #pink:Error;
+    kill
+else (Yes)
+endif
+
+:Run Tests (dotnet test);
+
+if(Succes) then (No)
+    #pink:Error;
+    kill
+else (Yes)
+endif
+
+#green:Tests passed;
+
+end
+@enduml

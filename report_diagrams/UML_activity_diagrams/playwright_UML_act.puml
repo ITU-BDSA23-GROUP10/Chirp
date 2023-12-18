@@ -1,0 +1,7 @@
+@startuml
+header UML Activity Diagram for Github Actions
+title Playwright Workflow (playwright.yml)
+
+
+
+@enduml
