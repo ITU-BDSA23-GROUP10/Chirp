@@ -1,7 +1,7 @@
 using Chirp.Core;
 using Microsoft.AspNetCore.Mvc;
 
-//this makes Chirp.Web/Pages/Components/CheepList/default.cshtml viewable
+namespace Chirp.Web.ViewComponents;
 public class CheepListViewComponent : ViewComponent 
 {
     public IViewComponentResult Invoke(IEnumerable<CheepDTO> cheeps) 
