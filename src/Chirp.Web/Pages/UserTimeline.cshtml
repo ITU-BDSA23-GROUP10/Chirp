@@ -25,10 +25,9 @@
         {
             <ul id="messagelist" class="cheeps">
                 @{
-                // this is a foreach loop component with the list of cheeps
-                // It's used for displaying the cheeps on the webpage
-                // The component can be altered if needed
-                // See the CheepList component for more details
+                    // this is a foreach loop component with the list of cheeps
+                    // It's used for displaying the cheeps on the webpage
+                    // See the CheepList component for more details
                     ViewBag.BaseModel = Model;
                 
                     @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
@@ -42,7 +41,6 @@
 
         @*
         Pagination
-        The component can be altered if needed
         See the Pagination component for more details
         *@
         @await Component.InvokeAsync("Pagination", ViewData["Author"])
@@ -56,7 +54,6 @@
 
 @*
 follow notification popup
-The component can be altered if needed
 See the FollowNotification component for more details
 *@
 @await Component.InvokeAsync("FollowNotification")

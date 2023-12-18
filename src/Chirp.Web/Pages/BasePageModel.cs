@@ -28,11 +28,8 @@ namespace Chirp.Web.Pages
         protected readonly IUserRepository<User> _userService;
         protected readonly IReactionRepository<Reaction> _reactionService;
         protected readonly IFollowsRepository<Follows> _followsService;
-
-        //TODO: Figure out why 2 extra pages are added to the pagination
         protected readonly int excessiveCheepsCount = 32;
 
-        // maybe remove
         public List<CheepDTO> UserCheeps { get; set; } = new List<CheepDTO>();
         //DisplayedCheeps is used in public.cshtml
         public List<CheepDTO> DisplayedCheeps { get; set; } = new List<CheepDTO>();

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
@@ -8,13 +7,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
 
 namespace Chirp.Web.Pages;
-public class UserProfileModel : PageModel
+public class UserProfileModel : BasePageModel
 {
-    readonly IUserRepository<User> _userService;
-    readonly IReactionRepository<Reaction> _reactionService;
-    readonly IAuthorRepository<Author, Cheep, User> _authorService;
-    readonly IFollowsRepository<Follows> _followsService;
-    readonly ICheepRepository<Cheep, Author> _cheepService;
 
     [BindProperty]
     public NewEmail NewEmail { get; set; } = new NewEmail { Email = string.Empty};
@@ -26,18 +20,15 @@ public class UserProfileModel : PageModel
 
     public List<CheepDTO> cheeps { get; set; } = new List<CheepDTO>();
 
-        public UserProfileModel(IUserRepository<User> userService,
+    public UserProfileModel(
+        ICheepRepository<Cheep, Author> cheepService,
         IAuthorRepository<Author, Cheep, User> authorService,
+        IUserRepository<User> userService,
         IReactionRepository<Reaction> reactionService,
-        IFollowsRepository<Follows> followsService,
-        ICheepRepository<Cheep, Author> cheepService)
+        IFollowsRepository<Follows> followsService)
+        : base(cheepService, authorService, userService, reactionService, followsService)
         {
-            _userService = userService;
-            _authorService = authorService;
-            _reactionService = reactionService;
-            _followsService = followsService;
-            _cheepService = cheepService;
-        }    
+        }   
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -104,11 +95,6 @@ public class UserProfileModel : PageModel
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return Redirect("/");
-    }
-
-    public async Task<int> FindUserIDByName(string userName)
-    {
-        return await _userService.GetUserIDByName(userName);
     }
 
     public async Task findUserFollowingByUserID(int userId)
@@ -246,7 +232,6 @@ public class UserProfileModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteCheep()
     {
-        // TODO: Set username = User?.Identity?.Name! in the constructor instead of hardcoding all the time
         await _cheepService.Delete(DeleteThisCheep.CheepID);
         // Re-adds the cheeps to the author.Cheeps
         cheeps = await _authorService.GetAllCheepsByAuthorName(User?.Identity?.Name!);
