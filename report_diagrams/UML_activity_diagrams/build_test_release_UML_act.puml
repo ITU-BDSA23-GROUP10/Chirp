@@ -9,7 +9,7 @@ start
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -18,7 +18,7 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -26,7 +26,7 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -34,13 +34,13 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
 #green:Release Created;
 
-end
+stop
 @enduml
 
 

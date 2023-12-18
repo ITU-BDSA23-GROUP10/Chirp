@@ -1,8 +1,9 @@
 @startuml
 header UML Activity Diagram for Github Actions
-title Playwright Workflow (playwright.yml)
+title Azure Pipeline / Database Update (azure_pipeline.yml)
 start
 :Checkout Github Branch (The Branch that got pushed to);
+:Call to get the Github Repository;
 
 
 if(Succes) then (No)
@@ -20,7 +21,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Install powershell (dotnet tool install);
+:Install Dotnet Entity Framework (dotnet tool install);
 
 if(Succes) then (No)
     #pink:Error;
@@ -28,7 +29,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Install Docker (Ubuntu docker install);
+:Install Azure CLI tool (az);
 
 if(Succes) then (No)
     #pink:Error;
@@ -36,7 +37,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Install Playwright (dotnet add packages);
+:Login to Azure CLI (az login);
 
 if(Succes) then (No)
     #pink:Error;
@@ -44,7 +45,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Build Project (dotnet build);
+:Create EF migration bundle;
 
 if(Succes) then (No)
     #pink:Error;
@@ -52,7 +53,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Install Playwright Browsers (using powershell);
+:Apply the migration bundle to the database using az CLI;
 
 if(Succes) then (No)
     #pink:Error;
@@ -60,7 +61,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Generate Browser Certificates (using bash script);
+:Logout from Azure CLI (az logout);
 
 if(Succes) then (No)
     #pink:Error;
@@ -68,25 +69,7 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-:Start Program and Database using docker-compose;
-
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
-
-:Wait 15 seconds for the program to start;
-
-:Run Playwright Tests (dotnet test);
-
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
-
-#green:Tests Passed;
+#green:Sucessfully Updated Database;
 
 stop
 @enduml

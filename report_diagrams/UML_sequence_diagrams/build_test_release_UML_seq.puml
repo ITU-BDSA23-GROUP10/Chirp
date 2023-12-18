@@ -13,7 +13,7 @@ return Response: Checkout Branch (main)
 Workflow -> Github: Request: Setup Dotnet SDK (actions/setup-dotnet@v3)
 activate Github
 Github -> Github: Sets up a dotnet environment
-return Response: Dotnet environment
+return Response: Created Dotnet environment
 
 == Publish Project (win, linux, mac)==
 

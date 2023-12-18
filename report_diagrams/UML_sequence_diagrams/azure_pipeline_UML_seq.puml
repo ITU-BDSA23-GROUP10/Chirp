@@ -1,0 +1,45 @@
+@startuml
+header Sequence Diagram for Github Actions
+title Azure Pipeline / Database Update (azure_pipeline.yml)
+
+== Checkout Branch (main) ==
+Workflow -> Github: Request: Checkout Branch (main)
+activate Github
+Github -> Github: Checkout to branch (main)
+return Response: Checkout Branch (main)
+
+== Setup Dotnet SDK ==
+
+Workflow -> Github: Request: Setup Dotnet SDK (actions/setup-dotnet@v3)
+activate Github
+Github -> Github: Sets up a dotnet environment
+return Response: Created Dotnet environment
+
+== Install EF tools and Azure CLI ==
+
+== Login to Azure CLI ==
+Workflow -> Github: Request: Azure Tenenant Credentials (secrets)
+activate Github
+Github -> Github: Gets Azure Tenant Credentials (secrets)
+return Response: Azure Tenant Credentials 
+
+
+Workflow -> Azure: Request: Attempt to login to Azure CLI (using Azure Tenant Credentials)
+activate Azure
+Azure -> Azure: Check credentials
+return Response: Login to Azure CLI successful 
+
+== Create EF Migration Bundle ==
+
+== Apply EF Migration Bundle to Database ==
+Workflow -> Azure: Request: Connection String to the database (using logged in tenenant) 
+activate Azure
+Azure -> Azure: Gets Connection String to the database
+return Response: Connection String to the database
+
+Workflow -> Azure: Request: Apply EF Migration Bundle to Database (using Connection String)
+activate Azure
+Azure -> Azure: Applies EF Migration Bundle to Database
+return Response: acknowledgement of EF Migration Bundle applied to Database
+
+@enduml

@@ -7,7 +7,7 @@ start
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -16,7 +16,7 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -24,7 +24,7 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -32,7 +32,7 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
@@ -40,11 +40,11 @@ endif
 
 if(Succes) then (No)
     #pink:Error;
-    kill
+    end
 else (Yes)
 endif
 
 #green:Tests passed;
 
-end
+stop
 @enduml
