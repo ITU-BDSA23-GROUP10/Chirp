@@ -227,9 +227,9 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
     {
         // Act
         var cheep = new CheepCreateDTO("Test", "I dont exist");
-
+        var author = await authorService.GetAuthorByName(cheep.author);
         // Assert
-        await Assert.ThrowsAsync<Exception>(async() => await cheepService.CreateCheep(cheep, await authorService.GetAuthorByName(cheep.author)));
+        await Assert.ThrowsAsync<Exception>(async() => await cheepService.CreateCheep(cheep, author!));
     }
 
     [Fact]
