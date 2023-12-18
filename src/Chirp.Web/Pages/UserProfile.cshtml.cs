@@ -2,18 +2,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Chirp.Web.BindableClasses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation;
 
 namespace Chirp.Web.Pages;
-
 public class UserProfileModel : PageModel
 {
-    
     readonly IUserRepository<User> _userService;
     readonly IReactionRepository<Reaction> _reactionService;
     readonly IAuthorRepository<Author, Cheep, User> _authorService;
@@ -255,28 +251,5 @@ public class UserProfileModel : PageModel
         // Re-adds the cheeps to the author.Cheeps
         cheeps = await _authorService.GetAllCheepsByAuthorName(User?.Identity?.Name!);
         return Redirect("/Profile");
-    }
-}
-
-public class NewEmail 
-{
-    //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
-    [Required]
-    [Display(Name = "email")]
-    public required string Email {get; set;}
-}
-
-public class DeleteCheep
-{
-    [Required]
-    [Display(Name = "CheepId")]
-    public int CheepID {get; set;} = -1;
-}
-
-public class EmailValidator : AbstractValidator<NewEmail>
-{
-    public EmailValidator()
-    {
-        RuleFor(x => x.Email).EmailAddress();
     }
 }

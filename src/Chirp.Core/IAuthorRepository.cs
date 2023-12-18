@@ -14,7 +14,7 @@ public interface IAuthorRepository<Author, Cheep, User>
     Task<int> GetCheepsCountsFromAuthorId(int id);
     Task<Author?> GetAuthorByName(string name);
     Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit);
-    Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit);
+    Task<List<CheepDTO>> GetCheepsByAuthorId(List<int> id, int offset, int limit);
     Task<List<CheepDTO>> GetAllCheepsByAuthorName(string authorName);
     Task CreateAuthor(User user);
 }
