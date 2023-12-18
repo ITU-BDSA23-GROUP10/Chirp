@@ -58,7 +58,7 @@ public class UserTimelineModel : BasePageModel
                 Cheeps.Clear();
                 Cheeps.AddRange(UserCheeps);
                 Cheeps.AddRange(followingCheeps);
-                ViewData["CheepsCount"] = cheepsCount + followedUsersCheepsCount - excessiveCheepsCount;
+                ViewData["CheepsCount"] = cheepsCount + followedUsersCheepsCount;
             }
             else // other users' pages
             {
