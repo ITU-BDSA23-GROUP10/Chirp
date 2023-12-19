@@ -10,6 +10,10 @@ participant "Cheep Repository" as CheepRepo
 participant "Reaction Repository" as ReactionRepo
 collections DisplayedCheeps as CheepsList
 entity cheepDTO as CheepDTO
+box "External services" #LightBlue
+    participant YouTube as YouTube
+    participant GitHub as GitHub
+end box
 
 
 UnauthorizedUser -> Browser: Enters website's URL
