@@ -1,0 +1,21 @@
+@startuml user_activities_digram
+header UML Activity Digram for user activities
+title User is not authorized
+start
+switch (looking at public timeline)
+case (Read cheeps)
+    :Brows cheeps on the
+    first page on public timeline;
+    :Look at new page number
+    on author timeline;
+case (Go to to authors timeline)
+    :Borws cheeps on 
+    authors timeline;
+    :Look at new page number 
+    on author timeline;
+case (Go to hashtag page)
+    :Brows cheeps with 
+    selected hashtag;
+endswitch
+stop
+@enduml
