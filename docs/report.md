@@ -32,7 +32,20 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 ## Team work
 
 ## How to make _Chirp!_ work locally
-For a full guide on how to run the project locally see the ReadMe.md on the public repository: [Chirp ReadMe.md](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/README.md)  
+For a full guide on how to run the project locally see the ReadMe.md on the public repository (This includes many other ways of running the program and more explanations): [Chirp ReadMe.md](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/README.md)  
+
+### How to Run the project using dotnet run and a MSQL docker image:
+If you haven't got docker please follow the guide on this website for more information on how to do so [Install guide for Docker](https://docs.docker.com/get-docker/) //TODO: visited 19/12
+
+First you will have to install a docker image of MSQL server this can be done running this in a terminal (Remember to set the password and the password has to be a strong password otherwise the server wont run)
+
+```
+$ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+
+
+
 
 <!--![Diagram Image Link](./report_diagrams/UML_activity_diagrams/build_test_UML.puml)-->
 
