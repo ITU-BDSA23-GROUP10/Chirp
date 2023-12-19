@@ -8,6 +8,7 @@ participant "Webbrowser" as Browser
 participant "Chirp.Web" as ChirpWeb
 participant "Cheep Repository" as CheepRepo
 entity cheepDTO as CheepDTO
+entity reactionDTO as ReactionDTO
 
 UnauthorizedUser -> Browser: Enters website's URL
 Browser -> ChirpWeb: HTTP Request: GET URL
@@ -20,6 +21,11 @@ alt If YouTube link exists in cheep's message
     ChirpWeb -> YouTube: Requests video embed HTML via iFrame
     YouTube --> ChirpWeb: Returns video-embed HTML page
 end
+|||
+ChirpWeb -> ReactionDTO: Get upvote-reactions for each cheep
+Return Count of upvotes
+ChirpWeb -> ReactionDTO: Get downvote-reactions for each cheep
+Return Count of downvotes
 |||
 
 ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
