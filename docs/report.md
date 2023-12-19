@@ -31,6 +31,18 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 
 
 ## Team work
+The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
+
+How work was conducted on the issues, can be seen in the diagram [team workflow diagram]. Once an issue was ready to be worked, group members would be assigned to the issue and take responsibility for solving the issue and updating it on the project board
+
+In the start of the project the issues where quite simple. They had a title, some extra description, if needed, and acceptance criteria in a normal list format. However, after some time the group started adding acceptance criteria lists with checkboxes that could be checked off when an acceptance criteria was met. This allowed other group members to follow how far along work on issues was
+
+The amount of group members on one issue would vary depending on the issue. Smaller or more specialized issues would often only be assigned one group member. A specialized issue could be one that pertained to a subject that one group member was significantly more experience in than other members were.
+
+Group members working on an issue would create a feature branch, where the development on testing of the solution to the issue would be done. Once issue’s group considered the solution done, they would create a pull-request on GitHub, that the group members that had not been a part of the issue would then review. The other group members then had the opportunity request changes to the solution or ask question to the other issue’s group about the solution. When all request changes where addressed, all checks were passing, and the group had approved for merge, then the pull-request was merged into main, and the issue was closed
+
+To automate closing and moving of issues on the project board when a pull-request for an issues was merged, the group used GitHub keywords like “Resolves” and “Closes” with links to the issues. This automatically closes the issue, and it gets moved to the “Done” column on the project board.
+
 
 ## How to make _Chirp!_ work locally
 For a full guide on how to run the project locally see the ReadMe.md on the public repository: [Chirp ReadMe.md](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/README.md)  
