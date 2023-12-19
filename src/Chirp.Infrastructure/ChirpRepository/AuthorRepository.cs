@@ -2,10 +2,11 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
-using System;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
+// The AuthorRepository is used to access the database and perform operations on the Author table. 
+// The AuthorRepository implements the IAuthorRepository interface
 public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 {
     protected DbSet<Author> DbSetAuthor;
@@ -18,47 +19,31 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
     }
 
     #region IAuthorRepository<Author, Cheep> Members
-
+    // The Insert method is used to insert a new Author object into the database.
     private async Task Insert(Author entity)
     {
         DbSetAuthor.Add(entity);
         await context.SaveChangesAsync();
     }
-
+    // The Delete method is used to delete an Author object from the database.
     public async Task Delete(Author entity)
     {
         DbSetAuthor.Remove(entity);
         await context.SaveChangesAsync();
     }
-
+    // The SearchFor method is used to search for an Author object in the database.
     private IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
     {
         return DbSetAuthor.Where(predicate);
     }
-
-    public async Task<Author> GetAuthorWithCheeps(string authorName)
-    {
-        // The returned Author object can use Author.Cheeps to get all the Cheeps (sorted by descending timestamp)
-        
-        var author = await DbSetAuthor.Include(_author => _author.Cheeps
-                    .OrderByDescending(_cheep => _cheep.TimeStamp))
-                    .Where(_author => _author.User.Name == authorName)
-                    .Select(_author => new Author
-                    {
-                        AuthorId = _author.AuthorId,
-                        User = _author.User,
-                        Cheeps = _author.Cheeps
-                    })
-                    .FirstOrDefaultAsync() ?? throw new Exception($"Author {authorName} not found");
-        return author;
-    }
-
+    // The GetCheepsCountsFromAuthorId method is used to get the number of cheeps from an author using the author's id.
     public async Task<int> GetCheepsCountsFromAuthorId(int id) 
     {
         var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
 
+        // Checks if the author exists
         if (authorEntity == null) {
-            return 0; // make this into an exception
+            throw new Exception("Author not found ");
         }
 
         int cheepsCount = await DbSetAuthor.Entry(authorEntity)
@@ -67,7 +52,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
                     .CountAsync();
         return cheepsCount;
     }
-
+    // The GetAuthorByName method is used to get an Author object from the database using the author's name.
     public async Task<Author?> GetAuthorByName(string name)
     {
         // FirstOrDefault returns null if no User is found.
@@ -75,20 +60,21 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
         return author;
     }
-
-    //GetCheepsByAuthor should be replaced with GetCheepsByAuthorId, we should search by id not name
+    // The GetCheepsByAuthor method is used to get a list of CheepDTO objects and the count of cheeps 
+    // from the database using the author's name.
     public async Task<Tuple<List<CheepDTO>, int>> GetCheepsByAuthor(string author, int offset, int limit)
     {
         int cheepsCount = 0;
 
         var authorEntity = await SearchFor(_author => _author.User.Name == author).FirstOrDefaultAsync();
 
+        // Checks if the author exists
         if (authorEntity is null)
         {
             return new Tuple<List<CheepDTO>, int>(new List<CheepDTO>(), cheepsCount);
         }
         else
-        {
+        {   
             cheepsCount = await DbSetAuthor.Entry(authorEntity)
                     .Collection(_author => _author.Cheeps)
                     .Query().CountAsync();
@@ -111,11 +97,12 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
         return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
     }
-
+    // The GetCheepsByAuthorId method is used to get a list of CheepDTO objects from the database using the author's id.
     public async Task<List<CheepDTO>> GetCheepsByAuthorId(List<int> ids, int offset, int limit)
     {
         var authorEntity = await SearchFor(_author => ids.Contains(_author.User.UserId)).FirstOrDefaultAsync();
 
+        // Checks if the author exists
         if (authorEntity is null)
         {
             return new List<CheepDTO>();
@@ -138,11 +125,17 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
         return cheeps;
     }
+    // The GetAllCheepsByAuthorName method is used to get a list of CheepDTO objects 
+    // from the database using the author's name.
 
+    // NOTE: This method is a little redundant, as you could just extract 
+    // the author's cheeps from the author object.
+    // However, you would need a method to convert these to cheepDTOs.
     public async Task<List<CheepDTO>> GetAllCheepsByAuthorName(string authorName)
     {
         var authorEntity = await SearchFor(_author => _author.User.Name == authorName).FirstOrDefaultAsync();
 
+        // Checks if the author exists
         if (authorEntity is null)
         {
             return new List<CheepDTO>();
@@ -164,39 +157,36 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
         return new List<CheepDTO>(cheeps);
     }
+    // The GetAuthorById method is used to get an Author object from the database using the author's id.
 
+    // NOTE: This is only used internally in the author repository since we have 
+    // swapped over to using Users as our generic "user type" instead of Authors on the front end.
     public async Task<Author?> GetAuthorById(int id)
     {
         return await DbSetAuthor.FindAsync(id);
     }
-
+    // The CreateAuthor method is used to create a new Author object in the database.
     public async Task CreateAuthor(User user)
     {
+        // Checks if the user exists
         if (user is null) {
             throw new Exception("User is null");
         }
 
         Author? author = await GetAuthorById(user.UserId);
+        // Checks if the author already exists
         if (author is not null)
         {
             throw new Exception("Author already exists");
         }
 
-        if (author is null)
+        // Create new author if it doesn't exist in database already
+        var authorEntity = new Author()
         {
-            var authorEntity = new Author()
-            {
-                User = user,
-                Cheeps = new List<Cheep>()
-            };
-            await Insert(authorEntity);
-        }
+            User = user,
+            Cheeps = new List<Cheep>()
+        };
+        await Insert(authorEntity);
     }
-
-
-    // Author? IAuthorRepository<Author, Cheep>.GetAuthorById(int id)
-    // {
-    //     throw new NotImplementedException();
-    // }
     #endregion
 }
