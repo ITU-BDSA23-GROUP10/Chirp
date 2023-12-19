@@ -34,7 +34,7 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 ## How to make _Chirp!_ work locally
 For a full guide on how to run the project locally see the ReadMe.md on the public repository: [Chirp ReadMe.md](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/README.md)  
 
-<!--! [Diagram Image Link](./report_diagrams/UML_activity_diagrams/build_test_UML.puml)-->
+<!--![Diagram Image Link](./report_diagrams/UML_activity_diagrams/build_test_UML.puml)-->
 
 
 ## How to run test suite locally

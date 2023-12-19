@@ -38,8 +38,8 @@ endif
 
 :Run Tests (dotnet test);
 
-if(Succes) then (No)
-    #pink:Error;
+if(Tests Passed) then (No)
+    #pink:Exception;
     end
 else (Yes)
 endif
