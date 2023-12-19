@@ -328,7 +328,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             await ar.CreateAuthor(user!);
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
-            var cheepUser = author.Cheeps[0];
+                        var cheepUser = (await ar.GetAuthorByName(user!.Name)).Cheeps[0];
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
@@ -369,7 +369,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             await ar.CreateAuthor(user!);
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
-            var cheepUser = author.Cheeps[0];
+            var cheepUser = (await ar.GetAuthorByName(user!.Name)).Cheeps[0];
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
@@ -419,7 +419,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
             var author = await ar.GetAuthorByName(authorName);
             await cr.CreateCheep(cheep, author!);
 
-            var cheepUser = author.Cheeps[0];
+                        var cheepUser = (await ar.GetAuthorByName(user!.Name)).Cheeps[0];
 
             // the user that will like the cheep
             await ur.CreateUser("CheepLiker", "cheepliker69@gmail.com");
