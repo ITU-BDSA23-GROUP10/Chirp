@@ -4,6 +4,7 @@ title Teams work activities
 start
 :Feature is thought off;
 :Issue is written;
+floating note left: Issues are moved on the GitHub project\nboard on to the column corresponding\nto the stage the issue is in
 :Members are assigned;
 :Solution is planned;
 :A feature branch is created; 
