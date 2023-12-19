@@ -50,8 +50,15 @@ You can check if the docker container is running by using this in a terminal. Lo
 ```
 $ docker ps
 ```
-
-TODO: Write a blurb about starting docker container
+If the docker container does not show up in the list then you can try to start it using the following commands
+```
+$ docker ps -a
+```
+Look for the container using the image **mcr.microsoft.com/mssql/server** and remember the first couple of letters of the ID. Then run this where id is the id from the docker ps -a command
+```
+docker start id
+```
+You can now check if it's running again using the first docker ps command from before
 
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
 
