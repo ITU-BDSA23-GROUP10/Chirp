@@ -9,50 +9,21 @@
 <div class="hashtag-page">
     <h2>Hashtag: @Model.TagName</h2>
 
-    @if (Model.cheeps?.Any() == true)
+    @if (Model.Cheeps?.Any() == true)
     {
         <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.cheeps)
-            {
-                <li>
-                    <div class="activity">
-                        <img src="https://avatars.githubusercontent.com/@cheep.Author" />
-                        <div>
-                            <strong><a href="/@cheep.Author">@cheep.Author</a></strong>
-                            <small>&mdash; @cheep.Timestamp</small>
-                            <!-- YouTube Link Check and Embed, hashtags -->
-                            @{
-                                string Message;
-                                var embedUrl = Model.GetYouTubeEmbed(cheep.Message, out Message);
-
-                                List<string> hashTags;
-                                string MessageWithHashtags;
-                                hashTags = Model.GetHashTags(Message, out MessageWithHashtags);    
-                            }
-
-                            @if (embedUrl != null)
-                            {
-                                <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            }
-
-                            <p>@MessageWithHashtags</p>
-
-                            @if(hashTags != null)
-                            {
-                                foreach(var hashTag in hashTags)
-                                {
-                                    var displayTag = hashTag.Replace("/hashtag/", "#");
-                                    <a rel="ugc nofollow" class="hashtag" href="@hashTag">@displayTag</a>
-                                }
-                            }
-                        </div>
-                    </div>
-                </li>
+            @{
+                // this is a foreach loop component with the list of cheeps
+                // It's used for displaying the cheeps on the webpage
+                // See the CheepList component for more details
+                ViewBag.BaseModel = Model;
+             
+                @await Component.InvokeAsync("CheepList", new { cheeps = Model.Cheeps })
             }
         </ul>
     }
     else
     {
-        <em>There are no cheeps for this hashtag yet.</em>
+    <em>There are no cheeps for this hashtag yet.</em>
     }
 </div>

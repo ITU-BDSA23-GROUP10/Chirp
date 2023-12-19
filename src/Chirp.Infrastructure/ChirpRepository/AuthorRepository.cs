@@ -19,7 +19,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     #region IAuthorRepository<Author, Cheep> Members
 
-    public async Task Insert(Author entity)
+    private async Task Insert(Author entity)
     {
         DbSetAuthor.Add(entity);
         await context.SaveChangesAsync();
@@ -31,7 +31,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
+    private IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
     {
         return DbSetAuthor.Where(predicate);
     }
@@ -112,31 +112,31 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         return new Tuple<List<CheepDTO>, int>(cheeps, cheepsCount);
     }
 
-    public async Task<List<CheepDTO>> GetCheepsByAuthorId(int id, int offset, int limit)
+    public async Task<List<CheepDTO>> GetCheepsByAuthorId(List<int> ids, int offset, int limit)
     {
-        var authorEntity = await SearchFor(_author => _author.User.UserId == id).FirstOrDefaultAsync();
+        var authorEntity = await SearchFor(_author => ids.Contains(_author.User.UserId)).FirstOrDefaultAsync();
 
         if (authorEntity is null)
         {
             return new List<CheepDTO>();
         }
 
-        List<CheepDTO> cheeps = await DbSetAuthor.Entry(authorEntity)
-                    .Collection(_author => _author.Cheeps)
-                    .Query()
-                    .OrderByDescending(_cheep => _cheep.TimeStamp)
-                    .Skip(offset).Take(limit)
-                    .Select(_cheep => new CheepDTO
-                    (
-                        _cheep.CheepId,
-                        _cheep.Author.User.Name,
-                        _cheep.Text,
-                        _cheep.TimeStamp
-                    ))
-                    .ToListAsync()
-                    ?? new List<CheepDTO>();
+        var cheeps = DbSetAuthor.Where(_author =>  ids.Contains(_author.User.UserId))
+                            .SelectMany(_author2 => _author2.Cheeps)
+                            .OrderByDescending(_cheep => _cheep.TimeStamp)
+                            .Skip(offset)
+                            .Take(limit)
+                            .Select(_cheep => new CheepDTO
+                            (
+                                _cheep.CheepId,
+                                _cheep.Author.User.Name,
+                                _cheep.Text,
+                                _cheep.TimeStamp
+                            ))
+                            .ToList();
+                                
 
-        return new List<CheepDTO>(cheeps);
+        return cheeps;
     }
 
     public async Task<List<CheepDTO>> GetAllCheepsByAuthorName(string authorName)

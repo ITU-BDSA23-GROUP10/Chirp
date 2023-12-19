@@ -21,13 +21,13 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     #region IReactionRepository<Reaction> Members
 
-    public async Task InsertReaction(Reaction entity)
+    private async Task InsertReaction(Reaction entity)
     {
         DbSetReaction.Add(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteReaction(Reaction entity)
+    private async Task DeleteReaction(Reaction entity)
     {
         DbSetReaction.Remove(entity);
         await context.SaveChangesAsync();
@@ -40,7 +40,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate)
+    private IQueryable<Reaction> SearchFor(Expression<Func<Reaction, bool>> predicate)
     {
         return DbSetReaction.Where(predicate);
     }
@@ -70,14 +70,14 @@ public class ReactionRepository : IReactionRepository<Reaction>
             {
                 cheepId = reactionDTO.cheepId,
                 userId = reactionDTO.userId,
-                reactionType = reactionDTO.reactionType,
+                reactionType = reactionDTO.reactionType!
             };
             await InsertReaction(newReaction);
             return;
         }
         
         // Delete reaction if reactiontype is the same as existing
-        if (reactionDTO.reactionType.Equals(reaction.reactionType))
+        if (reactionDTO.reactionType!.Equals(reaction.reactionType))
         {
             await DeleteReaction(reaction);
             return;
@@ -132,7 +132,7 @@ public class ReactionRepository : IReactionRepository<Reaction>
 
     public async Task<Reaction?> GetReactionByUserAndCheep(int userid, int cheepid)
     {
-        var reaction = SearchFor(_react => _react.userId == userid && _react.cheepId == cheepid).FirstOrDefault();
+        var reaction = await SearchFor(_react => _react.userId == userid && _react.cheepId == cheepid).FirstOrDefaultAsync();
         return reaction;
     }
 

@@ -21,13 +21,13 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     #region ICheepRepository<Cheep, Author> Members
 
-    public async Task Insert(Cheep entity)
+    private async Task Insert(Cheep entity)
     {
         DbSet.Add(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task Delete(Cheep entity)
+    private async Task Delete(Cheep entity)
     {
         DbSet.Remove(entity);
         await context.SaveChangesAsync();
@@ -35,10 +35,10 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
 
     public async Task Delete(int cheepId)
     {
-        await Delete(GetById(cheepId).Result);
+        await Delete(GetById(cheepId).Result!);
     }
 
-    public IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
+    private IQueryable<Cheep> SearchFor(Expression<Func<Cheep, bool>> predicate)
     {
         return DbSet.Where(predicate);
     }
@@ -48,7 +48,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         return (DbSet, DbSet.Count());
     }
 
-    public async Task<Cheep> GetById(int id)
+    public async Task<Cheep?> GetById(int id)
     {
         return await DbSet.FindAsync(id);
     }
@@ -106,7 +106,7 @@ public class CheepRepository : ICheepRepository<Cheep, Author>
         catch (Exception e)
         {
             Console.WriteLine(e.Message, ", failed validation");
-            throw e;
+            throw new Exception(e.Message);
         }
     }
     //hashtags
