@@ -16,11 +16,16 @@ ChirpWeb -> CheepRepo: Get cheeps for current page
 CheepRepo -> CheepDTO: Sends authorname, message \n and timestamp for each cheep
 CheepDTO --> ChirpWeb: Each CheepDTO has a cheep's \n authorname, message and timestamp
 |||
+alt If YouTube link exists in cheep's message
+    ChirpWeb -> YouTube: Requests video embed HTML via iFrame
+    YouTube --> ChirpWeb: Returns video-embed HTML page
+end
+|||
 
 ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
-alt GitHub user exists
+alt If GitHub user exists
     GitHub --> ChirpWeb: Returns author's GitHub image
-else GitHub user does not exist
+else If GitHub user does not exist
     GitHub --> ChirpWeb: Returns a GitHub default image
 end
 
