@@ -1,0 +1,16 @@
+@startuml team_workflow
+header Workflow for teams work
+title Teams work activities 
+start
+:Feature is thought off;
+:Issue is written;
+:Members are assigned;
+:Solution is planned;
+:A feature branch is created; 
+:Solution is build;
+repeat
+    :Pull-request is opened;
+    :Team members review the pull-requst;
+repeat while (Aprroved for merge?) is (No)
+->Yes;
+:Merge pull-request;
