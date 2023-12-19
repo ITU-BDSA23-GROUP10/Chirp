@@ -16,19 +16,19 @@ After installing docker you can run the bash script (and an equivalent powershel
 To run the bash file you can simply do this in a terminal from the Chirp folder  
 
 ```
-\$ chmod +x create_cert.sh && ./create_cert
+$ chmod +x create_cert.sh && ./create_cert
 ```
 
 To run the powershell script you can run (if you have problems with execution policies use the command below the first one ):  
 
 ```
-\$ PowerShell.exe -File create_cert.ps1
+$ PowerShell.exe -File create_cert.ps1
 ``` 
 
 USE ONLY IF YOU HAVE POLICY ISSUES:  
 
 ```
-\$ PowerShell.exe -File create_cert.ps1 -ExecutionPolicy Bypass
+$ PowerShell.exe -File create_cert.ps1 -ExecutionPolicy Bypass
 ```
 
 After doing this you can run the program using docker compose up in your terminal from the Chirp folder. This will boot the database and program at the same time
@@ -42,13 +42,13 @@ After VS code is done opening the container you should be able to go to the left
 
 ## For all of the below you must have a docker image with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
 ```
-\$ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+$ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
 You can check if the docker container is running by using this in a terminal. Look for wether it shows a container running:
 
 ```
-\$ docker ps
+$ docker ps
 ```
 
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
@@ -60,38 +60,38 @@ You can download the latest release build for your platform and use the included
 First you must unzip the directory using your unzipper of choice and go into that directory using  
 
 ```
-\$ cd Chirp-vX.X.X-linux-x64
+$ cd Chirp-vX.X.X-linux-x64
 ```
 
 Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:  
 
 ```
-\$ chmod +x ./Chirp.Web
+$ chmod +x ./Chirp.Web
 ```
 
 then you can run the program using:  
 
 ```
-\$ ./Chirp.Web
+$ ./Chirp.Web
 ```
 
 ### MacOS Example:
 Unzip the folder using your unzipper of choice then enter the directory using  
 
 ```
-\$ cd ./Chirp-vX.X.X-osx-x64
+$ cd ./Chirp-vX.X.X-osx-x64
 ```
 
 Then you have to allow the executable to run by running this command in your terminal in the unzipped directory:  
 
 ```
-\$ chmod +x ./Chirp.Web
+$ chmod +x ./Chirp.Web
 ``` 
 
 Since the app is unsigned you have to strip the xattr attribute from it using this command  
 
 ```
-\$ xattr -dr com.apple.quarantine "Chirp.Web"
+$ xattr -dr com.apple.quarantine "Chirp.Web"
 ```
 
 (You can read more about the above here https://apple.stackexchange.com/questions/202169/how-can-i-open-an-app-from-an-unidentified-developer-without-using-the-gui)  
@@ -99,7 +99,7 @@ Since the app is unsigned you have to strip the xattr attribute from it using th
 Now you can run the application using:  
 
 ```
-\$ ./Chirp.Web
+$ ./Chirp.Web
 ```
 
 ### Windows Example:
