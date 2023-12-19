@@ -51,6 +51,8 @@ You can check if the docker container is running by using this in a terminal. Lo
 $ docker ps
 ```
 
+TODO: Write a blurb about starting docker container
+
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
 
 ## Run from release
