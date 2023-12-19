@@ -1,0 +1,19 @@
+@startuml
+header Sequence Diagram for Message- and Datataflow
+Title Accessing Public Timeline As An Unauthorized User
+
+
+actor "Unauthorized User" as UnauthorizedUser
+participant "Chirp.Web" as ChirpWeb
+participant "Cheep Repository" as CheepRepo
+entity cheepDTO as CheepDTO
+database "MySQL Database" as DB
+
+
+UnauthorizedUser -> ChirpWeb: HTTP Request: GET URL, GET style.css
+ChirpWeb --> UnauthorizedUser: HTTP Request GET ACKs
+ChirpWeb -> CheepRepo: Request cheeps for current page
+CheepRepo -> CheepDTO: Returns authorname, message and timestamp for each cheep
+CheepDTO --> ChirpWeb:
+ChirpWeb --> UnauthorizedUser: Returns Response Headers: text/html, text/css
+@enduml
