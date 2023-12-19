@@ -19,7 +19,7 @@ public class UserRepository : IUserRepository<User>
 
     #region IUserRepository<User> Members
 
-    public async Task InsertUser(User entity)
+    private async Task InsertUser(User entity)
     {
         DbSetUser.Add(entity);
         await context.SaveChangesAsync();
@@ -31,7 +31,7 @@ public class UserRepository : IUserRepository<User>
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
+    private IQueryable<User> SearchFor(Expression<Func<User, bool>> predicate)
     {
         return DbSetUser.Where(predicate);
     }

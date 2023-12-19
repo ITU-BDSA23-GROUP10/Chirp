@@ -19,7 +19,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
     #region IAuthorRepository<Author, Cheep> Members
 
-    public async Task Insert(Author entity)
+    private async Task Insert(Author entity)
     {
         DbSetAuthor.Add(entity);
         await context.SaveChangesAsync();
@@ -31,7 +31,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
+    private IQueryable<Author> SearchFor(Expression<Func<Author, bool>> predicate)
     {
         return DbSetAuthor.Where(predicate);
     }
