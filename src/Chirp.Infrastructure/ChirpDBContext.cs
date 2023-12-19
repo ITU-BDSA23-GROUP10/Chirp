@@ -12,22 +12,12 @@ public class ChirpDBContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Follows> Follows { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
-    // public string DbPath { get; }
-
-    /*public ChirpDBContext()
-    {
-        DbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ??
-        Path.Combine(Path.GetTempPath(), "chirp.db");
-    }*/
 
     public ChirpDBContext(DbContextOptions<ChirpDBContext> options)
         : base(options)
     {
     }
-
-    /*protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseSqlite($"Data Source={DbPath}");*/
-
+    // This is used to set model options for the database.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Cheeps
@@ -48,11 +38,6 @@ public class ChirpDBContext : DbContext
             user.HasKey(us => us.UserId);
             user.HasIndex(us => us.Name).IsUnique();
             user.Property(us => us.Email).HasMaxLength(50);
-
-            // user.HasMany(us => us.Following)
-            // .WithMany(us => us.Followers)
-            // .HasForeignKey(us => us.UserId)
-            // .OnDelete(DeleteBehavior.Cascade);
         });
 
         // Follows
