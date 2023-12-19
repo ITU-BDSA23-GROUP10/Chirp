@@ -23,9 +23,9 @@ alt If YouTube link exists in cheep's message
 end
 |||
 ChirpWeb -> ReactionDTO: Get upvote-reactions for each cheep
-Return Count of upvotes
+Return Each upvote's cheepId, userId, and reactionType
 ChirpWeb -> ReactionDTO: Get downvote-reactions for each cheep
-Return Count of downvotes
+Return Each downvote's cheepId, userId, and reactionType
 |||
 
 ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
@@ -34,6 +34,9 @@ alt If GitHub user exists
 else If GitHub user does not exist
     GitHub --> ChirpWeb: Returns a GitHub default image
 end
+|||
+
+ChirpWeb -> ChirpWeb: Get pagination-info
 
 ChirpWeb --> Browser: HTTP Response: Content-type text/html,\nContent Public.cshtml & BasePageModel.cshtml
 |||
