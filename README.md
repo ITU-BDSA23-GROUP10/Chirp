@@ -36,7 +36,7 @@ If you are on an OS that allows you to --trust the cert then you should be able 
 
 
 ## Run using VS code dev containers
-This is by far the easiest option. First ensure you have the docker and dev container extension installed on your VS code installation. Afterwards you may get a small popup in the bottom right corner telling you that you can open the project as a dev container. Press that button. If this is not the case open the VS code command pallete (Ctrl + shift + p or cmd + shift + p) and dev containers and select either "Rebuild and reopen in Container" or "Reopen in a Container"  
+This is by far the easiest option. First ensure you have the docker and dev container extension installed on your VS code installation. Afterwards you may get a small popup in the bottom right corner telling you that you can open the project as a dev container. Press that button. If this is not the case open the VS code command pallete (Ctrl + shift + p or cmd + shift + p) and type dev containers and select either "Rebuild and reopen in Container" or "Reopen in a Container"  
 
 After VS code is done opening the container you should be able to go to the left hand sidebar in VS code and select the run and debug option and press the small green play button.  
 
