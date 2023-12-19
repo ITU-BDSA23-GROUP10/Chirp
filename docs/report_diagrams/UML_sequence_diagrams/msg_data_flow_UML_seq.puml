@@ -7,13 +7,22 @@ actor "Unauthorized User" as UnauthorizedUser
 participant "Chirp.Web" as ChirpWeb
 participant "Cheep Repository" as CheepRepo
 entity cheepDTO as CheepDTO
-database "MySQL Database" as DB
 
 
-UnauthorizedUser -> ChirpWeb: HTTP Request: GET URL, GET style.css
-ChirpWeb --> UnauthorizedUser: HTTP Request GET ACKs
-ChirpWeb -> CheepRepo: Request cheeps for current page
-CheepRepo -> CheepDTO: Returns authorname, message and timestamp for each cheep
+UnauthorizedUser -> ChirpWeb: HTTP Request: GET URL, GET CSS
+Return HTTP Request GET ACKs
+
+ChirpWeb -> CheepRepo: Requests cheeps for current page
+CheepRepo -> CheepDTO: Return authorname, message and timestamp for each cheep
 CheepDTO --> ChirpWeb:
+
+ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
+alt GitHub user exists
+    GitHub --> ChirpWeb: Returns author's GitHub image
+else GitHub user does not exist
+    GitHub --> ChirpWeb: Returns a GitHub default image
+end
+
 ChirpWeb --> UnauthorizedUser: Returns Response Headers: text/html, text/css
+ChirpWeb --> UnauthorizedUser: Writes Public.cshtml, BasePageModel.cshtml and style.css
 @enduml
