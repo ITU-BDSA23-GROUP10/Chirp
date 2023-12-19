@@ -40,7 +40,7 @@ This is by far the easiest option. First ensure you have the docker and dev cont
 
 After VS code is done opening the container you should be able to go to the left hand sidebar in VS code and select the run and debug option and press the small green play button.  
 
-## For all of the below you must have a docker image with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
+## For all of the options below you must have a docker image with Microsoft SQLServer running in the background. This can be done by downloading docker and using the following in a terminal (remember to set a password):
 ```
 $ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
