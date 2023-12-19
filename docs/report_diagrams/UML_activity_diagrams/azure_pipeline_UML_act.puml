@@ -1,0 +1,75 @@
+@startuml
+header UML Activity Diagram for Github Actions
+title Azure Pipeline / Database Update (azure_pipeline.yml)
+start
+:Checkout Github Branch (The Branch that got pushed to);
+:Call to get the Github Repository;
+
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+
+:Setup Dotnet 7 SDK;
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Install Dotnet Entity Framework (dotnet tool install);
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Install Azure CLI tool (az);
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Login to Azure CLI (az login);
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Create EF migration bundle;
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Apply the migration bundle to the database using az CLI;
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Logout from Azure CLI (az logout);
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+#green:Sucessfully Updated Database;
+
+stop
+@enduml

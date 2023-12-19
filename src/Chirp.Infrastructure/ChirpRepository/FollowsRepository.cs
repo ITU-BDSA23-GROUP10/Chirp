@@ -1,11 +1,10 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
 using Chirp.Core;
-using System;
 
 namespace Chirp.Infrastructure.ChirpRepository;
 
+// The FollowsRepository is used to access the database and perform operations on the Cheep table.
 public class FollowsRepository : IFollowsRepository<Follows>
 {
     protected DbSet<Follows> DbSetFollows;
@@ -18,22 +17,24 @@ public class FollowsRepository : IFollowsRepository<Follows>
     }
 
     #region IFollowsRepository<User> Members
-
+    // The Insert method is used to insert a new Follows object into the database.
     public async Task InsertFollow(Follows entity)
     {
         DbSetFollows.Add(entity);
         await context.SaveChangesAsync();
     }
-
+    // The Delete method is used to delete a Follows object from the database.
     public async Task DeleteFollow(Follows entity)
     {
         DbSetFollows.Remove(entity);
         await context.SaveChangesAsync();
     }
+    // The FollowUser method is used to follow a user using a followDTO object 
+    // The followDTO contains the id of the user following and the id of the user being followed.
     public async Task FollowUser(FollowDTO followDTO)
     {
         var exists = await DbSetFollows.AnyAsync(f => f.FollowerId == followDTO.followerId && f.FollowingId == followDTO.followingId);
-
+        // If the follow record does not exist, create a new one
         if (!exists)
         {
             var newFollow = new Follows()
@@ -48,23 +49,23 @@ public class FollowsRepository : IFollowsRepository<Follows>
             throw new Exception("Follow record already exists");
         }
     }
-
+    // The getUserFollowersCountById method is used to get the number of followers 
+    // of a user using the user's id.
     public async Task<int> getUserFollowingCountById(int userId)
     {
         return await DbSetFollows.CountAsync(f => f.FollowingId == userId);
     }
-
-    //is the author following or not?
+    // The IsFollowing method is used to check if a user is following another user.
     public async Task<bool> IsFollowing(int followerId, int followingId)
     {
         return await DbSetFollows.AnyAsync(f => f.FollowerId == followerId && f.FollowingId == followingId);
     }
-
-    //unfollowing an author
+    // The UnfollowUser method is used to unfollow a user using a unfollowDTO object
     public async Task UnfollowUser(FollowDTO unfollowDTO)
     {
         var record = await DbSetFollows.FirstOrDefaultAsync(f => f.FollowerId == unfollowDTO.followerId && f.FollowingId == unfollowDTO.followingId);
-
+        
+        // If the follow record exists, delete it
         if (record != null)
         {
             await DeleteFollow(record);
@@ -74,8 +75,7 @@ public class FollowsRepository : IFollowsRepository<Follows>
             throw new Exception("Unfollow record does not exist");
         }
     }
-
-    //Returns all ids of users a user is following
+    // The GetFollowedUsersId method is used to get a list of ids of users followed by a user
     public async Task<List<int>> GetFollowedUsersId(int userId)
     {
         var followedUsers = await DbSetFollows
@@ -85,8 +85,7 @@ public class FollowsRepository : IFollowsRepository<Follows>
 
         return followedUsers;
     }
-
-    //Returns all ids of users following a user
+    // The GetIdsFollowingUser method is used to get a list of ids of users following a user
     public async Task<List<int>> GetIdsFollowingUser(int userId)
     {
         var IdsFollowingUser = await DbSetFollows
@@ -97,7 +96,7 @@ public class FollowsRepository : IFollowsRepository<Follows>
         return IdsFollowingUser;
     }
 
-    //deletes all followers of a user
+    // The LoopDeleteFollowers method loops through a list of ids and deletes all followers
     public async Task LoopDeleteFollowers(List<int> followedUsers, int userId)
     {
         foreach (int id in followedUsers)
@@ -112,6 +111,8 @@ public class FollowsRepository : IFollowsRepository<Follows>
         return;
     }
 
+    // The DeleteAllFollowers method deletes all followers of a user
+    // This works reflexively, so it also deletes all follows the user has
     public async Task DeleteAllFollowers(int userId)
     {
         //gets all users the user is following

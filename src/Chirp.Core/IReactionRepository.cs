@@ -1,10 +1,9 @@
-using System.Linq.Expressions;
-
 namespace Chirp.Core;
 
 // Repository pattern from Remondo:
 // https://web.archive.org/web/20150404154203/https://www.remondo.net/repository-pattern-example-csharp/
 
+// The IReactionRepository is used to abstract the database from the rest of the application.
 public interface IReactionRepository<Reaction>
 {
     Task UpdateReaction(Reaction entity);
