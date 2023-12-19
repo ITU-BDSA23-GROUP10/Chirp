@@ -43,7 +43,26 @@ First you will have to install a docker image of MSQL server this can be done ru
 $ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
+After running the above you can check if the container is running 
 
+``` 
+$ docker ps
+```
+
+*If the container is not showing up on the list please refer to the ReadMe on possible ways to solve this issue*
+
+After ensuring that the Docker container is indeed running you can create a user secret with the connection string to your container from the Chirp directory (please ensure you have the dotnet user-secrets tool [Nuget Page For Dotnet user-secrets tool install](https://www.nuget.org/packages/dotnet-user-secrets)):
+```
+$ cd ./src/Chirp.Web && dotnet user-secret init
+```
+Now you can set the user secrets
+```
+dotnet user-secrets set "ConnectionStrings:ConnectionString" "Data Source=localhost,1433;Initial Catalog=Chirp;User ID=sa;Password=yourStrong(!)Password;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+```
+After this you can run the program using dotnet run from the Chirp.Web directory
+```
+$ dotnet run
+```
 
 
 
