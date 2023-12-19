@@ -10,12 +10,11 @@ participant "Cheep Repository" as CheepRepo
 entity cheepDTO as CheepDTO
 
 UnauthorizedUser -> Browser: Enters website's URL
-Browser -> ChirpWeb: HTTP Request: GET URL, GET CSS
-Return HTTP Reponse: ACKs of GET Requests
+Browser -> ChirpWeb: HTTP Request: GET URL
 
 ChirpWeb -> CheepRepo: Requests cheeps for current page
-CheepRepo -> CheepDTO: Return authorname, message and timestamp for each cheep
-CheepDTO --> ChirpWeb:
+CheepRepo -> CheepDTO: Sends authorname, message and timestamp for each cheep
+CheepDTO --> ChirpWeb: Each CheepDTO has a cheep's authorname, message and timestamp
 
 ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
 alt GitHub user exists
@@ -24,7 +23,10 @@ else GitHub user does not exist
     GitHub --> ChirpWeb: Returns a GitHub default image
 end
 
-ChirpWeb --> Browser: Returns Response Headers: text/html, text/css
-ChirpWeb --> Browser: Writes Public.cshtml, BasePageModel.cshtml and style.css
-Browser -> UnauthorizedUser: Returns rendered web-page
+ChirpWeb --> Browser: HTTP Response: text/html with Public.cshtml & BasePageModel.cshtml
+
+Browser -> ChirpWeb: HTTP Request: GET CSS
+ChirpWeb --> Browser: HTTP Response: text/css with style.css
+
+Browser --> UnauthorizedUser: Returns rendered web-page
 @enduml
