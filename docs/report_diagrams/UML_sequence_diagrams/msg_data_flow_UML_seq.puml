@@ -15,14 +15,15 @@ entity cheepDTO as CheepDTO
 UnauthorizedUser -> Browser: Enters website's URL
 Browser -> ChirpWeb: HTTP Request: GET URL
 
-ChirpWeb -> CheepRepo: Call GetSome() for current page\n to retrieve up to 32 cheeps\n and pagination-info
-CheepRepo -> CheepDTO: Sends authorname, message \n and timestamp for each cheep
-CheepDTO -> CheepsList: Added with a cheep's \n authorname, message and timestamp
-CheepsList -> ChirpWeb: Returns with up to 32 cheeps
+ChirpWeb -> CheepRepo: Call GetSome() for current page to retrieve\n up to 32 cheeps and count of all cheeps
+CheepRepo -> CheepDTO: Sends authorname, message and timestamp for each cheep
+CheepDTO --> CheepsList: Added with a cheep's authorname,\nmessage and timestamp
+CheepsList --> ChirpWeb: Returns with up to 32 cheeps
+CheepRepo --> ChirpWeb: Count of all cheeps for pagination
 |||
 alt If YouTube link exists in cheep's message
-    ChirpWeb -> YouTube: Requests video embed HTML via iFrame
-    YouTube --> ChirpWeb: Returns video-embed HTML page
+    ChirpWeb -> YouTube: Requests video-embed HTML via iFrame
+    Return Video-embed HTML page
 end
 |||
 ChirpWeb -> ReactionRepo: Call GetCheepsUpvoteCountsFromCheepID()
@@ -43,7 +44,7 @@ ChirpWeb --> Browser: HTTP Response: Content-type text/html,\nContent Public.csh
 |||
 
 Browser -> ChirpWeb: HTTP Request: GET CSS
-ChirpWeb --> Browser: HTTP Response: text/css with style.css
+ChirpWeb --> Browser: HTTP Response: Content-type text/css,\nContent style.css
 Browser -> Browser: Renders web-page
 Browser --> UnauthorizedUser: Shows rendered web-page
 @enduml
