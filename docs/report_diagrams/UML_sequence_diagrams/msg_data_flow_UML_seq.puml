@@ -7,14 +7,15 @@ actor "Unauthorized User" as UnauthorizedUser
 participant "Webbrowser" as Browser
 participant "Chirp.Web" as ChirpWeb
 participant "Cheep Repository" as CheepRepo
+participant "Reaction Repository" as ReactionRepo
 collections DisplayedCheeps as CheepsList
 entity cheepDTO as CheepDTO
-entity reactionDTO as ReactionDTO
+
 
 UnauthorizedUser -> Browser: Enters website's URL
 Browser -> ChirpWeb: HTTP Request: GET URL
 
-ChirpWeb -> CheepRepo: Call GetSome() for current page\n to retrieve up to 32 cheeps
+ChirpWeb -> CheepRepo: Call GetSome() for current page\n to retrieve up to 32 cheeps\n and pagination-info
 CheepRepo -> CheepDTO: Sends authorname, message \n and timestamp for each cheep
 CheepDTO -> CheepsList: Added with a cheep's \n authorname, message and timestamp
 CheepsList -> ChirpWeb: Returns with up to 32 cheeps
@@ -24,10 +25,10 @@ alt If YouTube link exists in cheep's message
     YouTube --> ChirpWeb: Returns video-embed HTML page
 end
 |||
-ChirpWeb -> ReactionDTO: Call GetCheepsUpvoteCountsFromCheepID()
-Return Each upvote's cheepId, userId, and reactionType
-ChirpWeb -> ReactionDTO: Call GetCheepsDownvoteCountsFromCheepID()
-Return Each downvote's cheepId, userId, and reactionType
+ChirpWeb -> ReactionRepo: Call GetCheepsUpvoteCountsFromCheepID()
+Return Count of upvotes for each cheep in DisplayedCheeps
+ChirpWeb -> ReactionRepo: Call GetCheepsDownvoteCountsFromCheepID()
+Return Count of downvotes for each cheep in DisplayedCheeps
 |||
 
 ChirpWeb -> GitHub: Requests GitHub image for each cheep's author
@@ -37,8 +38,6 @@ else If GitHub user does not exist
     GitHub --> ChirpWeb: Returns a GitHub default image
 end
 |||
-
-ChirpWeb -> ChirpWeb: Get pagination-info
 
 ChirpWeb --> Browser: HTTP Response: Content-type text/html,\nContent Public.cshtml & BasePageModel.cshtml
 |||
