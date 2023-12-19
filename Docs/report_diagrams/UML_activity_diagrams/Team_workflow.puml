@@ -2,14 +2,14 @@
 header Workflow for teams work
 title Teams work activities 
 start
-:Feature is thought off;
+:Task is thought off or given;
 :Issue is written;
 floating note left: Issues are moved on the GitHub project\nboard on to the column corresponding\nto the stage the issue is in
 :Members are assigned;
 :Solution is planned;
 :A feature branch is created; 
-:Solution is build;
 repeat
+    :Solution is build;
     :Pull-request is opened;
     :Team members review the pull-requst;
 repeat while (Aprroved for merge?) is (No)
