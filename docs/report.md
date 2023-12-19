@@ -3,6 +3,7 @@ title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2023 Group `10`
 author:
 - "Theis Per Holm <thph@itu.dk>"
+- "August Kofoed Brandt <aubr@itu.dk>"
 # Add your names here guys
 numbersections: true
 ---
