@@ -1,4 +1,4 @@
-@startuml user_activities_digram
+@startuml user_activities_digram_unauthorized
 header UML Activity Digram for user activities
 title User is not authorized
 start
@@ -17,5 +17,4 @@ case (Go to hashtag page)
     :Brows cheeps with 
     selected hashtag;
 endswitch
-stop
 @enduml
