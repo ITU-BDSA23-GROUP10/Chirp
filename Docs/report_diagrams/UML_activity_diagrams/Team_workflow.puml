@@ -15,3 +15,5 @@ repeat
 repeat while (Aprroved for merge?) is (No)
 ->Yes;
 :Merge pull-request;
+stop
+@enduml
