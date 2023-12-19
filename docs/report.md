@@ -31,6 +31,13 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 
 
 ## Team work
+
+//TODO: Add picture of project board 
+
+//TODO: Add text about missing issues and features
+
+//TODO: Add team workflow diagram
+
 The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
 
 How work was conducted on the issues, can be seen in the diagram [team workflow diagram]. Once an issue was ready to be worked, group members would be assigned to the issue and take responsibility for solving the issue and updating it on the project board
