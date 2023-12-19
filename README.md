@@ -54,7 +54,7 @@ If the docker container does not show up in the list then you can try to start i
 ```
 $ docker ps -a
 ```
-Look for the container using the image **mcr.microsoft.com/mssql/server** and remember the first couple of letters of the ID. Then run this where **id** is the **id** from the docker ps -a command
+Look for the container using the image **mcr.microsoft.com/mssql/server** and remember the first couple of letters of the ID. Then run this where **id** is the ID from the docker ps -a command
 ```
 docker start id
 ```
