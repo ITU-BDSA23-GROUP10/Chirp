@@ -7,24 +7,26 @@ actor "Unauthorized User" as UnauthorizedUser
 participant "Webbrowser" as Browser
 participant "Chirp.Web" as ChirpWeb
 participant "Cheep Repository" as CheepRepo
+collections DisplayedCheeps as CheepsList
 entity cheepDTO as CheepDTO
 entity reactionDTO as ReactionDTO
 
 UnauthorizedUser -> Browser: Enters website's URL
 Browser -> ChirpWeb: HTTP Request: GET URL
 
-ChirpWeb -> CheepRepo: Get cheeps for current page
+ChirpWeb -> CheepRepo: Call GetSome() for current page\n to retrieve up to 32 cheeps
 CheepRepo -> CheepDTO: Sends authorname, message \n and timestamp for each cheep
-CheepDTO --> ChirpWeb: Each CheepDTO has a cheep's \n authorname, message and timestamp
+CheepDTO -> CheepsList: Added with a cheep's \n authorname, message and timestamp
+CheepsList -> ChirpWeb: Returns with up to 32 cheeps
 |||
 alt If YouTube link exists in cheep's message
     ChirpWeb -> YouTube: Requests video embed HTML via iFrame
     YouTube --> ChirpWeb: Returns video-embed HTML page
 end
 |||
-ChirpWeb -> ReactionDTO: Get upvote-reactions for each cheep
+ChirpWeb -> ReactionDTO: Call GetCheepsUpvoteCountsFromCheepID()
 Return Each upvote's cheepId, userId, and reactionType
-ChirpWeb -> ReactionDTO: Get downvote-reactions for each cheep
+ChirpWeb -> ReactionDTO: Call GetCheepsDownvoteCountsFromCheepID()
 Return Each downvote's cheepId, userId, and reactionType
 |||
 
@@ -43,6 +45,6 @@ ChirpWeb --> Browser: HTTP Response: Content-type text/html,\nContent Public.csh
 
 Browser -> ChirpWeb: HTTP Request: GET CSS
 ChirpWeb --> Browser: HTTP Response: text/css with style.css
-
-Browser --> UnauthorizedUser: Returns rendered web-page
+Browser -> Browser: Renders web-page
+Browser --> UnauthorizedUser: Shows rendered web-page
 @enduml
