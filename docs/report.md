@@ -9,8 +9,6 @@ author:
 numbersections: true
 ---
 
-Testing some git things
-
 # Design and Architecture of _Chirp!_
 
 Chirp! is a mini social media platform based around user generated "cheeps", 160 character text-based messages which stores the input of the cheep author's shared message. It is hosted on Azure App Service and utilizes ASP.Net 7.
