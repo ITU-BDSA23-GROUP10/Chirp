@@ -10,17 +10,17 @@ numbersections: true
 
 # Design and Architecture of _Chirp!_
 
+Chirp! is a mini social media platform based around user generated "cheeps", 160 character text-based messages which stores the input of the cheep author's shared message. It is hosted on Azure App Service and utilizes ASP.Net 7.
+
 ## Domain model
 
 The Chirp! domain model represents the fundamental structure and behavior of the application. It describes how users, who can be authors once they write one or many cheeps, also can react to cheeps and follow other users. The Follows, Reaction, Author, Cheep, and User classes manage these relationships and interactions on the platform.
 
-![Illustration of the _Chirp!_ data model as UML class diagram.](domain_model_UML.png)
+![Illustration of the _Chirp!_ data model as UML class diagram.](images/domain_model_UML.png)
 
 ## Architecture — In the small
 
 ## Architecture of deployed application
-
-Chirp! is a mini social media platform based around user generated "cheeps", 160 character text-based messages which stores the input of the cheep author's shared message. It is hosted on Azure App Service and utilizes ASP.Net 7.
 
 ### Architecture
 The project uses the Razor Pages framework to serve Chirp.Web. Chirp.Web effectively sets up the GUI for the website, and is a blend of static html components like images, css, javascript files, viewcomponents, and razor pages, all of them collectively handles the user's experience on the Chirp! platform.
@@ -32,9 +32,14 @@ Chirp.Infrastructure is the persistent data layer of the Chirp! application. Thi
 ### Client-server communication
 The database server is hosted on SQL Server on Azure App Service. The database server works with the Chirp.Infrastructure layer where it stores and retrieves data as requested by the application.
 
-The communication between the client application and the server is carried out through HTTP and HTTPS protocols (Get, Set, etc..). These protocols are safely handled by the Azure App Service using their TCP/IP service, giving high certainty of reliable data transmissions.
+The communication between the client application and the server is carried out through HTTP and HTTPS protocols. These protocols are safely handled by the Azure App Service using their TCP/IP service, giving high certainty of reliable data transmissions.
 
-When a user interacts with the Chirp! website, an HTTP request is sent to the server. For instance, when a user posts a new cheep, the client application sends a request to the server to store that information in the database. The server then processes this request with the help of Chirp.Core and Chirp.Infrastructure, which handle data operations with the database. (REFERENCE sequence diagram)
+When a user interacts with the Chirp! website, an HTTP request is sent to the Azure server.
+
+
+![Illustration of the _Chirp!_ data model as UML class diagram.](images/DeployedDiagram.svg)
+
+For instance, when a user posts a new cheep, the client application sends a request to the server to store that information in the database. The server then processes this request with the help of Chirp.Core and Chirp.Infrastructure, which handle data operations with the database. (REFERENCE sequence diagram)
 
 The server, after storing the cheep in the database, sends a response back to the client application, signifying that the operation was successful and updates accordingly. This kind of request-response communication happens every time a user interacts with the website and uses its functions.
 
@@ -43,7 +48,7 @@ Both the Chirp! application and the SQL Database are hosted on Azure App Service
 The Azure services hosting Chirp! utilize ACID properties in their SQL Server, ensuring all-or-nothing transactions for data consistency. Concurrency is managed through the SQL Server's locking mechanism and conflict detection in Entity Framework, which is also part of the Chirp! application. During a transaction, the accessed data is locked to prevent conflicting modifications. Entity Framework also checks for changes made by other users since the last read, helping to resolve any conflicts. Furthermore, data integrity within Chirp! is maintained by enforcing constraints (like UNIQUE, FOREIGN KEY, NOT NULL) in the SQL Server database.
 
 ### User Authentication
-User authentication in Chirp! is managed through GitHub's OAuth authentication service. This service enables users to log into the application using their GitHub accounts, providing an easy login experience. (DIAGRAM)
+User authentication in Chirp! is managed through GitHub's OAuth authentication service. This service enables users to log into the application using their GitHub accounts, providing an easy login experience.
 
 When a user attempts to log in, the application directs them to GitHub's OAuth login page. After the user enters their GitHub credentials and grants the necessary permissions, GitHub sends an authorization code back to the Chirp! application. This authorization code is handled by an ASP.NET handler form in Chirp! which then exchanges it for an access token.
 
