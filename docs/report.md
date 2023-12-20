@@ -7,6 +7,10 @@ author:
 numbersections: true
 ---
 
+# Table Of Content
+
+//TODO: Create a ToC
+
 # Design and Architecture of _Chirp!_
 
 ## Domain model
