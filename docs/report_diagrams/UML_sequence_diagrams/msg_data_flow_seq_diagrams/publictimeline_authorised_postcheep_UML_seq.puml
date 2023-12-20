@@ -16,7 +16,6 @@ skinparam legend {
 }
 
 legend top
-
   <b>Legend</b>
 
   Lifelines
