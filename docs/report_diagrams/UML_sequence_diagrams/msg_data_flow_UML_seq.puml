@@ -3,7 +3,6 @@
 header Sequence Diagram for Message- and Datataflow
 Title Accessing Public Timeline As An Unauthorized User
 
-
 actor "User" as Us
 participant "Front End" as Fe
 participant "API" as Api
@@ -17,5 +16,8 @@ Dh -> Db: Queries 32 newest cheeps
 Return Returns:\nUp to 32 newest cheeps,\nand count of all cheeps
 Dh --> Api: Returns:\nPaginated list of cheeps sorted by date,\nand count of all cheeps
 Api --> Fe: HTTP Response:\ntext/html with cheeps
+|||
+Fe -> Api: HTTP GET: {url}/css/style.css
+Return HTTP Response:\ntext/css with style.css
 Fe --> Us: Renders webpage
 @enduml
