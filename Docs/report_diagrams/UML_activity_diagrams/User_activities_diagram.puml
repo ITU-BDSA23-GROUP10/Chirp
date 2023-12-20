@@ -33,7 +33,7 @@ if (Authorized?) then (No)
         kill
     split again
         ->Go to;
-        #23d96c:{Author name}s timeline;
+        #23d96c:{Author name}'s timeline;
         split
             ->read;
             #955acc:Cheeps and
@@ -42,7 +42,7 @@ if (Authorized?) then (No)
         split again
             ->Go to;
             #23d96c:Other page on
-            {Author name}s timeline;
+            {Author name}'s timeline;
             ->read;
             #955acc:Cheeps and
             reactions;
@@ -152,7 +152,7 @@ else (Yes)
         endsplit
     split again
         ->Go to;
-        #23d96c:{Author name}s timeline;
+        #23d96c:{Author name}'s timeline;
         split
             ->read;
             #955acc:Cheeps and
@@ -161,7 +161,7 @@ else (Yes)
         split again
             ->Go to;
             #23d96c:Other page on
-            {Author name}s timeline;
+            {Author name}'s timeline;
             ->read;
             #955acc:Cheeps and
             reactions;
@@ -199,7 +199,7 @@ else (Yes)
         ->Go to;
         #23d96c:Profile;
         split
-            if (Has email) then (No)
+            if (Has email?) then (No)
                 #4fa7c9:Add email;
             else (Yes)
                 #4fa7c9:Update email;
@@ -209,7 +209,7 @@ else (Yes)
             ->Press;
             #4fa7c9:Download data;
             #bf4a3d:Download file with 
-            user data;
+            all user data;
             kill
         split again
             ->See;
@@ -219,7 +219,7 @@ else (Yes)
             ->Press;
             #4fa7c9:Forget me;
             #bf4a3d:User is removed
-            from chirps database;
+            from Chirp's database;
             stop
         split again
             ->See;

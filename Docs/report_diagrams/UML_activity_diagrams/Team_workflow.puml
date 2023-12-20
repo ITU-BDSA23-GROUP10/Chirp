@@ -1,6 +1,6 @@
 @startuml team_workflow
-header Workflow for teams work
-title Groups work activities 
+header Activity diagram for group's workflow
+title Group's work activities 
 start
 :Task is thought off or given;
 :Issue is written;

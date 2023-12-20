@@ -27,7 +27,7 @@ The User activities diagram shows what is possible for a user to do on our Chirp
 
 ![User activities activity diagram](images/user_activities_diagram.svg)
 
-[Web version of *User activities* diagram](https://www.plantuml.com/plantuml/svg/xLZVRzCm47xlNt4IBzq3Bsm3RPDW4sZR4rI32UrfSkDBOisn8_lI2X3_EuhJSircHLQ3w43jKnf_lXztNxvpSkv9E6eg3Or7ToyoKWj52lszLA9mefgKA2GwkFNeW9VNbzzWZID56X_39i7yHEKmlMYej4vzH_dk0AX40zEFzc020F3YrQ4yUPsTpfgvLXcGgb0hWs5jQYo1LuL12SeSd8MRljQA9h3wlNmxS-XzjnJi7UNYJNPogcq1ocpSd-T7ub2kxiDIKGbNYgwREMCysPfzW2Y4CXkURb383OCdnySYoqxVbuYr1s7axoM7RHMiyOn-K5eFcBwoG9RHww9yeX8TrA90i0ol-wKwssc8ryAN98eGv6uZ-T6n38oeyAUFb8UPmxOSXpaSwa2ulP3ZOST37-mr_uOJUuQfH3d1lFZpKQAHNNDxVr1xXEaT-WIbsL9bscrW6tggCq4CbL_95sFsElFFwCnNfmYVzZpS1eDBo5el36WdtPrjlZHp1AtCmthMCGKVcxgGCY21BAntBfJ4ZVm3YRjfoMHNUS_fgZO-pM7PeO4i9v3YYwtCh2VUErpBuUVdqcfjbs0TD2RlhaKGkx66RzfkSueZoJT3vwqHEc6ef6eSyn5oPolemJtgF82wcg1SLUKl3fsQKquVDxjFSlVZg1ybfnpHb0HTITUMBVKb_jptd_rKhKdNctJVATgJJfE-N4IrI1WP5wFndkBYb7AksH-6zuVXyL7knUUvYuzr_u7sp9pDbOvhJR-PW9LGcZy93VSoW2CD76R1RIq58MyUwlFuydwmIwEja205YGq8lnaof2rIzo6gXsiykiZsnDW-8yOLvJBXb3MEmQv0WehTHz-77LPsWNrL2sV3h5IkzY7nkV1iXT-OHoJVoXkXwKY_nPU4m9HpDBAfz2y0)
+[Web version of *User activities* diagram](https://www.plantuml.com/plantuml/svg/xLXBJzj04BxdLupK0-5GgIhG5f1Q41LmQYCUgZYXINOSZrZlMhjhebBrlrTU9nqCAyl2LQ5LSdBMtyvZvlEtZmCVq8Mgq51vSjSu2tpBWSbVAyQvmsBaRzYKwB202mwQZgq9vtn7yE7DA2TKvE3IamEPkNhy3YiJePxu43QAdaUSmVYm2hbrV4VgqoQ4d0oClzZD4G30gxTRQlVTR6zIJJNF8711cWt5TsDZ0tYU6rB0PdC_3lfISnZ1ylVwuyIHzyshQ6yxm_UptJrjvy3ctlWqsyOjjHo71OSSJZYSLbF1-61ByG4uHpRtF9qHgdi6TtTsS3RREyg9IWzerEzNZkegMEC5VSDQTvW-iH3i2Yr5-HfoSb3YdC0Al6oNQlzPGpn5dmUSno2VDv8V3Sl0O44_DtoYFa8TCUOapkvOE-9jnPoEEnrxPxFbrv7P2yqbpGfXnX-FaengkjlwGzeJZA_8zz2Q9-fCFGri5HuhJPH3zj0O5inQQVuPfVdcED3ZdiTXCBI0MUr50FLQTsMhYsfAeDdSh5OxeU13KuTAHIG42wkPjwp8Yj58ucQz5B9prdAwh8tlvp1lq12i9D37brYPM1zaRdSjkx-VOwkrNO1rK9ciUSQeTaCDdzNTbXG7acz2pbk3kkUgqaVZX8-GELj02-v9Pn7Kr8JKiYf_STKfqocBLVVoatoMvQWTfQISr9HUkj9FMvweBydlFl7jzzUQ_dhJstTQU_hJ92qNQIr2ez9YDDnJMfpwxclMs-7rTdXOb2zVVjRoOzr_e3uJPpFMQR5fDnEeGDQjUw6kPaPqgeETDBWi5GQIoLsD7bxVptPXj4K52WCA1EHmA92wIirjL0k7khcmIvZe6TyvKLfMZeTjjdhGsCqfG27kayTYHuMzfRQqnItYKSwktF0nyobwCICdvm7Pro8No3JKVyADGgJB0HbL5VeN)
 
 ## Sequence of functionality/calls trough _Chirp!_
 
@@ -46,17 +46,17 @@ Above is an image of the project board for our chirp project. While the vast maj
 **Overview of uncompleted issues:**
 | Issue | Description | Not completed because: |
 | ----------- | ----------- | ----------- |
-| [#175](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/175) (Bugs) | Make playwright UI tests able to run<br> with a workflow through GitHub actions. | Problems with getting playwright test to run in “Headless” mode.<br>Because running UI tests on GitHub actions was not an important requirement for the project the issue was not prioritized. |
+| [#175](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/175) (Bugs) | Make playwright UI tests able to run<br> with a workflow through GitHub actions. | Problems with getting playwright test to run in “Headless” mode.<br>Because running UI tests on GitHub actions was not an important requirement for the project, the issue was not prioritized. |
 | [#263](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/263) (Bugs) | When running integration tests on a unix<br> based system, the tests would give a<br> `System.InvalidOperationException`. | Since the exception didn’t stop the tests from running and passing, the issue was not prioritized. |
 | [#225](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/225) (Not started) | Be able to run `playwright` tests on a dockerized container of the project. | The scope of this issue was too big for the deadline of the project, and not a necessary addition. |
-| [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program used general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program and due to the deadline approaching, it was decide that other issues would be prioritized.  |
+| [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program uses general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program, and due to the deadline approaching, it was decide that other issues would be prioritized.  |
 
 
-### Groups work activities
+### Group's work activities
 
 ![Activity diagram of group workflow](images/team_workflow.svg)
 
-[Web version of *Groups work activities* diagram](https://www.plantuml.com/plantuml/svg/TP6_RZ8n4CHxFyMA2WfU0AJlWoXIH94eKf2Yb8QRkxFm7sUzldlzs701Yk1ovgUPNUycYMR9pgeUkW7JP-1JQyD8RM0IQ9TeB98I8nRqmY77YqBwA6OmOf18dLFKQg_JYKmYwKFkUg7GjXIOEZF0hzLgbr96zKSs8cVf5Uu0JgGPf5CodKTpJxeme249D7k2yHr5gtr1PeNv23QB2RvYarpKBRNGaXbqOEsFVNMFNAJYac94Q55KtkEEGpQsDbIghRlJzEuhBzGD8jrfuw_eBJt7HWic4hwv9gxUixLBndT6aag625_0XzFjF346Wt4sCNjeH-xoWvD5qeFYRt2IzRGoZRsneFasCfy3wtaTkCF_HMsPluM5MlxxGgf7gVej1Kd-Fibpy2Yp90bHRU2RxEmF)
+[Web version of *Group's work activities* diagram](https://www.plantuml.com/plantuml/svg/TP6zxjD04CJxUufL6lufyWA910b2GYb0IAIXGfjuR9zo7yVUdYtUdhDZWWjovSpFCxlUOrOMBTwHWltFCSgzTN4qFRY1qEccTh3wcnhBdR2dDWfr4ajwb-a9grK7-hoIYHyVMcGoSuNPNpZVoMRIFfQkLufjIrEQ7H0EPd_EkM3oHx6gi_G5_Wh9n0BYd6qNqAn97mSqf94s7s53HybngCYcCj-ZAsfZcB15hkg9Mh0M0Ls5mwsVt9jKgRfa10ciXkfxtN4jrjM6cMhhfeQMjwvyKFyWuevjMD1rUaaDAnOIeNacxhyLvtQ2NmLP9p8cX0g-dEuSI31OZ9k5kO0z-UKFFYpI7fJ-1cSzB2lJs5i7UZibaJbmkhA7TFYmdLhUliQjsRt_WJmVfUgKLkFz_oIVOa2T9MjCveZG5E_-0000)
 
 The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
 
