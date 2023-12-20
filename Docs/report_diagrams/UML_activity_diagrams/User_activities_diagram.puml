@@ -2,8 +2,8 @@
 header User activities activity diagram
 title User activities
 start
-if (authorized?) then (No)
-    #23d96c:public timeline
+if (Authorized?) then (No)
+    #23d96c:Public timeline
     (not signed in);
     split
         ->Press;
@@ -56,7 +56,7 @@ if (authorized?) then (No)
         endsplit
     endsplit
 else (Yes)
-    #23d96c:public timeline
+    #23d96c:Public timeline
     (signed in);
     split
         ->Press;
