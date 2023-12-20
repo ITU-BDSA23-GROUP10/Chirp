@@ -47,7 +47,12 @@ Above is an image of the project board for our chirp project. While the vast maj
 | [#225](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/225) (Not started) | Be able to run `playwright` tests on a dockerized container of the project. | The scope of this issue was too big for the deadline of the project, and not a necessary addition. |
 | [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program used general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program and due to the deadline approaching, it was decide that other issues would be prioritized.  |
 
-//TODO: Add team workflow diagram
+
+### Groups work activities
+
+![Activity diagram of group workflow](images/team_workflow.svg)
+
+[Web version of groups work activities diagram](https://www.plantuml.com/plantuml/svg/TP6_RZ8n4CHxFyMA2WfU0AJlWoXIH94eKf2Yb8QRkxFm7sUzldlzs701Yk1ovgUPNUycYMR9pgeUkW7JP-1JQyD8RM0IQ9TeB98I8nRqmY77YqBwA6OmOf18dLFKQg_JYKmYwKFkUg7GjXIOEZF0hzLgbr96zKSs8cVf5Uu0JgGPf5CodKTpJxeme249D7k2yHr5gtr1PeNv23QB2RvYarpKBRNGaXbqOEsFVNMFNAJYac94Q55KtkEEGpQsDbIghRlJzEuhBzGD8jrfuw_eBJt7HWic4hwv9gxUixLBndT6aag625_0XzFjF346Wt4sCNjeH-xoWvD5qeFYRt2IzRGoZRsneFasCfy3wtaTkCF_HMsPluM5MlxxGgf7gVej1Kd-Fibpy2Yp90bHRU2RxEmF)
 
 The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
 

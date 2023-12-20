@@ -1,6 +1,6 @@
 @startuml team_workflow
 header Workflow for teams work
-title Teams work activities 
+title Groups work activities 
 start
 :Task is thought off or given;
 :Issue is written;
