@@ -21,6 +21,9 @@ Here comes a description of our domain model.
 ## Architecture of deployed application
 
 ## User activities
+The User activities diagram shows what is possible for a user to do on our Chirp application. Both when authenticated and unauthenticated.
+
+//TODO: Add user activities activity diagram
 
 ## Sequence of functionality/calls trough _Chirp!_
 
