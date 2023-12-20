@@ -16,7 +16,7 @@ jobs:
         
         - uses: docker://pandoc/latex:2.9
           with:
-            args: "-f markdown_strict -t pdf ./docs/report.md" # gets appended to pandoc command
+            args: "-f markdown_strict -t pdf ./docs/report.md -o report.pdf" # gets appended to pandoc command
         
         - name: Commit Changes to GitHub
           run: |
