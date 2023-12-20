@@ -1,0 +1,74 @@
+@startuml
+
+header Sequence Diagram for Message- and Datataflow
+Title Post cheep as an authorised user with no followings
+
+actor "User" as Us
+participant "Front End" as Fe
+participant "API" as Api
+participant "Data-handler" as Dh
+database "Database" as Db
+
+== After accessing public timeline as an authorised user ==
+Us -> Fe: Presses "Share"
+Fe -> Api: HTTP POST: <User's message>
+Api -> Dh: GetAuthorByName(<userName>)
+Dh -> Db: Query author with name: <userName>
+Return Returns: [Author]
+Dh --> Api: Returns: [Author]
+
+alt If author does not exist
+    Api -> Dh: GetUserByName(<userName>)
+    Dh -> Db: Query user with name: <userName>
+    Return Returns: [User]
+    Dh --> Api: Returns: [User]
+
+    alt If user does not exist
+        Api -> Dh: CreateUser(<userName>)
+        Dh -> Db: Add new user
+        Api -> Dh: GetUserByName(<userName>)
+        Return Returns: [User]
+        alt If created user does not exist
+            Api -> Api: throw new InvalidOperationException\nMessage: "Author could not be created."
+        end
+    end
+    Api -> Dh: CreateAuthor(User)
+    Dh -> Db: Add user as new author
+    Api -> Dh: GetAuthorByName(<userName>)
+    Return Returns: [Author]
+end
+alt If author still does not exist
+    Api -> Api: throw new InvalidOperationException\nMessage: "Author could not be created."
+end
+
+Api -> Dh: CheepCreateDTO(<User's message>, <userName>)
+Return Returns: CheepDTO
+Api -> Dh: CreateCheep(CheepDTO, <User's Author-data>)
+Dh -> Db: Add new cheep
+
+Api -> Fe: Redirect to {url}/<userName>
+Fe -> Api: HTTP GET: {url}/<userName>
+
+Api -> Dh: GetUserIDByName(<userName>)
+Dh -> Db: Query user's id by <userName>
+Return Returns: UserId
+Dh --> Api: Returns: UserId
+
+Api -> Dh: GetCheepsCountFromAuthorId(UserId)
+Dh -> Db: Query author with UserId
+Return Returns: Author
+Dh -> Db: Query the author and their list of cheeps to count amount of cheeps
+Return Returns: Count of author's cheeps
+Dh --> Api: Returns: Count of author's cheeps
+Api -> Dh: GetCheepsByAuthorId(UserId, 0, 32)
+Dh -> Db: Query author's newest 32 cheeps by UserId
+Return Returns: Up to 32 of the author's newest cheeps
+Dh --> Api: Returns: Paginated list of cheeps sorted by date
+
+Api -> Api: Clears List<CheepDTO> Cheeps
+Api -> Api: Adds paginated list's cheeps into Cheeps
+Api -> Api: Order Cheeps' content by descending timestamp
+
+Api -> Fe: HTTP Response:\n text/html with cheeps
+
+@enduml
