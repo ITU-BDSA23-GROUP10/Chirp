@@ -8,18 +8,20 @@ namespace PlaywrightTests;
 [TestFixture]
 class UITesting 
 {
-    // logs in with a user to chirp
-    [Test]
-    public async Task LoginWithUser()
+    private IBrowser? _browser;
+    private IBrowserContext? _context;
+    
+    [OneTimeSetUp]
+    public async Task Setup()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        var playwright = await Playwright.CreateAsync();
+        _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
         });
-        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+        _context = await _browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
-        var page = await context.NewPageAsync();
+        var page = await _context.NewPageAsync();
 
         await page.GotoAsync("https://localhost:5273");
 
@@ -37,35 +39,33 @@ class UITesting
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-    
+
         // save the state
-        var state = await context.StorageStateAsync(new()
+        var state = await _context.StorageStateAsync(new()
         {
             Path = "../../../state.json"
         });
-    
-        await browser.CloseAsync();
     }
-    
-    // User creates a cheep
-    [Test]
-    public static async Task UserCreatesCheep()
+
+    [OneTimeTearDown]
+    public async Task TearDown()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_browser != null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            await _browser.CloseAsync();
+        }
+    }
 
-        var context = await browser.NewContextAsync(new()
+    [Test]
+    public async Task UserCreatesCheep()
+    {
+        if (_context == null)
         {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true,
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var page = await context.NewPageAsync();
-        
+        var page = await _context.NewPageAsync();
+
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -77,31 +77,26 @@ class UITesting
         await page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
 
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
-        
+
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
-        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();        
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.CloseAsync();
     }
+
     
     // Add an email to the users profile
     [Test]
-    public static async Task EmailAddTest() 
+    public async Task EmailAddTest()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_context == null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var context = await browser.NewContextAsync(new()
-        {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true
-        });
+        var page = await _context.NewPageAsync();
 
-        var page = await context.NewPageAsync();
-        
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -109,30 +104,24 @@ class UITesting
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
-        
+
         await page.GetByText("Email successfully updated").ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.CloseAsync();
     }
     // test the front end error when the user has a duplicate email
     [Test]
-    public static async Task EmailUpdateDuplicateError() 
+    public async Task EmailUpdateDuplicateError()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_context == null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var context = await browser.NewContextAsync(new()
-        {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true
-        });
+        var page = await _context.NewPageAsync();
 
-        var page = await context.NewPageAsync();
-        
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -148,26 +137,20 @@ class UITesting
         await page.GetByText("Duplicate email, that email already exists").ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.CloseAsync();
     }
     // Tests the front end alert for when the user made a formatting error
     [Test]
-    public static async Task EmailUpdateFormattingError() 
+    public async Task EmailUpdateFormattingError()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_context == null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var context = await browser.NewContextAsync(new()
-        {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true
-        });
+        var page = await _context.NewPageAsync();
 
-        var page = await context.NewPageAsync();
-        
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -181,30 +164,25 @@ class UITesting
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
 
         await page.GetByText("Email formatting is incorrect").ClickAsync();
-        
+
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.CloseAsync();
     }
+    
     // tests the alert for when the user updates their email on their profile
     [Test]
-    public static async Task EmailUpdateChangeSuccessful() 
+    public async Task EmailUpdateChangeSuccessful()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_context == null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var context = await browser.NewContextAsync(new()
-        {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true
-        });
+        var page = await _context.NewPageAsync();
 
-        var page = await context.NewPageAsync();
-        
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -218,30 +196,24 @@ class UITesting
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
 
         await page.GetByText("Email successfully updated").ClickAsync();
-        
+
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
+
+        await page.CloseAsync();
     }
-    // logs the user in and then deletes them
+    // logs a user in and deletes the user
     [Test]
-    public static async Task LoginAndDeleteUser()
+    public async Task LoginAndDeleteUser()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        if (_context == null)
         {
-            Headless = false,
-            //SlowMo = 10000
-        });
+            throw new InvalidOperationException("The test context is not initialized.");
+        }
 
-        var context = await browser.NewContextAsync(new()
-        {
-            StorageStatePath = "../../../state.json",
-            IgnoreHTTPSErrors = true
-        });
+        var page = await _context.NewPageAsync();
 
-        var page = await context.NewPageAsync();
-        
         await page.GotoAsync("https://localhost:5273");
 
         await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
@@ -255,5 +227,7 @@ class UITesting
         await page.GetByText("User UI-tester-bdsa does not exist").ClickAsync();
 
         await page.GetByText("Go back to the home page").ClickAsync();
+
+        await page.CloseAsync();
     }
 }
