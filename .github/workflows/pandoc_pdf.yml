@@ -18,7 +18,7 @@ jobs:
           with:
             args: "-f markdown_strict -t pdf ./docs/report.md -o report.pdf" # gets appended to pandoc command
         
-        - name: Copy PDF to docs folder
+        - name: Move PDF to docs folder
           run: |
               mv report.pdf docs/report.pdf
         - name: Commit Changes to GitHub
