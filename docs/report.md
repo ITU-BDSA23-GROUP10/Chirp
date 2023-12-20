@@ -138,7 +138,7 @@ The group chose this license as it was a good fit for the groups requirements of
 ## LLMs, ChatGPT, Copilot, and others
 The use of LLMs like ChatGPT and Copilot has been documented on github commits as a co-author when used. The use of Copilot was almost entirely used for writing comments in the code as documentation and was used to translate a bash script into a powershell version of that script for the docker setup. 
 
- You can see the number of these commits on the page linked here: [ChatGPT Co-authored commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/graphs/contributors). Sadly the page that shows the actual commits doesn't have all the commits that it contributed on as these were done on separate branches whose commits seem to not carry over to the main branch's working tree.
+ You can see the number of these commits on the page linked here: [ChatGPT Co-authored commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/graphs/contributors). Sadly the page that shows the [actual commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/commits?author=fromchatgpt) it worked on doesn't show any of the commits that it contributed on for some reason but it is counted in the contribution section linked to before.
 
 
 # References 
