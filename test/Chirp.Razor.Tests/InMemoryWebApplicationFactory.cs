@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Chirp.Infrastructure;
 
 // referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
+// The CustomWebApplicationFactory class is a test utility class
+// It configures a mock web host with an in-memory database for the ChirpDBContext
+// This allows us to perform isolated testing without affecting a real database, and also to seed data for the testing environment.
 public class CustomWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
@@ -31,19 +34,6 @@ public class CustomWebApplicationFactory<TProgram>
             {
                 services.Remove(dbConnectionDescriptor);
             }
-
-            // Create a new Sqlite in-memory database and open a connection to it
-            /*services.AddSingleton<DbConnection>(container =>
-            {
-                var connection = new SqliteConnection("DataSource=:memory:");
-                return connection;
-            });
-
-            services.AddDbContext<ChirpDBContext>((container, options) =>
-            {
-                var connection = container.GetRequiredService<DbConnection>();
-                options.UseSqlite(connection);
-            });*/
 
             services.AddDbContext<ChirpDBContext>(options =>
             {

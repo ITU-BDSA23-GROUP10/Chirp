@@ -43,7 +43,7 @@ public class AuthorRepository : IAuthorRepository<Author, Cheep, User>
 
         // Checks if the author exists
         if (authorEntity == null) {
-            throw new Exception("Author not found ");
+            return 0;
         }
 
         int cheepsCount = await DbSetAuthor.Entry(authorEntity)

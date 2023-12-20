@@ -1,0 +1,134 @@
+@startuml
+package "Chirp.Razor.Tests.MemoryFactory" {
+    class CustomWebApplicationFactory<TProgram> {
+    +ConfigureWebHost(builder : IWebHostBuilder) : void
+    }
+    CustomWebApplicationFactory --> ChirpDBContext : configures
+}
+
+interface IWebHostBuilder {}
+CustomWebApplicationFactory ..|> IWebHostBuilder : configures
+
+abstract class DbConnection {}
+ChirpDBContext ..|> DbConnection : uses
+
+
+package "Chirp.Infrastructure" {
+    
+    class ChirpDBContext {
+        -Database : DatabaseFacade
+    }
+
+    class DbContextOptions<ChirpDBContext> {}
+    
+    ChirpDBContext --> DbContextOptions : uses
+
+    class DbInitializer {
+        +SeedDatabase(context : ChirpDBContext) : void
+    }
+    
+    DbInitializer --> ChirpDBContext : initializes
+}
+
+package "Chirp.Razor.Tests.Integration" {
+    class IntegrationTest {
+        -_fixture : CustomWebApplicationFactory<Program>
+        -_client : HttpClient
+        +CanSeePublicTimeline() : Task
+        +CanSeePrivateTimeline(author : string) : void
+        +UserDoesntExistPageErrorTest(authorName : string) : Task
+        +CheckIfAuthorHasNoCheeps(author : string) : Task
+        +CheckIfTheRootPageTheSameAsPageOne(page : string) : Task
+        +CheckIfThereThirtyTwoCheepsPerPage(page : string) : Task
+        +AddingAuthors_WithContext_AddsToDatabase(): Task
+        +VerifyingAuthors_WithContext_DoesNotRetainData(): void
+        +CreateCheepInDatabase_CreateAuthorAfterException(authorName : string, authorEmail : string, message : string): Task 
+        +CreateFollowInDatabase_CreateUserAfterException(authorName : string, authorEmail : string, followName : string, followEmail : string): Task
+        +CheckIfReactedByUser(typeOfReaction : string ): Task
+        +CheckIfReactedByUser_ChangedFromOneReactionToAnother(firstReaction : string, secoundReaction : string): Task
+        +CheckIfReactedByUser_ChangedFromUpvoteOrDownvoteToNoReaction(reactionToCheep : string): Task
+    }
+    IntegrationTest --> CustomWebApplicationFactory : uses >
+}
+
+class HttpClient {}
+class Task {}
+IntegrationTest --> HttpClient : uses >
+IntegrationTest --> Task : returns >
+
+package "ChirpDatabase.Tests" {
+    class DatabaseFixture{
+        -ChirpDBContext Context
+        +AsyncPadlock padlock
+        -MsSqlContainer _sqlServer
+        +SetUpContext(): void
+        +SeedDB(ChirpDBContext context): void
+        +InitializeAsync(): Task
+        +DisposeAsync(): Task
+        +ChirpDBContext GetContext()
+    }
+
+    class ChirpDatabaseRepositoryTest {
+        +CreateUserWithEmail(name: string, email: string): async void
+        +DeleteUser(name: string, email: string): async void
+        +GetIdOfUserByName(): async void
+        +UpdateUserEmail(): async void
+        +GetUserById(): async void
+        +CreateUser_NameExists(): async void
+        +TwoUsersCanFollow_AndUnfollow(): async void
+        +CreateAuthor(): async void
+        +DeleteUserAlsoDeletesAuthor(): async void
+        +CreateAuthor_AlreadyExists(): async void
+        +GetAuthorByName(): async void
+        +GetCheepsByAuthorOnlyGetsTheLimitOfCheeps(): async void
+        +CreateValidCheepInDatabase_WhereAuthorExists(authorName: string, message: string): async void
+        +CreateValidCheep_WhereAuthorDoesntExist(): async void
+        +Create100CheepsWith100DifferentAuthors_ReadMostResent32(): async void
+        +CreateInvalidCheep(): async void
+        -IUserRepository<User> userService
+        -IAuthorRepository<Author, Cheep, User> authorService
+        -ICheepRepository<Cheep, Author> cheepService
+        -IFollowsRepository<Follows> followService
+        -IReactionRepository<Reaction> reactionService
+        -AsyncPadlock padlock
+    }
+
+    class ChripDatabaseContextTest {
+        +ChripDatabaseContextTest(_fixture: DatabaseFixture)
+        +CreateUser(username: string, email: string?): async void
+        +CreateUserWithInvalidEmail_ThrowsException(name: string, email: string): async void
+        +CreateUserWithSameName_ThrowsException(name: string, email: string): async void
+        +CreateAuthor(): async void
+        +CreateCheep(message: string): async void
+        +CreateInvalidCheep_ThrowsException(): async void
+        +CreateFollow(): async void
+        +CreateReaction(): async void
+        -ChirpDBContext context
+    }
+}
+database "Docker Container (MsSql)" as Docker {
+    note right: mcr.microsoft.com/mssql/server:2022-latest
+}
+
+interface IAsyncLifetime<T>
+DatabaseFixture ..|> IAsyncLifetime
+DatabaseFixture --> Docker: Uses
+
+interface IClassFixture<DatabaseFixture>
+ChirpDatabaseRepositoryTest ..|> IClassFixture
+ChripDatabaseContextTest ..|> IClassFixture
+
+
+package "PlaywrightTests" {
+    class UITesting {
+        +LoginWithUser() : async Task 
+        +Main() : async Task
+        +EmailAddTest() : async Task
+        +EmailUpdateDuplicateError() : async Task
+        +EmailUpdateFormattingError() : async Task
+        +EmailUpdateChangeSuccessful() : async Task
+        +LoginAndDeleteUser() : async Task
+    }
+}
+
+@enduml
