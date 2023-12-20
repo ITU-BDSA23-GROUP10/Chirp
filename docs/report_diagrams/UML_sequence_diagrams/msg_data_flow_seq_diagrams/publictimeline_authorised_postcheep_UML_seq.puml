@@ -47,7 +47,9 @@ Activate Api #LightBlue
         Api ->> Dh: CreateAuthor(User)
         Activate Api
             Dh -> Db: Add user as new author
-            Api ->> Dh: GetAuthorByName(<userName>)
+        Deactivate Api
+        Api ->> Dh: GetAuthorByName(<userName>)
+        Activate Api
             Dh -> Db: Query author by <userName>
             Db --> Dh: Returns: [Author]
             Dh ->> Api: Returns: [Author]
@@ -67,21 +69,28 @@ Deactivate Api
 Api -> Fe: HTTP Response:\nRedirect to {url}/<userName>
 Fe -> Api: HTTP GET: {url}/<userName>
 
-Api -> Dh: GetUserIDByName(<userName>)
-Dh -> Db: Query user's id by <userName>
-Return Returns: UserId
-Dh --> Api: Returns: UserId
-
-Api -> Dh: GetCheepsCountFromAuthorId(UserId)
-Dh -> Db: Query author with UserId
-Return Returns: Author
-Dh -> Db: Query the author and their list of cheeps to count amount of cheeps
-Return Returns: Count of author's cheeps
-Dh --> Api: Returns: Count of author's cheeps
-Api -> Dh: GetCheepsByAuthorId(UserId, 0, 32)
-Dh -> Db: Query author's newest 32 cheeps by UserId
-Return Returns: Up to 32 of the author's newest cheeps
-Dh --> Api: Returns: Paginated list of cheeps sorted by date
+Activate Api #LightBlue
+    Api ->> Dh: GetUserIDByName(<userName>)
+    Activate Api
+        Dh -> Db: Query user's id by <userName>
+        Db --> Dh: Returns: UserId
+        Dh --> Api: Returns: UserId
+    Deactivate Api
+    Api ->> Dh: GetCheepsCountFromAuthorId(UserId)
+    Activate Api
+        Dh -> Db: Query author with UserId
+        Db --> Dh: Returns: Author
+        Dh -> Db: Query the author and their list of cheeps to count amount of cheeps
+        Db --> Dh: Returns: Count of author's cheeps
+        Dh -->> Api: Returns: Count of author's cheeps
+    Deactivate Api
+    Api ->> Dh: GetCheepsByAuthorId(UserId, 0, 32)
+    Activate Api
+        Dh -> Db: Query author's newest 32 cheeps by UserId
+        Db --> Dh: Returns: Up to 32 of the author's newest cheeps
+        Dh -->> Api: Returns: Paginated list of cheeps sorted by date
+    Deactivate Api
+Deactivate Api
 
 Api -> Fe: HTTP Response:\n text/html with cheeps
 Fe -> Us: Renders webpage

@@ -11,11 +11,13 @@ database "Database" as Db
 
 Us -> Fe: Accesses webpage
 Fe -> Api: HTTP GET: {url}/
-Api ->> Dh: GetSome(32, 0)
-Activate Api 
-Dh -> Db: Queries 32 newest cheeps
-Db --> Dh: Returns:\nUp to 32 newest cheeps,\nand count of all cheeps
-Dh -->> Api: Returns:\nPaginated list of cheeps sorted by date,\nand count of all cheeps
+Activate Api #LightBlue
+    Api ->> Dh: GetSome(32, 0)
+    Activate Api 
+        Dh -> Db: Queries 32 newest cheeps
+        Db --> Dh: Returns:\nUp to 32 newest cheeps,\nand count of all cheeps
+        Dh -->> Api: Returns:\nPaginated list of cheeps sorted by date,\nand count of all cheeps
+    Deactivate Api
 Deactivate Api
 Api --> Fe: HTTP Response:\ntext/html with cheeps
 Fe --> Us: Renders webpage
