@@ -10,9 +10,8 @@ jobs:
   convert_via_pandoc:
     runs-on: ubuntu-22.04
     steps:
-        - name: 
-            run: sudo apt-get install texlive-fonts-recommended texlive-latex-recommended
+        - run: sudo apt-get install texlive-fonts-recommended texlive-latex-recommended
         #- uses: actions/checkout@v3
         - uses: docker://pandoc/latex:2.9
-        with:
+          with:
             args: "-f markdown_strict -t pdf" # gets appended to pandoc command
