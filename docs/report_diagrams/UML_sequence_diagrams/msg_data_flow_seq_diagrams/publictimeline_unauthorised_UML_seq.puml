@@ -9,6 +9,28 @@ participant "API" as Api
 participant "Data-handler" as Dh
 database "Database" as Db 
 
+skinparam legend {
+  backgroundColor #E6E6E6
+  entrySeparator #E6E6E6
+  borderColor #FFFFFF
+}
+
+legend top
+
+  <b>Legend</b>
+
+  Lifelines
+  |     <#LightBlue>       | Async method's lifeline |
+  |     <#white>           | Async method's lifeline, nested |
+
+  Arrow-heads
+  |    <size:24><&arrow-right></size>|  Synchronous method |
+  |    <size:20><U+2192></size>      |  Async methods |
+
+  Other
+  | <b>alt</b>-box | Occurs if [condition] is true |
+endlegend
+
 Us -> Fe: Accesses webpage
 Fe -> Api: HTTP GET: {url}/
 Activate Api #LightBlue
