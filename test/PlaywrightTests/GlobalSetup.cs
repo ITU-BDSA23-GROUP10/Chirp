@@ -1,10 +1,11 @@
 using Microsoft.Playwright;
+using Microsoft.Playwright.Core;
 
 namespace PlaywrightTests
 {
     public class GlobalSetup
     {
-        public async void something()
+        /*public async Task<StorageState> SetupUserLogin()
         {
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -33,10 +34,17 @@ namespace PlaywrightTests
             await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
         
             // save the state
-            var state = await context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = "state.json" });
+            var state = await context.StorageStateAsync(new()
+            {
+                Path = "state.json"
+            });
+            
+            // await context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = "state.json" });
         
-            await browser.close();
-        }
+            await browser.CloseAsync();
+
+            return state;
+        }*/
     }
     
 

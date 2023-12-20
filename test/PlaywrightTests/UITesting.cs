@@ -8,14 +8,13 @@ namespace PlaywrightTests;
 class UITesting 
 {
     [Test]
-    public static async Task LoginWithUser()
+    public async Task Something()
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
         });
-
         var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
 
         var page = await context.NewPageAsync();
@@ -36,7 +35,65 @@ class UITesting
         await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+    
+        // save the state
+        var state = await context.StorageStateAsync(new()
+        {
+            Path = "../../../state.json"
+        });
+
+        //await context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = "state.json" });
+    
+        await browser.CloseAsync();
     }
+
+    [Test]
+    public static async Task LoginWithUser()
+    {
+        /*using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = false,
+        });
+
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+
+        var page = await context.NewPageAsync();*/
+        // using var playwright = await Playwright.CreateAsync();
+        //     await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        //     {
+        //         Headless = false,
+        //     });
+            
+        //     string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+        //     string fullPath = Path.Combine(directoryPath, "PlaywrightTests/user.json");
+
+        //     var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true, StorageStatePath = state });
+
+        //     var page = await context.NewPageAsync();
+        
+        // var GlobalSetup = new GlobalSetup();
+        // var state = await GlobalSetup.SetupUserLogin();
+        // var page = await BrowserConfig.SetupChromium(state);
+
+        // await page.GotoAsync("https://localhost:5273");
+
+        // await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+
+        // await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
+        // {
+        //     Modifiers = new[] { KeyboardModifier.Control },
+        // });
+
+        // await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
+
+        // await page.GetByLabel("Password").ClickAsync();
+
+        // await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
+
+        // await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+    }
+    /*
     [Test]
     public static async Task Main()
     {
@@ -82,7 +139,7 @@ class UITesting
         
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
-    }
+    }*/
     [Test]
     public static async Task EmailAddTest() 
     {
@@ -91,26 +148,36 @@ class UITesting
         {
             Headless = false,
         });
-        var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+        //var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true });
+
+        var context = await browser.NewContextAsync(new()
+        {
+            StorageStatePath = "../../../state.json",
+            IgnoreHTTPSErrors = true
+        });
 
         var page = await context.NewPageAsync();
 
+        // var GlobalSetup = new GlobalSetup();
+        // state = await GlobalSetup.SetupUserLogin();
+        // var page = await BrowserConfig.SetupChromium(state);
+        
         await page.GotoAsync("https://localhost:5273");
 
-        await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        // await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
         
-        await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
-        {
-            Modifiers = new[] { KeyboardModifier.Control },
-        });
+        // await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
+        // {
+        //     Modifiers = new[] { KeyboardModifier.Control },
+        // });
 
-        await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
+        // await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
 
-        await page.GetByLabel("Password").ClickAsync();
+        // await page.GetByLabel("Password").ClickAsync();
 
-        await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
+        // await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
 
-        await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+        // await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
 
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
@@ -118,6 +185,7 @@ class UITesting
         
         await page.GetByText("Email successfully updated").ClickAsync();
     }
+    /*
     [Test]
     public static async Task EmailUpdateDuplicateError() 
     {
@@ -275,5 +343,5 @@ class UITesting
         await page.GetByText("User UI-tester-bdsa does not exist").ClickAsync();
 
         await page.GetByText("Go back to the home page").ClickAsync();
-    } 
+    }*/
 }

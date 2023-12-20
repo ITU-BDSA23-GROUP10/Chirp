@@ -7,37 +7,44 @@ namespace PlaywrightTests
 {
     public class BrowserConfig
     {
-        public static async Task SetupChromium()
+       /* public static async Task<IPage> SetupChromium(StorageStatePath state)
         {
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
                 Headless = false,
             });
-
+            
             string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
             string fullPath = Path.Combine(directoryPath, "PlaywrightTests/user.json");
 
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true, StorageStatePath = fullPath });
+            var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true, StorageStatePath = state });
+
+            var page = await context.NewPageAsync();
+
+            return page;
 
             // The rest of your setup code goes here.
-        }
+        }*/
 
-        public static async Task SetupFirefox()
-        {
-            using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false,
-            });
+        // public static async Task<IPage> SetupFirefox()
+        // {
+        //     using var playwright = await Playwright.CreateAsync();
+        //     await using var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions
+        //     {
+        //         Headless = false,
+        //     });
 
-            string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
-            string fullPath = Path.Combine(directoryPath, "PlaywrightTests/user.json");
+        //     var page = await context.NewPageAsync();
 
-            var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true, StorageStatePath = fullPath });
+        //     string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+        //     string fullPath = Path.Combine(directoryPath, "PlaywrightTests/user.json");
 
-            // The rest of your setup code goes here.
-        }
+        //     var context = await browser.NewContextAsync(new BrowserNewContextOptions { IgnoreHTTPSErrors = true, StorageStatePath = fullPath });
+
+        //     return page;
+        //     // The rest of your setup code goes here.
+        // }
     }
 }
 
