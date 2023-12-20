@@ -61,6 +61,7 @@ else (Yes)
     split
         ->Press;
         #4fa7c9:sign out;
+        #bf4a3d:User is signed out;
         stop
     split again
         ->Read;

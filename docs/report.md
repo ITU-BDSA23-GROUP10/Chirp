@@ -23,7 +23,11 @@ Here comes a description of our domain model.
 ## User activities
 The User activities diagram shows what is possible for a user to do on our Chirp application. Both when authenticated and unauthenticated.
 
-//TODO: Add user activities activity diagram
+![User activities activity diagram legend](images/user_activities_legend.svg)
+
+![User activities activity diagram](images/user_activities_diagram.svg)
+
+[Web version of *User activities* diagram](xLZVRzCm47xlNt4IBzq3Bsm3RPDW4sZR4rI32UrfSkDBOisn8_lI2X3_EuhJSircHLQ3w43jKnf_lXztNxvpSkv9E6eg3Or7ToyoKWj52lszLA9mefgKA2GwkFNeW9VNbzzWZID56X_39i7yHEKmlMYej4vzH_dk0AX40zEFzc020F3YrQ4yUPsTpfgvLXcGgb0hWs5jQYo1LuL12SeSd8MRljQA9h3wlNmxS)
 
 ## Sequence of functionality/calls trough _Chirp!_
 
