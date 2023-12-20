@@ -2,10 +2,8 @@
 using Chirp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Models;
-using Chirp.Web;
 
 namespace ChirpDatabase.Tests;
-
 public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
 {
     private readonly ChirpDBContext context;
@@ -15,7 +13,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         context = _fixture.GetContext();
     }
 
-    // Users tests
+    // creates a new user in the database with a username and an optional email, then checks if the user has been successfully saved
     [Theory]
     [InlineData("Cowboy", "WeeellHeeell@Yeehaw.com")]
     [InlineData("Jackson", null)]
@@ -36,6 +34,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(DBuser);
     }
 
+    // checks if the system throws a database update exception when trying to create a user with an invalid email
     [Theory]
     [InlineData("MyEmailIsTooLong", "EEEEEEEEEEEEEEEEEEEEMMMMMMMMMMMMMMMMMMAAAAAAAAAAAIIIIIIILLLLLLL@TTTHHHIIISSSIIIISSSAAAAMMMMAAIIILLL.com")]
     public async void CreateUserWithInvalidEmail_ThrowsException(string name, string email)
@@ -53,6 +52,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         context.Users.Remove(user);
     }
 
+    // verifies if the system throws a database update exception when attempting to create a second user with the same name and email as an existing user
     [Theory]
     [InlineData("Simon", "NormalMail@gmail.com")]
     public async void CreateUserWithSameName_ThrowsException(string name, string email)
@@ -78,7 +78,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         await Assert.ThrowsAsync<DbUpdateException>(async() => await context.SaveChangesAsync());
     }
 
-    // Author tests
+    // confirms the creation of an author associated with a user
     [Fact]
     public async void CreateAuthor()
     {
@@ -98,7 +98,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(DBauthor);
     }
 
-    // Cheep tests
+    // tests the creation of a cheep by an author
     [Theory]
     [InlineData("New cheep here")]
     public async void CreateCheep(string message)
@@ -121,6 +121,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(DBcheep);
     }
 
+    // tests too long of a cheep, where the text content exceeds the allowed length of 160 characters
     [Fact]
     public async void CreateInvalidCheep_ThrowsException()
     {
@@ -140,7 +141,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         context.Remove(cheep);
     }
 
-    // Follow tests
+    // tests the creation of a follow, where one user follows another
     [Fact]
     public async void CreateFollow()
     {
@@ -159,7 +160,7 @@ public class ChripDatabaseContextTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(DBfollow);
     }
 
-    // React test
+    // tests a reaction, where a user upvotes a cheep
     [Fact]
     public async void CreateReaction()
     {

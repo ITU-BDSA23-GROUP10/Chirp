@@ -1,0 +1,30 @@
+name: Pandoc PDF Conversion
+
+on: 
+    push:
+        branches: main
+        paths: 
+            - 'docs/**'
+                
+jobs:
+  convert_via_pandoc:
+    runs-on: ubuntu-22.04
+    steps:
+        - uses: actions/checkout@v3
+        #- run: sudo apt-get install texlive-fonts-recommended texlive-latex-recommended
+        #- uses: actions/checkout@v3
+        
+        - uses: docker://pandoc/latex:2.9
+          with:
+            args: "-f markdown_strict -t pdf ./docs/report.md -o report.pdf" # gets appended to pandoc command
+        
+        - name: Move PDF to docs folder
+          run: |
+              mv report.pdf docs/report.pdf
+        - name: Commit Changes to GitHub
+          run: |
+              git config --global user.name 'Github Action'
+              git config --global user.email 'thph@itu.dk'
+              git add ./docs/report.pdf
+              git commit -m "Updated PDF"
+              git push

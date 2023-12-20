@@ -3,7 +3,9 @@ using Chirp.Core;
 using Chirp.Infrastructure.Models;
 
 namespace Chirp.Web.Pages;
-
+// This is the page model for the Public page (the home page)
+// This page is used to display all cheeps, has a cheep creation form, the ability to follow authors, and the ability to react to cheeps
+// As well as containing different redirects for the different pages (most of this can be seen in the actual cshtml file)
 public class PublicModel : BasePageModel
 {
     public PublicModel(
@@ -15,6 +17,8 @@ public class PublicModel : BasePageModel
         : base(cheepService, authorService, userService, reactionService, followsService)
         {
         }
+    // This is the list of cheeps that will be displayed on the page
+    // As well as some code for pagination
     public async Task<ActionResult> OnGetAsync([FromQuery(Name = "page")] int page = 1)
     {
         ViewData["Page"] = page;
