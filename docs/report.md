@@ -4,6 +4,7 @@ subtitle: ITU BDSA 2023 Group `10`
 author:
 - "Theis Per Holm <thph@itu.dk>"
 - "Jonas Skjødt <skjo@itu.dk>"
+- "Alexander Lolk <lolk@itu.dk" 
 # Add your names here guys
 numbersections: true
 ---
@@ -17,6 +18,54 @@ The Chirp! domain model represents the fundamental structure and behavior of the
 ![Illustration of the _Chirp!_ data model as UML class diagram.](domain_model_UML.png)
 
 ## Architecture — In the small
+### Chirp.core Layer:
+The core layer is where we place our interfaces and DTO. This layer is oblivious to external concerns such as the database context(infrastructure) or razer pages(Web). 
+
+Structure:
+Chirp.Core
+├── CheepCreateDTO.cs
+├── CheepDTO.cs
+├── FollowDTO.cs
+├── ReactionDTO.cs
+├── IAuthorRepository.cs
+├── ICheepRepository.cs
+├── IFollowRepository.cs
+├── IReactionRepository.cs
+└── IUserRepository.cs
+
+### Chirp.Infrastructure Layer:
+The Infrastructure layer is responsible for implementing the details of the database and Initializing the database. Database creation and migrations are constructed here with EF core and the Models.
+
+Structure:
+Chirp.Infrastructure
+<br/>├── ChirpDBContext.cs
+<br/>├── DbInitializer.cs
+<br/>├── ChirpRepository
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── AuhorRepository.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── CheepRepository.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── FollowsRepository.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── ReactionRepository.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;└── UserRepository.cs
+<br/>└── Models
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Author.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Cheep.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Follows.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Reaction.cs
+<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;└── User.cs
+
+
+### Chirp.Web Layer:
+The Web Layer is where the UI interface is placed, and as such have all the cshtml file with their corresponding cs file. Within the program.cs is where the dependencies are built to the others layers.
+
+Structure:
+Chirp.Web
+<br/>├── Pages (cshtml and cs files)
+<br/>├── ViewComponents
+<br/>├── AsyncLock.cs
+<br/>├── PagesData.cs	
+<br/>└── Program.cs
+
+The Onion Architecture provides a clear separation of concerns and upholds the  Dependency Inversion Principle by keeping every layer unaware of the layer above itself. This layered approach facilitates testability by decoupled components, so each can be tested in isolation. The architecture hereby enables a stronger use of dependency injection to ensure that
 
 ## Architecture of deployed application
 
