@@ -8,7 +8,7 @@ namespace PlaywrightTests;
 [TestFixture]
 class UITesting 
 {
-    [Parallelizable(ParallelScope.Self)]
+    // logs in with a user to chirp
     [Test]
     public async Task LoginWithUser()
     {
@@ -43,15 +43,13 @@ class UITesting
         {
             Path = "../../../state.json"
         });
-
-        //await context.StorageStateAsync(new BrowserContextStorageStateOptions { Path = "state.json" });
     
         await browser.CloseAsync();
     }
     
-    [Parallelizable(ParallelScope.Self)]
+    // User creates a cheep
     [Test]
-    public static async Task Main()
+    public static async Task UserCreatesCheep()
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -78,17 +76,14 @@ class UITesting
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
 
-        //await page.GetByText("this is a user test from the UI test github user").ClickAsync();
-
-        await page.GetByRole(AriaRole.Link, new() { Name = "logout [UI-tester-bdsa]" }).ClickAsync();
-
-        await page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
-
-        await page.GetByRole(AriaRole.Link, new() { Name = "UI-tester-bdsa" }).ClickAsync();
+        await page.GetByText("this is a user test from the UI test github user").ClickAsync();
         
+        await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();        
     }
     
-    [Parallelizable(ParallelScope.Self)]
+    // Add an email to the users profile
     [Test]
     public static async Task EmailAddTest() 
     {
@@ -115,9 +110,11 @@ class UITesting
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
         
-        await page.GetByText("Duplicate email, that email already exists").ClickAsync();
+        await page.GetByText("Email successfully updated").ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
+    // test the front end error when the user has a duplicate email
     [Test]
     public static async Task EmailUpdateDuplicateError() 
     {
@@ -149,8 +146,10 @@ class UITesting
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync(); 
 
         await page.GetByText("Duplicate email, that email already exists").ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
+    // Tests the front end alert for when the user made a formatting error
     [Test]
     public static async Task EmailUpdateFormattingError() 
     {
@@ -170,31 +169,24 @@ class UITesting
         var page = await context.NewPageAsync();
         
         await page.GotoAsync("https://localhost:5273");
-        
-        await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
-        {
-            Modifiers = new[] { KeyboardModifier.Control },
-        });
 
-        await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
-
-        await page.GetByLabel("Password").ClickAsync();
-
-        await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+        await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.Locator("#NewEmail_Email").ClickAsync();
-
-        await page.Locator("#NewEmail_Email").FillAsync("Example");
+        
+        await page.Locator("#NewEmail_Email").FillAsync("ExampleExample.com");
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
 
-        await page.GetByText("Duplicate email, that email already exists").ClickAsync();
+        await page.GetByText("Email formatting is incorrect").ClickAsync();
+        
+        await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
+    // tests the alert for when the user updates their email on their profile
     [Test]
     public static async Task EmailUpdateChangeSuccessful() 
     {
@@ -214,19 +206,8 @@ class UITesting
         var page = await context.NewPageAsync();
         
         await page.GotoAsync("https://localhost:5273");
-        
-        await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
-        {
-            Modifiers = new[] { KeyboardModifier.Control },
-        });
 
-        await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
-
-        await page.GetByLabel("Password").ClickAsync();
-
-        await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
+        await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
@@ -237,8 +218,12 @@ class UITesting
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
 
         await page.GetByText("Email successfully updated").ClickAsync();
+        
+        await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
+
+        await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
+    // logs the user in and then deletes them
     [Test]
     public static async Task LoginAndDeleteUser()
     {
@@ -259,20 +244,7 @@ class UITesting
         
         await page.GotoAsync("https://localhost:5273");
 
-        await page.GetByLabel("Username or email address").ClickAsync(new LocatorClickOptions
-        {
-            Modifiers = new[] { KeyboardModifier.Control },
-        });
-
-        await page.GetByLabel("Username or email address").FillAsync("spammer@jonaskjodt.com");
-
-        await page.GetByLabel("Password").ClickAsync();
-
-        await page.GetByLabel("Password").FillAsync("og=)¤GHKhrg5");
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
-
-        //LoginWithUser();
+        await page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 

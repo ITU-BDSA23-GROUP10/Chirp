@@ -69,13 +69,9 @@ class EndtoEnd
 
         await page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
 
-        await page.GetByLabel("EndPage").ClickAsync();
+        await page.GotoAsync("https://localhost:5273/?page=21");
 
-        await page.Locator("li").Filter(new() { HasText = "Helge — 01/08/2023 12.16.48" }).GetByRole(AriaRole.Button).First.ClickAsync();
-
-        await page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
-
-        await page.GetByRole(AriaRole.Button, new() { Name = "Upvote" }).Nth(2).ClickAsync();
+        await page.GetByText("Hello, BDSA students!").ClickAsync();
 
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
