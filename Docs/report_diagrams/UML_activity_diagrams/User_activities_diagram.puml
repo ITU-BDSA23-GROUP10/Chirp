@@ -1,0 +1,75 @@
+@startuml user_activities_diagram
+header User activities activity diagram
+title User activities
+start
+if (authorized?\n(check)) then (No)
+    #23d96c:public timeline
+    (not signed in);
+    split
+        ->Press;
+        #4fa7c9:log in;
+        #bf4a3d:log in with GitHub;
+        stop
+    split again
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Other page on
+        public timeline;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Hashtag page;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:{Author name}s timeline;
+        split
+            ->read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Other page on
+            {Author name}s timeline;
+            ->read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Hashtag page;
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        endsplit
+    endsplit
+else (Yes)
+    #23d96c:public timeline
+    (signed in);
+    split
+        ->Press;
+        #4fa7c9:sign out;
+        stop
+    split again
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        :test;
+        kill
+    endsplit
+endif
+@enduml
