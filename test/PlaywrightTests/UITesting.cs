@@ -7,7 +7,6 @@ namespace PlaywrightTests;
 [TestFixture]
 class UITesting 
 {
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginWithUser()
     {
@@ -38,7 +37,6 @@ class UITesting
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Sign in", Exact = true }).ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task Main()
     {
@@ -85,7 +83,6 @@ class UITesting
         await page.GetByText("this is a user test from the UI test github user").ClickAsync();
 
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailAddTest() 
     {
@@ -118,10 +115,9 @@ class UITesting
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Add Email" }).ClickAsync();
-
+        
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateDuplicateError() 
     {
@@ -161,7 +157,6 @@ class UITesting
 
         await page.GetByText("Email already exists ").ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateFormattingError() 
     {
@@ -201,7 +196,6 @@ class UITesting
 
         await page.GetByText("Email formatting is incorrect ").ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task EmailUpdateChangeSuccessful() 
     {
@@ -241,7 +235,6 @@ class UITesting
 
         await page.GetByText("Email successfully updated").ClickAsync();
     }
-    [Parallelizable(ParallelScope.Self)]
     [Test]
     public static async Task LoginAndDeleteUser()
     {
