@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Chirp.Web.BindableClasses
-{
+{   
+    // These classes are used to bind data to the razor pages
     //annotations https://www.bytehide.com/blog/data-annotations-in-csharp
     public class NewFollow 
     {

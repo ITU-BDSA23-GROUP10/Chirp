@@ -10,7 +10,9 @@ namespace Chirp.Web.Pages
     //this contains all methods collectively used in UserTimeline.cshtml.cs, Public.cshtml.cs, HashTag.cshtml.cs
     //the methods are then used in the connected html pages
     public class BasePageModel : PageModel
-    {
+    {   
+        // Every one of these bind properties is used in the connected html pages. 
+        // They provide a way to get data from the html pages
         [BindProperty]
         public NewCheep NewCheep { get; set; } = new NewCheep { Message = string.Empty };
 
@@ -48,7 +50,8 @@ namespace Chirp.Web.Pages
             _reactionService = reactionService;
             _followsService = followsService;
         }
-        
+        // This method is used to for creating a new cheep and adding it to the database
+        // It also creates a new author if the author doesn't exist in the database
         public async Task<IActionResult> OnPost()
         {
             AsyncPadlock padlock = new();
@@ -91,7 +94,8 @@ namespace Chirp.Web.Pages
             return Redirect("/" + userName);
         }
 
-        //follow form button
+        // This method is used to create a new follow and add it to the database
+        // It also creates a new user if the user doesn't exist in the database
         public async Task<IActionResult> OnPostFollow()
         {
             var LoggedInUserName = User?.Identity?.Name ?? "default";
@@ -103,7 +107,7 @@ namespace Chirp.Web.Pages
                 throw new ArgumentNullException("Followed user does not exist.");
             }
 
-            //Check if the user that is logged in exists
+            //Check if the user that is logged in exists if not create a new user
             try
             {
                 var loggedInUser = await _userService.GetUserByName(LoggedInUserName);
@@ -130,11 +134,12 @@ namespace Chirp.Web.Pages
             return new JsonResult(new { success = true });
         }
 
-        //unfollow form button
+        // This method is used to unfollow a user and remove it from the database
         public async Task<IActionResult> OnPostUnfollow()
         {
             var userName = User?.Identity?.Name ?? "default";
-
+            
+            // Check if followedUserName is null
             if (string.IsNullOrEmpty(NewFollow.Author))
             {
                 throw new ArgumentException("NewFollow.Author cannot be null or empty");
@@ -147,22 +152,23 @@ namespace Chirp.Web.Pages
                 var unfollowDTO = new FollowDTO(followerId, followingId);
 
                 await _followsService.UnfollowUser(unfollowDTO);
-
+                
+                //return it as Json for the Ajax script, so only the form/button will reload
                 return new JsonResult(new { success = true });
             }
         }
-
+        // This method is used to check if a user is following another user
         public async Task<bool> CheckIfFollowed(int userId, int authorId)
         {
             return await _followsService.IsFollowing(userId, authorId);
         }
-
+        // This method is used to find a user id by their name
         public async Task<int> FindUserIDByName(string userName)
         {
             return await _userService.GetUserIDByName(userName);
         }
 
-
+        // This method is used to get a youtube embed link from a youtube link
         public string? GetYouTubeEmbed(string message, out string Message)
         {
             string pattern =  @"(.*?)(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([^?&\n]{11})(?:[^\n ]*)(.*)";
@@ -180,20 +186,20 @@ namespace Chirp.Web.Pages
                 return null;
             }
         }
-
+        // This method finds the upvote count for a cheep using its id
         public async Task<int> FindUpvoteCountByCheepID(int id)
         {
             return await _reactionService.GetCheepsUpvoteCountsFromCheepID(id);
         }
-
+        // This method finds the downvote count for a cheep using its id
         public async Task<int> FindDownvoteCountByCheepID(int id)
         {
             return await _reactionService.GetCheepsDownvoteCountsFromCheepID(id);
         }
-
+        // This method creates a new reaction and adds it to a cheep in the database
         public async Task<IActionResult> OnPostReaction()
         {
-            // the id for the user who is reacting
+            // The id for the user who is reacting
             var userId = await _userService.GetUserIDByName(User!.Identity!.Name!);
             int cheepId = NewcheepId.id  ?? default(int);
             string react = NewReaction.Reaction!;
@@ -225,7 +231,7 @@ namespace Chirp.Web.Pages
             int upvoteCount = await FindUpvoteCountByCheepID(cheepId);
             int downvoteCount = await FindDownvoteCountByCheepID(cheepId);
 
-            // return counts with the response
+            // Return counts with the response
             return new JsonResult(
                 new
                 {
@@ -235,10 +241,11 @@ namespace Chirp.Web.Pages
                 });
         }
 
-        //hashtags
-        //inspired from hashtag code from worklizard.com
+        // This method is used to get the Hashtags tied to a cheep
+        // Inspired from hashtag code from worklizard.com - By Jonas Skjødt
         public List<string>? GetHashTags(string message, out string Message)
-        {
+        {   
+            // This regex is used to find the hastags in a cheep
             var regex = new Regex(@"(?<=#)\w+"); 
             var matches = regex.Matches(message);
             var hashTags = new List<string>();
