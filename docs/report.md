@@ -107,7 +107,7 @@ The group has chosen the MIT open source software license
 >OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 >SOFTWARE.  
 
-//TODO: figure out how we want to source from things
+//TODO: figure out how we want to source from things VISITED 18/12
 Source: [Github choose a license site](https://choosealicense.com/licenses/mit/)
 
 The group chose this license as it was a good fit for the groups requirements of an open source license in that it basically has no restrictions for any end user or somebody who wants to work with the codebase. We also sign off any warranty or liability which is great for a small group project that we more than likely wont want to take further in the future.
