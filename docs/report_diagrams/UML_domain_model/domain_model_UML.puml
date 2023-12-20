@@ -1,0 +1,40 @@
+@startuml
+
+class Cheep {
+    +CheepId int
+    +Text string
+    +TimeStamp DateTime
+    +AuthorId int
+}
+
+class User {
+  +UserId: int
+  +Name: string
+  +Email: string
+}
+
+class Author {
+  +AuthorId: int
+  +Cheeps: List<Cheep>
+  +User: User
+}
+
+class Reaction {
+  +cheepId: int
+  +userId: int
+  +reactionType: string
+}
+
+class Follows {
+  +FollowerId: int
+  +FollowingId: int
+}
+
+User "1..1" -- "1..1" Author :  Can be >
+Author "1..1" -- "1..M" Cheep : Writes >
+User "1..1" -- "0..M" Reaction : can have >
+Cheep "1..1" -- "0..M" Reaction : can have >
+User "0..M" -- Follows : following <
+User  -- "0..M" Follows : Follows >
+
+@enduml
