@@ -28,10 +28,20 @@ Here comes a description of our domain model.
 ## Build, test, release, and deployment  
 The group employed the use of Github Workflows/Actions to build, test, release and deploy the app to Azure. The UML activity diagrams below show how each of the Workflows work using UML activity and UML sequence diagrams. 
 
-Via the use of two workflows (See figure ?? and ??) the group ensured that the program was always passing the tests when the anything got pushed to the main branch. More importantly it secured the main branch when trying to merge branches into main via Github Pull Requests.   They also ensured that the release build of the program was able to be built and passed most tests before getting put into a release build thus minimizing the chances that a release would be broken . 
+Via the use of two workflows (See figure ?? and ??) the group ensured that the program was always passing the tests when the anything got pushed to the main branch. More importantly it provided some security to the main branch when trying to merge branches into it via Github Pull Requests. These workflows also ensured that the release build of the program was able to build and passed most tests (all tests excluding the UI tests) before getting put into a release, minimizing the chances that a release would be broken. 
+
+#### Test and Release UML Activity diagrams
+[![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/build_test_release_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/build_test_release_UML_act.svg)
+*- Figure ??*
+
+[![Build & Test Workflow](report_diagrams/UML_activity_diagrams/build_test_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/UML_activity_diagrams/build_test_UML_act.svg)
+*- Figure ??*
 
 Deployment was done on Microsoft Azure using their webapp and database features. The azure webapp automatically updates when changes are pushed to main using the main_bdsagroup10chirprazor.yml file which on Github is the "Build and deploy ASP.Net Core app to Azure Web App - bdsagroup10chirprazor" action. This will build the application, publish it and send it to our azure webapp which then runs the released build. The database is a MSQL server database hosted on Azure. We also deploy the database schema to the database using workflows. This is done using the azure_pipeline.yml file which on Github is the "Azure Pipeline" action. This gets the current database migration from the main branch on Github and applies them to the azure database. 
 
+#### Azure Deployment Workflow Activity Diagrams
+[![Build & Test Workflow](report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)
+*- Figure ??*
 
 ## Team work
 
@@ -126,6 +136,10 @@ The group chose this license as it was a good fit for the groups requirements of
 
 ## LLMs, ChatGPT, CoPilot, and others
 The use of LLMs like ChatGPT and Copilot has been documented on github commits as a co-author when used. You can see the number of these commits on the page linked here: [ChatGPT Co-authored commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/graphs/contributors). Sadly the page that shows the actual commits doesn't have the commits that it contributed on as these were done on separate branches whose commits seem to not carry over to the main branch's working tree. 
+
+# References 
+This section is a collection of the references used in this report with date stamps. The references are in the order they appear in the report are and numbered the same here as in the report.
+
 
 
 # Appendix

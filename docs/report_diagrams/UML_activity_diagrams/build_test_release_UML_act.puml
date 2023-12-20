@@ -3,40 +3,35 @@ header UML Activity Diagram for Github Actions
 title Build, Test & Release Workflow (build_test_release.yml)
 
 start 
+legend top left
+Legend:
+⨂ : termination of workflow
+⚫ : start of workflow
+◉ : stop and completion of workflow
+Yellow box with ... : repeation of succes if-else block
+endlegend
 :Checkout Github Branch (The Branch that got pushed to);
 :Call to get the Github Repository;
-
 
 if(Succes) then (No)
     #pink:Error;
     end
 else (Yes)
 endif
+
 
 
 :Setup Dotnet 7 SDK;
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Publish Project (dotnet publish) to all platforms (win, linux, mac);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Create Release (Github Release) with all published artifacts;
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 #green:Release Created;
 
