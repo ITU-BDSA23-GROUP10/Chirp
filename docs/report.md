@@ -56,7 +56,7 @@ Above is an image of the project board for our chirp project. While the vast maj
 
 ![Activity diagram of group workflow](images/team_workflow.svg)
 
-[Web version of groups work activities diagram](https://www.plantuml.com/plantuml/svg/TP6_RZ8n4CHxFyMA2WfU0AJlWoXIH94eKf2Yb8QRkxFm7sUzldlzs701Yk1ovgUPNUycYMR9pgeUkW7JP-1JQyD8RM0IQ9TeB98I8nRqmY77YqBwA6OmOf18dLFKQg_JYKmYwKFkUg7GjXIOEZF0hzLgbr96zKSs8cVf5Uu0JgGPf5CodKTpJxeme249D7k2yHr5gtr1PeNv23QB2RvYarpKBRNGaXbqOEsFVNMFNAJYac94Q55KtkEEGpQsDbIghRlJzEuhBzGD8jrfuw_eBJt7HWic4hwv9gxUixLBndT6aag625_0XzFjF346Wt4sCNjeH-xoWvD5qeFYRt2IzRGoZRsneFasCfy3wtaTkCF_HMsPluM5MlxxGgf7gVej1Kd-Fibpy2Yp90bHRU2RxEmF)
+[Web version of *Groups work activities* diagram](https://www.plantuml.com/plantuml/svg/TP6_RZ8n4CHxFyMA2WfU0AJlWoXIH94eKf2Yb8QRkxFm7sUzldlzs701Yk1ovgUPNUycYMR9pgeUkW7JP-1JQyD8RM0IQ9TeB98I8nRqmY77YqBwA6OmOf18dLFKQg_JYKmYwKFkUg7GjXIOEZF0hzLgbr96zKSs8cVf5Uu0JgGPf5CodKTpJxeme249D7k2yHr5gtr1PeNv23QB2RvYarpKBRNGaXbqOEsFVNMFNAJYac94Q55KtkEEGpQsDbIghRlJzEuhBzGD8jrfuw_eBJt7HWic4hwv9gxUixLBndT6aag625_0XzFjF346Wt4sCNjeH-xoWvD5qeFYRt2IzRGoZRsneFasCfy3wtaTkCF_HMsPluM5MlxxGgf7gVej1Kd-Fibpy2Yp90bHRU2RxEmF)
 
 The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
 
