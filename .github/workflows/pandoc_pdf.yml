@@ -10,13 +10,9 @@ on:
 jobs:
   convert_via_pandoc:
     runs-on: ubuntu-22.04
-    defaults:
-        run:
-            working-directory: ./docs
-
     steps:
-      - name:
-        run: sudo apt-get install texlive-latex-base
-      - uses: docker://pandoc/core:2.9
+        - uses: actions/checkout@v3
+
+        - uses: docker://pandoc/latex:2.9
         with:
-          args: "-f markdown_strict -t pdf" # gets appended to pandoc command
+            args: "-f markdown_strict -t pdf" # gets appended to pandoc command
