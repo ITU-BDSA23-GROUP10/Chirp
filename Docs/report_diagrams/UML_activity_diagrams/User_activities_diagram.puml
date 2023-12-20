@@ -1,4 +1,5 @@
 @startuml user_activities_diagram
+skinparam TitleFontSize 80
 header User activities activity diagram
 title User activities
 start
