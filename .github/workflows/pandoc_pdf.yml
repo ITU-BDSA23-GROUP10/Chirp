@@ -1,0 +1,19 @@
+name: Pandoc PDF Conversion
+
+on: 
+    push:
+        branches: main
+        paths: 
+            - 'docs/**'
+                
+
+jobs:
+  convert_via_pandoc:
+    runs-on: ubuntu-22.04
+    defaults:
+        run:
+            working-directory: ./docs
+    steps:
+      - uses: docker://pandoc/core:2.9
+        with:
+          args: "-f markdown_strict -t pdf" # gets appended to pandoc command
