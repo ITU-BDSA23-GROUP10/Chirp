@@ -25,7 +25,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         padlock = _fixture.padlock;
     }
 
-    // UserRepo tests
+    // tests user repo ability to correctly create and retrieve a user using given name and email
     [Theory]
     [InlineData("NewChirpUser", "user@usingChirp.com")]
     [InlineData("New user with spaces", "FancyUser@fancy.co.uk")]
@@ -40,6 +40,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(email, user!.Email);
     }
 
+    // Deletes a user and then checks to ensure that the user no longer exists in the system both by name and email
     [Theory]
     [InlineData("Anakin", "skywalker@jedi.com")]
     public async void DeleteUser(string name, string email)
@@ -56,6 +57,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Null(userByEmail);
     }
 
+    // tests if user id corrosponds with user name
     [Fact]
     public async void GetIdOfUserByName()
     {
@@ -64,6 +66,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(1, await userService.GetUserIDByName(username));
     }
 
+    // tests if user can update email
     [Fact]
     public async void UpdateUserEmail()
     {
@@ -77,6 +80,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(user);
     }
 
+    // ensures GetUserById function retrieves the correct user from the database based on a specific user ID.
     [Fact]
     public async void GetUserById()
     {
@@ -86,6 +90,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(username, (await userService.GetUserById(1))!.Name);
     }
 
+    // tests if an exception is thrown when attempting to create a new user with a username that already exists in the database.
     [Fact]
     public async void CreateUser_NameExists()
     {
@@ -95,7 +100,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         await Assert.ThrowsAsync<Exception>(async() => await userService.CreateUser(username));
     }
     
-    // Follows repo tests
+    // Follows repo test. Verifies that the follow and unfollow functions work as expected by checking the status before and after the actions
     [Fact]
     public async void TwoUsersCanFollow_AndUnfollow()
     {
@@ -118,7 +123,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.False(await followService.IsFollowing(1, 2));
     }
 
-    // AuthorRepo test
+    // AuthorRepo test. Verifies the author service is able to correctly create an author and confirms the creation
     [Fact]
     public async void CreateAuthor()
     {
@@ -133,6 +138,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.NotNull(author);
     }
 
+    // creates a user and an author, deletes the user, and then checks if both the user and the corresponding author have been deleted
     [Fact]
     public async void DeleteUserAlsoDeletesAuthor()
     {
@@ -149,6 +155,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Null( await authorService.GetAuthorByName(authorName) );
     }
 
+    // checks if the author already exists on author creation
     [Fact]
     public async void CreateAuthor_AlreadyExists()
     {
@@ -161,6 +168,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         await Assert.ThrowsAsync<Exception>(async() => await authorService.CreateAuthor(user!));
     }
 
+    // Verifies if the author repo method GetAuthorByName retrieves the correct author
     [Fact]
     public async void GetAuthorByName()
     {
@@ -172,6 +180,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(username, author.User.Name);
     }
 
+    //checks GetCheepsByAuthor method in author repo and whether or not it retrieves the correct number of 'cheeps' from an author up to a specified limit
     [Fact]
     public async void GetCheepsByAuthorOnlyGetsTheLimitOfCheeps() 
     {
@@ -195,7 +204,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(32, cheeps.Item1.Count);
     }
 
-    // CheepRepo tests
+    // CheepRepo test. Tests if a cheep can be created by an existing author in the database.
     [Theory]
     [InlineData("Obi-Wan", "Hello there")]
     [InlineData("Grievous", "General Kenobi. A bold one i see")]
@@ -217,6 +226,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(message, dbCheep[0].Message);
     }
 
+    //  tests if an exception is thrown when trying to create a cheep from an author who doesn't exist in the database
     [Fact]
     public async void CreateValidCheep_WhereAuthorDoesntExist()
     {
@@ -227,6 +237,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         await Assert.ThrowsAsync<Exception>(async() => await cheepService.CreateCheep(cheep, author!));
     }
 
+    // tests how to handle creating 100 cheeps from 100 different authors, and then retrieves the most recent 32
     [Fact]
     public async void Create100CheepsWith100DifferentAuthors_ReadMostResent32()
     {
@@ -257,6 +268,7 @@ public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
         Assert.Equal(32, cheeps.Item1.Count); // Only getting 32 cheeps
     }
 
+    // checks if an exception is thrown when trying to create a cheep with a message that is too long
     [Fact]
     public async void CreateInvalidCheep()
     {
