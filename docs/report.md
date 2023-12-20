@@ -22,22 +22,22 @@ The Chirp! domain model represents the fundamental structure and behavior of the
 The core layer is where we place our interfaces and DTO. This layer is oblivious to external concerns such as the database context(infrastructure) or razer pages(Web). 
 
 Structure:
-Chirp.Core
-├── CheepCreateDTO.cs
-├── CheepDTO.cs
-├── FollowDTO.cs
-├── ReactionDTO.cs
-├── IAuthorRepository.cs
-├── ICheepRepository.cs
-├── IFollowRepository.cs
-├── IReactionRepository.cs
-└── IUserRepository.cs
+<br/>Chirp.Core
+<br/>├── CheepCreateDTO.cs
+<br/>├── CheepDTO.cs
+<br/>├── FollowDTO.cs
+<br/>├── ReactionDTO.cs
+<br/>├── IAuthorRepository.cs
+<br/>├── ICheepRepository.cs
+<br/>├── IFollowRepository.cs
+<br/>├── IReactionRepository.cs
+<br/>└── IUserRepository.cs
 
 ### Chirp.Infrastructure Layer:
 The Infrastructure layer is responsible for implementing the details of the database and Initializing the database. Database creation and migrations are constructed here with EF core and the Models.
 
 Structure:
-Chirp.Infrastructure
+<br/>Chirp.Infrastructure
 <br/>├── ChirpDBContext.cs
 <br/>├── DbInitializer.cs
 <br/>├── ChirpRepository
@@ -58,14 +58,14 @@ Chirp.Infrastructure
 The Web Layer is where the UI interface is placed, and as such have all the cshtml file with their corresponding cs file. Within the program.cs is where the dependencies are built to the others layers.
 
 Structure:
-Chirp.Web
+<br/>Chirp.Web
 <br/>├── Pages (cshtml and cs files)
 <br/>├── ViewComponents
 <br/>├── AsyncLock.cs
 <br/>├── PagesData.cs	
 <br/>└── Program.cs
 
-The Onion Architecture provides a clear separation of concerns and upholds the  Dependency Inversion Principle by keeping every layer unaware of the layer above itself. This layered approach facilitates testability by decoupled components, so each can be tested in isolation. The architecture hereby enables a stronger use of dependency injection to ensure that
+The Onion Architecture provides a clear separation of concerns and upholds the Dependency Inversion Principle by keeping every layer unaware of the layer above itself. This layered approach facilitates testability by decoupled components, so each can be tested in isolation. The architecture hereby enables a stronger use of dependency injection to ensure more class are independent from eachother.
 
 ## Architecture of deployed application
 
