@@ -25,6 +25,6 @@ jobs:
           run: |
               git config --global user.name 'Github Action'
               git config --global user.email 'thph@itu.dk'
-              git add report.pdf
+              git add ./docs/report.pdf
               git commit -m "Updated PDF"
               git push
