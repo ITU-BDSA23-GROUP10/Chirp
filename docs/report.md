@@ -28,9 +28,9 @@ Here comes a description of our domain model.
 ## Build, test, release, and deployment  
 The group employed the use of Github Workflows/Actions to build, test, release and deploy the app to Azure. The UML activity diagrams below show how each of the Workflows work using UML activity and UML sequence diagrams. 
 
-Via the use of these workflows the group thusly ensured that the program was always passing the tests when the anything got pushed to the main branch. More importantly it secured the main branch when trying to merge branches into main via Github Pull Requests.   They also ensured that the release build of the program was able to be built and passed most tests before getting put into a release build thus minimizing the chances that a release would have a broken program. 
+Via the use of two workflows (See figure ?? and ??) the group ensured that the program was always passing the tests when the anything got pushed to the main branch. More importantly it secured the main branch when trying to merge branches into main via Github Pull Requests.   They also ensured that the release build of the program was able to be built and passed most tests before getting put into a release build thus minimizing the chances that a release would be broken . 
 
-Deployment was done on Microsoft Azure using their webapp and database features.
+Deployment was done on Microsoft Azure using their webapp and database features. The azure webapp automatically updates when changes are pushed to main using the main_bdsagroup10chirprazor.yml file which on Github is the "Build and deploy ASP.Net Core app to Azure Web App - bdsagroup10chirprazor" action. This will build the application, publish it and send it to our azure webapp which then runs the released build. The database is a MSQL server database hosted on Azure. We also deploy the database schema to the database using workflows. This is done using the azure_pipeline.yml file which on Github is the "Azure Pipeline" action. This gets the current database migration from the main branch on Github and applies them to the azure database. 
 
 
 ## Team work
