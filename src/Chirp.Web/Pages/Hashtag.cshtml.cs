@@ -5,7 +5,8 @@ using Chirp.Infrastructure.Models;
 namespace Chirp.Web.Pages;
 
 public class HashtagModel : BasePageModel
-{
+{   
+    // This is the page model for the Hashtag page
     public HashtagModel(
         ICheepRepository<Cheep, Author> cheepService,
         IAuthorRepository<Author, Cheep, User> authorService,

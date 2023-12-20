@@ -1,6 +1,6 @@
 @startuml
 
-package "namespace: Chirp.Web.BindableClasses" {
+package "Chirp.Web.BindableClasses" {
     class NewFollow {
         +Author : string
     }
@@ -32,7 +32,7 @@ package "namespace: Chirp.Web.BindableClasses" {
 class AbstractValidator<NewEmail>{}
 AbstractValidator <|-- EmailValidator
 
-package "namespace: Chirp.Web.Pages" {
+package "Chirp.Web.Pages" {
     BasePageModel --> NewFollow
     BasePageModel --> NewCheep
     BasePageModel --> NewReaction
@@ -110,7 +110,7 @@ package "HTML pages" {
     Hashtag_cshtml --> HashtagModel
 }
 
-package "namespace: Chirp.Web.ViewComponents" {
+package "Chirp.Web.ViewComponents" {
     class WriteCheepFormViewComponent {}
 
     Timeline_cshtml --> WriteCheepFormViewComponent
@@ -134,7 +134,7 @@ package "namespace: Chirp.Web.ViewComponents" {
     Public_cshtml --> FollowNotifactionViewComponent
 }
 
-package "namespace: Chirp.Web" {
+package "Chirp.Web" {
     class PagesData {
         + CheepsPerPage : int
         + CurrentPage : int
@@ -326,94 +326,99 @@ package "Chirp.Infrastructure.Migrations" {
 
 
 package "Chirp.Core" {
-    interface IAuthorRepository<Author, Cheep, User> {
-        + Delete(Author entity) : Task
-        + GetAuthorWithCheeps(string authorName) : Task<Author>
-        + GetCheepsCountsFromAuthorId(int id) : Task<int>
-        + GetAuthorByName(string name) : Task<Author?>
-        + GetCheepsByAuthor(string author, int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
-        + GetCheepsByAuthorId(List<int> id, int offset, int limit) : Task<List<CheepDTO>>
-        + GetAllCheepsByAuthorName(string authorName) : Task<List<CheepDTO>>
-        + CreateAuthor(User user) : Task
+    package "interfaces" {
+        interface IAuthorRepository<Author, Cheep, User> {
+            + Delete(Author entity) : Task
+            + GetAuthorWithCheeps(string authorName) : Task<Author>
+            + GetCheepsCountsFromAuthorId(int id) : Task<int>
+            + GetAuthorByName(string name) : Task<Author?>
+            + GetCheepsByAuthor(string author, int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
+            + GetCheepsByAuthorId(List<int> id, int offset, int limit) : Task<List<CheepDTO>>
+            + GetAllCheepsByAuthorName(string authorName) : Task<List<CheepDTO>>
+            + CreateAuthor(User user) : Task
+        }
+
+        interface ICheepRepository<Cheep, Author> {
+            + Delete(int cheepId) : Task
+            + GetAll() : (IQueryable<Cheep>, int)
+            + GetById(int id) : Task<Cheep?>
+            + GetSome(int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
+            + CreateCheep(CheepCreateDTO cheepCreateDTO, Author author) : Task
+            + GetCheepsByHashtag(string hashtag) : Task<List<CheepDTO>>
+        }
+
+        interface IFollowsRepository<Follows> {
+            + FollowUser(FollowDTO followDTO) : Task
+            + IsFollowing(int followerId, int followingId) : Task<bool>
+            + UnfollowUser(FollowDTO unfollowDTO) : Task
+            + GetFollowedUsersId(int userId) : Task<List<int>>
+            + GetIdsFollowingUser(int userId) : Task<List<int>>
+            + LoopDeleteFollowers(List<int> followedUsers, int userId) : Task
+            + DeleteAllFollowers(int userId) : Task
+        }
+        
+        interface IReactionRepository<Reaction> {
+            + UpdateReaction(Reaction entity) : Task
+            + GetCheepsUpvoteCountsFromCheepID(int id) : Task<int>
+            + GetCheepsDownvoteCountsFromCheepID(int id) : Task<int>
+            + ReactToCheep(ReactionDTO reactionDTO) : Task
+            + checkUserReacted(int userid, int cheepid) : Task<bool>
+            + checkUserReactionType(int userid, int cheepid) : Task<string>
+            + deleteAllUserReactions(int userid) : Task
+            + GetReactionByUsersId(int userid) : Task<List<Reaction>>
+        }
+
+        interface IUserRepository<User> {
+            + DeleteUser(User entity) : Task
+            + GetUserById(int id) : Task<User?>
+            + GetUserByName(string name) : Task<User?>
+            + GetUserByEmail(string email) : Task<User?>
+            + GetUserIDByName(string name) : Task<int>
+            + CreateUser(string name, string? email = null) : Task
+        }
+
+        AuthorRepository ..|> IAuthorRepository
+        CheepRepository ..|> ICheepRepository
+        FollowsRepository ..|> IFollowsRepository
+        ReactionRepository ..|> IReactionRepository
+        UserRepository ..|> IUserRepository
     }
 
-    interface ICheepRepository<Cheep, Author> {
-        + Delete(int cheepId) : Task
-        + GetAll() : (IQueryable<Cheep>, int)
-        + GetById(int id) : Task<Cheep?>
-        + GetSome(int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
-        + CreateCheep(CheepCreateDTO cheepCreateDTO, Author author) : Task
-        + GetCheepsByHashtag(string hashtag) : Task<List<CheepDTO>>
-    }
+    package "DTOs" {
+        class ReactionDTO {
+            + cheepId : int
+            + userId : int
+            + reactionType : string
+        }
+        
+        class FollowDTO {
+            + int followerId
+            + int followingId
+        }
 
-    interface IFollowsRepository<Follows> {
-        + FollowUser(FollowDTO followDTO) : Task
-        + IsFollowing(int followerId, int followingId) : Task<bool>
-        + UnfollowUser(FollowDTO unfollowDTO) : Task
-        + GetFollowedUsersId(int userId) : Task<List<int>>
-        + GetIdsFollowingUser(int userId) : Task<List<int>>
-        + LoopDeleteFollowers(List<int> followedUsers, int userId) : Task
-        + DeleteAllFollowers(int userId) : Task
-    }
-    
-    interface IReactionRepository<Reaction> {
-        + UpdateReaction(Reaction entity) : Task
-        + GetCheepsUpvoteCountsFromCheepID(int id) : Task<int>
-        + GetCheepsDownvoteCountsFromCheepID(int id) : Task<int>
-        + ReactToCheep(ReactionDTO reactionDTO) : Task
-        + checkUserReacted(int userid, int cheepid) : Task<bool>
-        + checkUserReactionType(int userid, int cheepid) : Task<string>
-        + deleteAllUserReactions(int userid) : Task
-        + GetReactionByUsersId(int userid) : Task<List<Reaction>>
-    }
+        class CheepDTO {
+            + int id
+            + string Author
+            + string Message
+            + DateTime Timestamp
+        }
 
-    interface IUserRepository<User> {
-        + DeleteUser(User entity) : Task
-        + GetUserById(int id) : Task<User?>
-        + GetUserByName(string name) : Task<User?>
-        + GetUserByEmail(string email) : Task<User?>
-        + GetUserIDByName(string name) : Task<int>
-        + CreateUser(string name, string? email = null) : Task
+        class CheepCreateDTO {
+            + string text
+            + string author
+        }
+
+        FollowDTO <-- FollowsRepository
+        ReactionDTO <-- ReactionRepository
+        CheepDTO <-- CheepRepository
+        CheepCreateDTO <-- CheepRepository
+        CheepCreateDTO <-- CheepCreateValidator
+
+        CheepDTO --> UserTimelineModel
+        CheepDTO --> UserProfileModel
+        CheepDTO --> BasePageModel
     }
-
-    AuthorRepository ..|> IAuthorRepository
-    CheepRepository ..|> ICheepRepository
-    FollowsRepository ..|> IFollowsRepository
-    ReactionRepository ..|> IReactionRepository
-    UserRepository ..|> IUserRepository
-
-    class ReactionDTO {
-        + cheepId : int
-        + userId : int
-        + reactionType : string
-    }
-    
-    class FollowDTO {
-        + int followerId
-        + int followingId
-    }
-
-    class CheepDTO {
-        + int id
-        + string Author
-        + string Message
-        + DateTime Timestamp
-    }
-
-    class CheepCreateDTO {
-        + string text
-        + string author
-    }
-
-    FollowDTO <|-- FollowsRepository
-    ReactionDTO <|-- ReactionRepository
-    CheepCreateDTO <|-- CheepCreateValidator
-
-    CheepDTO --> UserTimelineModel
-    CheepDTO --> UserProfileModel
-    CheepDTO --> BasePageModel
     
 }
 
 @enduml
-

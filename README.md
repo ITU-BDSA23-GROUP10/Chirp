@@ -9,7 +9,7 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 # How to run
 ## Using docker
 The project is fully dockerized as can be seen by the Dockerfile and docker-compose.yml file in the main Chirp directory
-To run the project with docker you must first download docker and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)  
+To run the project with Docker you must first download Docker ([Docker installation guide](https://docs.docker.com/get-docker/)) and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)  
 
 After installing docker you can run the bash script (and an equivalent powershell script with the .ps1 extension) found in Chirp called create_cert.sh or run the dotnet dev-cert commands found in there making sure to put the cert inside a folder called .local in Chirp  
 
