@@ -5,6 +5,7 @@ namespace PlaywrightTests;
 // it open a browser and starts to tests the UI functionality to see if everything is running as it should
 // to create new tests: pwsh bin/Debug/net8.0/playwright.ps1 codegen https://localhost:5273 --ignore-https-errors
 
+
 [TestFixture]
 class UITesting 
 {
@@ -84,8 +85,6 @@ class UITesting
 
         await page.CloseAsync();
     }
-
-    
     // Add an email to the users profile
     [Test]
     public async Task EmailAddTest()
