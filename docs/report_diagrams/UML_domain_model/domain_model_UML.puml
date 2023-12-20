@@ -1,4 +1,6 @@
 @startuml
+header UML Domain Model Diagram
+title Domain Model
 
 class Cheep {
     +CheepId int
