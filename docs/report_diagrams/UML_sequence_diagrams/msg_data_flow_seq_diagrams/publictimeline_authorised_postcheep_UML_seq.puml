@@ -95,7 +95,7 @@ Activate Api #LightBlue
     Activate Api
         Dh -> Db: Query user's id by <userName>
         Db --> Dh: Returns: UserId
-        Dh --> Api: Returns: UserId
+        Dh -->> Api: Returns: UserId
     Deactivate Api
     Api ->> Dh: GetCheepsCountFromAuthorId(UserId)
     Activate Api
