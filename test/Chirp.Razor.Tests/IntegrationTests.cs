@@ -8,9 +8,6 @@ using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
-using Microsoft.Identity.Client;
-using Microsoft.EntityFrameworkCore;
-using Chirp.Web.ViewComponents;
 
 [Collection("Sequential")]
 //referenced from https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
@@ -37,7 +34,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Contains("Public Timeline", content);
     }
 
-    // checks if authors (from dump.sql) have content
+    // checks if authors have content
     [Theory]
     [InlineData("Helge")]
     [InlineData("Rasmus")]
@@ -54,6 +51,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         Assert.Contains($"{author}'s Timeline", content);
     }
 
+    // verifies if a request for a non-existent user returns the expected error message and suggestion to go back to the home page.
     [Theory]
     [InlineData("test1")]
     [InlineData("test3")]
@@ -104,7 +102,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         } 
     }
 
-    // is the root page the same as page 1?
+    // checks if the root page is the same as page 1
     [Theory]
     [InlineData("/")]
     [InlineData(@"/?page=1")]
@@ -177,7 +175,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
-    // verifies that the database does not retain any data with the specific author in question after the test execution (in memory only).
+    // verifies that the database does not retain any data with the specific author in question after the test execution
     [Fact]
     public void VerifyingAuthors_WithContext_DoesNotRetainData()
     {
@@ -195,7 +193,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
-    //Tests if the program can create a cheep using a try catch to ensure the author exists
+    // tests if the program can create a cheep using a try catch to ensure the author exists
     [Theory]
     [InlineData("test1", "test1@test.dk", "This is a test cheep1")]
     [InlineData("test3", "test3@test.de", "This is a test cheep2")]
@@ -236,7 +234,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
-    //Tests if the program adds follows correctly and creates a user if the user does not exist
+    // tests if the program adds follows correctly and creates a user if the user does not exist
     [Theory]
     [InlineData("test1", "test1@test.dk", "test2", "test2@test.com")]
     [InlineData("test3", "test3@test.de", "test4", "test4@test.uk")] 
@@ -300,6 +298,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }     
     }
 
+    // check whether a user's reaction (either upvote or downvote) to a specific cheep is successfully recorded and can be retrieved
     [Theory]
     [InlineData("Upvote")]
     [InlineData("Downvote")] 
@@ -341,6 +340,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
+    // verify a user's reaction (upvote or downvote) can be successfully changed from one type to another on a specific cheep
     [Theory]
     [InlineData("Upvote", "Downvote")]
     [InlineData("Downvote", "Upvote")] 
@@ -390,6 +390,7 @@ public class IntegrationTest : IClassFixture<CustomWebApplicationFactory<Program
         }
     }
 
+    // checks if the user's reaction to a cheep (either upvote or downvote) can be successfully removed
     [Theory]
     [InlineData("Upvote")]
     [InlineData("Downvote")] 

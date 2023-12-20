@@ -1,15 +1,10 @@
-using Testcontainers.MsSql;
-using Chirp.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.ChirpRepository;
 using Chirp.Core;
 using Chirp.Infrastructure.Models;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Chirp.Web;
 
 namespace ChirpDatabase.Tests;
 
-// TODO: Create order for test to awoid need for Seeding test database
 public class ChirpDatabaseRepositoryTest : IClassFixture<DatabaseFixture>
 {
     private readonly IUserRepository<User> userService;
