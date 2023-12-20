@@ -37,13 +37,21 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 
 //TODO: Add picture of project board 
 
-//TODO: Add text about missing issues and features
+Above is an image of the project board for our chirp project. While the vast majority of issues are done and closed, some issues are still open.
+
+**Overview of uncompleted issues:**
+| Issue | Description | Not completed because: |
+| ----------- | ----------- | ----------- |
+| [#175](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/175) (Bugs) | Make playwright UI tests able to run<br> with a workflow through GitHub actions. | Problems with getting playwright test to run in “Headless” mode.<br>Because running UI tests on GitHub actions was not an important requirement for the project the issue was not prioritized. |
+| [#263](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/263) (Bugs) | When running integration tests on a unix<br> based system, the tests would give a<br> `System.InvalidOperationException`. | Since the exception didn’t stop the tests from running and passing, the issue was not prioritized. |
+| [#225](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/225) (Not started) | Be able to run `playwright` tests on a dockerized container of the project. | The scope of this issue was too big for the deadline of the project, and not a necessary addition. |
+| [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program used general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program and due to the deadline approaching, it was decide that other issues would be prioritized.  |
 
 //TODO: Add team workflow diagram
 
 The group would create issues after a lecture, based on the project work given and tasks that needed to be solved. New issues where added to the “Not started” column on the project board or “Bugs” if the issue pertained to a bug.
 
-How work was conducted on the issues, can be seen in the diagram [team workflow diagram]. Once an issue was ready to be worked, group members would be assigned to the issue and take responsibility for solving the issue and updating it on the project board
+How work was conducted on the issues, can be seen in the diagram [team workflow diagram]. Once an issue was ready to be worked on, group members would be assigned to the issue and take responsibility for solving the issue and updating it on the project board
 
 In the start of the project the issues where quite simple. They had a title, some extra description, if needed, and acceptance criteria in a normal list format. However, after some time the group started adding acceptance criteria lists with checkboxes that could be checked off when an acceptance criteria was met. This allowed other group members to follow how far along work on issues was
 
