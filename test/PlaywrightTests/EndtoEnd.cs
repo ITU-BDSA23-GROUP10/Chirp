@@ -76,6 +76,5 @@ class EndtoEnd
         await page.GetByRole(AriaRole.Link, new() { Name = "[UI-tester-bdsa] profile" }).ClickAsync();
 
         await page.GetByRole(AriaRole.Button, new() { Name = "Forget Me" }).ClickAsync();
-
     }
 }
