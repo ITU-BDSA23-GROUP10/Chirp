@@ -19,8 +19,8 @@ jobs:
             args: "-f markdown_strict -t pdf ./docs/report.md" # gets appended to pandoc command
 
         - uses: actions/checkout@v3
-          name: Commit Changes to GitHub
-        run: |
+        - name: Commit Changes to GitHub
+          run: |
               git config --global user.name 'Github Action'
               git config --global user.email 'thph@itu.dk'
               git commit -m "Updated PDF"
