@@ -75,7 +75,7 @@ Now you can set the user secrets
 ```
 dotnet user-secrets set "ConnectionStrings:ConnectionString" "Data Source=localhost,1433;Initial Catalog=Chirp;User ID=sa;Password=yourStrong(!)Password;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
 ```
-After this you can run the program using dotnet run from the Chirp.Web directory or the release latest release executable from the github repository (an OS specific guide on how to do this can be found in the full ReadMe): [Releases]()
+After this you can run the program using dotnet run from the Chirp.Web directory or the release latest release executable from the github repository (an OS specific guide on how to do this can be found in the full ReadMe):  [Releases](https://github.com/ITU-BDSA23-GROUP10/Chirp/releases)
 ```
 $ dotnet run
 ```
@@ -106,6 +106,7 @@ $ dotnet test
 ## License  
 The group has chosen the MIT open source software license. You can read a small summary from Github's license page below as well as see a very simple overview of the ... that this license provides
 
+[![Permissions and limitations](images_web/MIT_perks.png)](https://choosealicense.com/licenses/mit/)
 
 >MIT License
 >
@@ -134,8 +135,11 @@ Source: [Github choose a license site](https://choosealicense.com/licenses/mit/)
 
 The group chose this license as it was a good fit for the groups requirements of an open source license in that it basically has no restrictions for any end user or somebody who wants to work with the codebase. We also sign off any warranty or liability which is great for a small group project that we more than likely wont want to take further in the future.
 
-## LLMs, ChatGPT, CoPilot, and others
-The use of LLMs like ChatGPT and Copilot has been documented on github commits as a co-author when used. You can see the number of these commits on the page linked here: [ChatGPT Co-authored commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/graphs/contributors). Sadly the page that shows the actual commits doesn't have the commits that it contributed on as these were done on separate branches whose commits seem to not carry over to the main branch's working tree. 
+## LLMs, ChatGPT, Copilot, and others
+The use of LLMs like ChatGPT and Copilot has been documented on github commits as a co-author when used. The use of Copilot was almost entirely used for writing comments in the code as documentation and was used to translate a bash script into a powershell version of that script for the docker setup. 
+
+ You can see the number of these commits on the page linked here: [ChatGPT Co-authored commits](https://github.com/ITU-BDSA23-GROUP10/Chirp/graphs/contributors). Sadly the page that shows the actual commits doesn't have all the commits that it contributed on as these were done on separate branches whose commits seem to not carry over to the main branch's working tree.
+
 
 # References 
 This section is a collection of the references used in this report with date stamps. The references are in the order they appear in the report are and numbered the same here as in the report.
@@ -144,5 +148,26 @@ This section is a collection of the references used in this report with date sta
 
 # Appendix
 
+## 1. Links to Github repository and Publicly hosted Webapp version of Chirp
 
-# 
+**Github Repository:**  
+https://github.com/ITU-BDSA23-GROUP10/Chirp
+
+**Chirp Webapp On Azure**  
+https://bdsagroup10chirprazor.azurewebsites.net/
+
+## 2. Extra workflow diagrams
+These are diagrams that show off the workflows that weren't mentioned in the report but are present on the Github Repository
+
+### 2.1 Playwright Test Workflow
+***Sadly due to the limitations of our docker compose setup in regards to getting the browser certificates working, the playwright tests will more than likely fail (in this workflow) but here is the current logic for the playwright test workflow.***
+
+[![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/playwright_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/playwright_UML_act.svg)
+*- Figure ??*
+
+
+### 2.2 Pandoc PDF Convert Workflow
+This is the pandoc CLI tool workflow that converts the report.md file into a .pdf any time there was a change within the docs folder on the Github Repository
+
+[![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/pandoc_pdf_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/pandoc_pdf_UML_act.svg)
+*- Figure ??*

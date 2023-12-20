@@ -1,0 +1,38 @@
+@startuml
+header UML Activity Diagram for Github Actions
+title Build And Test Workflow (build_and_test.yml)
+start
+legend top left
+Legend:
+⨂ : termination of workflow
+⚫ : start of workflow
+◉ : stop and completion of workflow
+Yellow box with ... : repeation of success error decision
+endlegend
+
+:Checkout Github Branch (The Branch that got pushed to);
+
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Run docker image of pandoc (with arguments);
+
+#yellow:...;
+
+:Move PDF to docs folder;
+
+#yellow:...;
+
+:Set Github Credentials;
+:Add files to commit;
+:Commit changes;
+:Push changes to Github;
+
+#yellow:...;
+
+stop
+@enduml
