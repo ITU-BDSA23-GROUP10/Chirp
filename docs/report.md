@@ -132,7 +132,7 @@ Deployment was done on Microsoft Azure using their web app and database features
 
 ## Team work
 
-//TODO: Add picture of project board 
+![Project board](images/projectboard.PNG)
 
 Above is an image of the project board for our chirp project. While the vast majority of issues are done and closed, some issues are still open.
 
