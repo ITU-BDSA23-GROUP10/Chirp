@@ -91,7 +91,7 @@ Above is an image of the project board for our chirp project. While the vast maj
 |  Test  | tabel     |  here  |
 |--------+-----------+--------|
 | value1 |  test2    |  her   |
-| what   |  is       |  up?   |
+| what   |  is      |  up?   |
 
 ### Group's work activities
 
