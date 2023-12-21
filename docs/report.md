@@ -5,7 +5,7 @@ author:
 - "Theis Per Holm <thph@itu.dk>"
 - "August Kofoed Brandt <aubr@itu.dk>"
 - "Jonas Skjødt <skjo@itu.dk>"
-- "Alexander Lolk <lolk@itu.dk"
+- "Alexander Lolk <lolk@itu.dk>"
 - "Nayla Angelina Hauerberg <nayh@itu.dk>"
 ---
 
