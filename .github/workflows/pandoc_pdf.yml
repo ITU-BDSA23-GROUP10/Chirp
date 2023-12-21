@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
         - uses: actions/checkout@v3
-        #- run: sudo apt-get install texlive-fonts-recommended texlive-latex-recommended
+        - run: sudo apt-get install context
         #- uses: actions/checkout@v3
-        
+
         - uses: docker://pandoc/latex:2.9
           with:
-            args: "-f markdown -t pdf ./docs/report.md -o report.pdf" # gets appended to pandoc command
+            args: "-f markdown --template ./docs/mytemplate.context -t pdf ./docs/report.md -o report.pdf --pdf-engine=context" # gets appended to pandoc command
         
         - name: Move PDF to docs folder
           run: |
