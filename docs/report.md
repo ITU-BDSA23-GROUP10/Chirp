@@ -15,7 +15,7 @@ Chirp! is a mini social media platform based around user generated "cheeps", 160
 
 ## Domain model
 
-The Chirp! domain model represents the fundamental structure and behavior of the application. It describes how users, who can be authors once they write one or many cheeps, also can react to cheeps and follow other users. The Follows, Reaction, Author, Cheep, and User classes manage these relationships and interactions on the platform.
+The Chirp! domain model represents the structure and user behavior of the application. It describes how users, who can be authors once they write one or many cheeps, also can react to cheeps and follow other users. The Follows, Reaction, Author, Cheep, and User classes manage these relationships and interactions on the platform.
 
 ![Illustration of the _Chirp!_ data model as UML class diagram.](images/domain_model_UML.svg)
 
