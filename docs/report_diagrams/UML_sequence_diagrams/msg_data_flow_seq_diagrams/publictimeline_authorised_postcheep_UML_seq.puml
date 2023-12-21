@@ -1,0 +1,118 @@
+@startuml
+
+header Sequence Diagram for Message- and Datataflow
+Title Post cheep as an authorised user with no followings
+
+actor "User" as Us
+participant "Front End" as Fe
+participant "API" as Api
+participant "Data-handler" as Dh
+database "Database" as Db
+
+skinparam legend {
+  backgroundColor #E6E6E6
+  entrySeparator #E6E6E6
+  borderColor #FFFFFF
+}
+
+legend top
+  <b>Legend</b>
+
+  Lifelines
+  |     <#LightBlue>       | Async method's lifeline |
+  |     <#white>           | Async method's lifeline, nested |
+
+  Arrow-heads
+  |    <size:24><&arrow-right></size>|  Synchronous method |
+  |    <size:20><U+2192></size>      |  Async methods |
+
+  Other
+  | <b>alt</b>-box | Occurs if [condition] is true |
+endlegend
+
+== After accessing public timeline as an authorised user ==
+Us -> Fe: Presses "Share"
+Fe -> Api: HTTP POST: <User's message>
+
+Activate Api #LightBlue 
+    Api ->> Dh: GetAuthorByName(<userName>)
+    Activate Api
+        Dh -> Db: Query author with name: <userName>
+        Db -> Dh: Returns: [Author]
+        Dh -->> Api: Returns: [Author]
+    Deactivate Api
+
+    alt If author does not exist
+        Api ->> Dh: GetUserByName(<userName>)
+        Activate Api
+            Dh -> Db: Query user with name: <userName>
+            Db -> Dh: Returns: [User]
+            Dh -->> Api: Returns: [User]
+        Deactivate Api
+
+        alt If user does not exist
+            Api ->> Dh: CreateUser(<userName>)
+            Activate Api
+                Dh -> Db: Add new user
+            Deactivate Api
+            Api ->> Dh: GetUserByName(<userName>)
+            Activate Api
+                Dh -> Db: Query user with name: <userName>
+                Db -> Dh: Returns: [User]
+                Dh -->> Api: Returns: [User]
+            Deactivate Api
+            alt If created user does not exist
+                Api -> Api: throw new InvalidOperationException\nMessage: "Author could not be created."
+            end
+        end
+        Api ->> Dh: CreateAuthor(User)
+        Activate Api
+            Dh -> Db: Add user as new author
+        Deactivate Api
+        Api ->> Dh: GetAuthorByName(<userName>)
+        Activate Api
+            Dh -> Db: Query author by <userName>
+            Db --> Dh: Returns: [Author]
+            Dh ->> Api: Returns: [Author]
+        Deactivate Api
+    end
+    alt If author still does not exist
+        Api -> Api: throw new InvalidOperationException\nMessage: "Author could not be created."
+    end
+
+    Api -> Api: CheepCreateDTO(<User's message>, <userName>)
+    Api ->> Dh: CreateCheep(CheepDTO, <User's Author-data>)
+    Activate Api
+        Dh -> Db: Add new cheep
+    Deactivate Api
+Deactivate Api
+
+Api -> Fe: HTTP Response:\nRedirect to {url}/<userName>
+Fe -> Api: HTTP GET: {url}/<userName>
+
+Activate Api #LightBlue
+    Api ->> Dh: GetUserIDByName(<userName>)
+    Activate Api
+        Dh -> Db: Query user's id by <userName>
+        Db --> Dh: Returns: UserId
+        Dh -->> Api: Returns: UserId
+    Deactivate Api
+    Api ->> Dh: GetCheepsCountFromAuthorId(UserId)
+    Activate Api
+        Dh -> Db: Query author with UserId
+        Db --> Dh: Returns: Author
+        Dh -> Db: Query the author and their list of cheeps to count amount of cheeps
+        Db --> Dh: Returns: Count of author's cheeps
+        Dh -->> Api: Returns: Count of author's cheeps
+    Deactivate Api
+    Api ->> Dh: GetCheepsByAuthorId(UserId, 0, 32)
+    Activate Api
+        Dh -> Db: Query author's newest 32 cheeps by UserId
+        Db --> Dh: Returns: Up to 32 of the author's newest cheeps
+        Dh -->> Api: Returns: Paginated list of cheeps sorted by date
+    Deactivate Api
+Deactivate Api
+
+Api -> Fe: HTTP Response:\n text/html with cheeps
+Fe -> Us: Renders webpage
+@enduml
