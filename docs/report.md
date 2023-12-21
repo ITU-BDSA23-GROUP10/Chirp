@@ -6,7 +6,7 @@ author:
 - "August Kofoed Brandt <aubr@itu.dk>"
 - "Jonas Skjødt <skjo@itu.dk>"
 - "Alexander Lolk <lolk@itu.dk"
-- Nayla Angelina Hauerberg <nayh@itu.dk>
+- "Nayla Angelina Hauerberg <nayh@itu.dk>"
 ---
 
 # Design and Architecture of _Chirp!_
@@ -104,6 +104,10 @@ The User activities diagram shows what is possible for a user to do on our Chirp
 [Web version of *User activities* diagram](https://www.plantuml.com/plantuml/svg/xPZVJzim4CVV-rUSj0VAmwHfm3P0sa1CmDDMyKCJJyYDByq9nuxi2zKsxNyVILgk0IkAIWNhH9xIv7m_pjz-xFWWiF9SvWRAWFvQ9Kotn8JXMfEQU9KFmWtPGjtTmGMnmMDd-Pn-8NnwDyXGQVHm6T23Z9pV_eIv2wu6FZGRr947bCBmiEJC-Jkd-iicS8OMXj_SvW3khZVlj_JkXsHlL8uD9S2Keo6BzRkXTGo19XOraDtShn-6mX0FO7Qz_Jpo64BpglQtdQgFoUwUSHCWk_1yd6whBJrx3bFY34w8Jykns0HsXSG0DL5a5oATeT8B3dTtTbIIx1rbY4K0PVNzAuzL5vmDOdr3ndIuFd70JgpdJVdE6Neer0J1YNdHRjN-YwPugaB6Qb8b-SAP_6vK1bRb-6SZHFeZqX5dNlBiphKZtrREqRpZkNTFjbpTbVsBjKHL8SfOVPPejSpk_Gyq0M5uXQ47QvRaJ3KCNCcFILFZaC8CO6ApDgHv9SqFJuoFvxn-31Qda5HHnA1QwwvSUL6E4GpPc_bg9n9ywEfGwzeIsC5yv2rfNAY_4h6ibpDzKzeAEkjDw1SmctMIdHJG9vPu6Rd0CbPcGfF7X1_FtGXzS5OPaLAVAUZusnqxOzmKd8VIfiszgY7vLCTdbKWYdUclsNvrDtwMGAF865BlScYP1pHfRTJq1FMiAy-uM1NnaiMhNuiYNs0LQsKf9KTGr0D7_P6q19RYk8WZep-Y-cEgV-muilhB98wBA8kKrH4OhJHI74uTsw7dsaMVhVykUlMrh3L_Nl7p7FY9xvfwxY1MIY_d_mDuZRnBoSHPrTO2OAx8j4wZEhJGMCS4qAcYoq8hHXaSqSaA-_lLJQrnIeDMhCHauPDKJAekDMTWBJjbccF2Y8kU-PqZngbq7DchhLR6Ve8CkOIFVenxpDqjjiZOx32FClB5HgWh7wiWRkHx_GdLLunaj8tqbpZ7gELoW5QNkVaB)
 
 ## Sequence of functionality/calls trough _Chirp!_
+
+The UML sequence diagram below shows an unauthorised user successfully accessing the webapp's root endpoint, public timeline, and the execution of actions until the page is rendered.
+
+![Calls through Chirp! Sequence diagram](images/publictimeline_unauthorised_UML_seq.svg)
 
 # Process
 
