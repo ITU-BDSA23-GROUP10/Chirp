@@ -71,22 +71,13 @@ Structure:
 The Onion Architecture provides a clear separation of concerns and upholds the Dependency Inversion Principle by keeping every layer unaware of the layer above itself. This layered approach facilitates testability by decoupled components, so each can be tested in isolation. The architecture hereby enables a stronger use of dependency injection to ensure more class are independent from eachother.
 
 ## Architecture of deployed application
-
-### Architecture
-The project uses the Razor Pages framework to serve Chirp.Web. Chirp.Web effectively sets up the GUI for the website, and is a blend of static html components like images, css, javascript files, viewcomponents, and razor pages, all of them collectively handles the user's experience on the Chirp platform.
-
-The backend of the website is handled by Chirp.Core and Chirp.Infrastructure. As its innermost layer, Chirp.Core handles the Data Transfer Objects (DTOs) and the interfaces. The DTOs are data carriers, exchanging data related to authors, cheeps, users, follows, and reactions between the different parts of the project.
-
-Chirp.Infrastructure is the persistent data layer of the Chirp application. This is where models for Author, Cheep, Follows, Reaction, User, and their corresponding repositories exist, handling the actual data operations with the database. It also includes the Dbinitializer, which helps manage the database state.
-
-### Client-server communication
-The database server is hosted on SQL Server on Azure Web App. The database server works with the Chirp.Infrastructure layer where it stores and retrieves data as requested by the application. The Chirp.Infrastructure then communicates with Chirp.Web and ensures the data flow.
-
-The communication between the client application and the server is carried out through HTTP and HTTPS protocols to Chirp.Web. These protocols are safely handled by the Azure Web App using their TCP/IP service, giving high certainty of reliable data transmissions.
-
 When a user interacts with the Chirp website, an HTTPS request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
 
 ![Illustration of the _Chirp!_ deployed architecture as UML class diagram.](images/DeployedDiagram1.svg)
+
+The communication between the client application and the server is carried out through HTTPS protocols to Chirp.Web. These protocols are safely handled by the Azure Web App using their TCP/IP service, giving high certainty of reliable data transmissions.
+
+The database server is hosted on a SQL Server on Azure Web App. The database server works with the Chirp.Infrastructure layer where it stores and retrieves data as requested by the application. The Chirp.Infrastructure then communicates with Chirp.Web and ensures the data flow.
 
 ### User Authentication
 User authentication in Chirp is managed through Azure's B2C and GitHub's OAuth authentication service.
