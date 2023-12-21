@@ -122,7 +122,9 @@ Deployment was done on Microsoft Azure using their web app and database features
 #### Azure Deployment Workflow Activity Diagrams
 [![Build & Test Workflow](report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)
 
-![Azure deployment](images/main_bdsagroup10chirprazor.svg)
+![Azure deployment activity diagram](images/main_bdsagroup10chirprazor.svg)
+
+![Azure deployment sequence diagram](images/main_bdsagroup10chirprazor_UML_act.svg)
 
 ## Team work
 
