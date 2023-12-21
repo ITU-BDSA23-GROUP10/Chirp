@@ -71,7 +71,7 @@ Structure:
 The Onion Architecture provides a clear separation of concerns and upholds the Dependency Inversion Principle by keeping every layer unaware of the layer above itself. This layered approach facilitates testability by decoupled components, so each can be tested in isolation. The architecture hereby enables a stronger use of dependency injection to ensure more class are independent from eachother.
 
 ## Architecture of deployed application
-When a user interacts with the Chirp website, an HTTPS request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
+When a user interacts with the Chirp website, a HTTPS request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
 
 ![Illustration of the _Chirp!_ deployed architecture as UML class diagram.](images/DeployedDiagram1.svg)
 
@@ -259,7 +259,7 @@ https://github.com/ITU-BDSA23-GROUP10/Chirp
 https://bdsagroup10chirprazor.azurewebsites.net/
 
 ## 2. Extra workflow diagrams
-These are diagrams that show off the workflows that weren't mentioned in the report but are present on the Github Repository
+These are diagrams that show off the workflows that weren't mentioned in the report but are present on the Github Repository.
 
 ### 2.1 Playwright Test Workflow
 ***Sadly due to the limitations of our docker compose setup in regards to getting the browser certificates working, the Playwright tests will more than likely fail (in this workflow) but here is the current logic for the Playwright test workflow.***
