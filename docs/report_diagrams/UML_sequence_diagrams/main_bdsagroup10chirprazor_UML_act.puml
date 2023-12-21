@@ -1,5 +1,25 @@
 @startuml
 
+title "Azure deployment workflow"
+header "UML Sequence Diagram for GitHub Actions"
+
+skinparam legend {
+  backgroundColor #E6E6E6
+  entrySeparator #E6E6E6
+  borderColor #FFFFFF
+}
+
+legend top
+
+  <b>Legend</b>
+
+  Arrow-heads
+  |    <size:24><&arrow-right></size>|  Synchronous method |
+
+  Other
+  | <b>alt</b>-box | Occurs if [condition] is true |
+endlegend
+
 participant "Dev computer" as Dev
 participant "Git" as Git
 participant "Build & unit tests" as But
