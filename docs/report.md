@@ -44,11 +44,11 @@ Structure:
 <br/>├── ChirpDBContext.cs
 <br/>├── DbInitializer.cs
 <br/>├── ChirpRepository
-<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── AuhorRepository.cs
-<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── CheepRepository.cs
-<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── FollowsRepository.cs
-<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── ReactionRepository.cs
-<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;└── UserRepository.cs
+<br/>|&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── AuhorRepository.cs
+<br/>|&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── CheepRepository.cs
+<br/>|&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── FollowsRepository.cs
+<br/>|&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── ReactionRepository.cs
+<br/>|&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;└── UserRepository.cs
 <br/>└── Models
 <br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Author.cs
 <br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;├── Cheep.cs
