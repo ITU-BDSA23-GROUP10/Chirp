@@ -2,6 +2,14 @@
 header UML Activity Diagram for Github Actions
 title Playwright Workflow (playwright.yml)
 start
+legend top left
+Legend:
+⨂ : termination of workflow
+⚫ : start of workflow
+◉ : stop and completion of workflow
+Yellow box with ... : repeation of success error decision
+endlegend
+
 :Checkout Github Branch (The Branch that got pushed to);
 
 
@@ -14,77 +22,41 @@ endif
 
 :Setup Dotnet 7 SDK;
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Install powershell (dotnet tool install);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Install Docker (Ubuntu docker install);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Install Playwright (dotnet add packages);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Build Project (dotnet build);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Install Playwright Browsers (using powershell);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Generate Browser Certificates (using bash script);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Start Program and Database using docker-compose;
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 :Wait 15 seconds for the program to start;
 
 :Run Playwright Tests (dotnet test);
 
-if(Succes) then (No)
-    #pink:Error;
-    end
-else (Yes)
-endif
+#yellow:...;
 
 #green:Tests Passed;
 

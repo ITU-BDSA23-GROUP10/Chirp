@@ -1,17 +1,17 @@
 @startuml
 header UML Activity Diagram for Github Actions
-title Build, Test & Release Workflow (build_test_release.yml)
-
-start 
+title Build And Test Workflow (build_and_test.yml)
+start
 legend top left
 Legend:
 ⨂ : termination of workflow
 ⚫ : start of workflow
 ◉ : stop and completion of workflow
-Yellow box with ... : repeation of succes if-else block
+Yellow box with ... : repeation of success error decision
 endlegend
+
 :Checkout Github Branch (The Branch that got pushed to);
-:Call to get the Github Repository;
+
 
 if(Succes) then (No)
     #pink:Error;
@@ -19,23 +19,20 @@ if(Succes) then (No)
 else (Yes)
 endif
 
-
-
-:Setup Dotnet 7 SDK;
+:Run docker image of pandoc (with arguments);
 
 #yellow:...;
 
-:Publish Project (dotnet publish) to all platforms (win, linux, mac);
+:Move PDF to docs folder;
 
 #yellow:...;
 
-:Create Release (Github Release) with all published artifacts;
+:Set Github Credentials;
+:Add files to commit;
+:Commit changes;
+:Push changes to Github;
 
 #yellow:...;
-
-#green:Release Created;
 
 stop
 @enduml
-
-
