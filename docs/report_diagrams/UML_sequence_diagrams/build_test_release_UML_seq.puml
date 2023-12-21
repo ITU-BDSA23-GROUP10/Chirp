@@ -19,7 +19,7 @@ return Response: Created Dotnet environment
 
 == Release Project (win, linux, mac)==
 
-Workflow -> Github: Request: Publish Project (win, linux, mac)
+Workflow -> Github: Request: Publish Release on Github (win, linux, mac)
 activate Github
 Github -> Github: Creates a release
 return Response: Sucess acknowledgement
