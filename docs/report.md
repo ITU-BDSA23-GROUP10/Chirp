@@ -23,6 +23,7 @@ The Chirp! domain model represents the fundamental structure and behavior of the
 ![Illustration of the _Chirp!_ data model as UML class diagram.](images/domain_model_UML.png)
 
 ## Architecture — In the small
+![Illustration of the Onion architecture.](images/Onion.png)
 ### Chirp.core Layer:
 The core layer is where we place our interfaces and DTO. This layer is oblivious to external concerns such as the database context(infrastructure) or razer pages(Web). 
 
