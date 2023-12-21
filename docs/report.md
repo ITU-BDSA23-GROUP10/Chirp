@@ -80,11 +80,11 @@ The backend of the website is handled by Chirp.Core and Chirp.Infrastructure. As
 Chirp.Infrastructure is the persistent data layer of the Chirp application. This is where models for Author, Cheep, Follows, Reaction, User, and their corresponding repositories exist, handling the actual data operations with the database. It also includes the Dbinitializer, which helps manage the database state.
 
 ### Client-server communication
-The database server is hosted on SQL Server on Azure App Service. The database server works with the Chirp.Infrastructure layer where it stores and retrieves data as requested by the application. The Chirp.Infrastructure then communicates with Chirp.Web and ensures the data flow.
+The database server is hosted on SQL Server on Azure Web App. The database server works with the Chirp.Infrastructure layer where it stores and retrieves data as requested by the application. The Chirp.Infrastructure then communicates with Chirp.Web and ensures the data flow.
 
-The communication between the client application and the server is carried out through HTTP and HTTPS protocols to Chirp.Web. These protocols are safely handled by the Azure App Service using their TCP/IP service, giving high certainty of reliable data transmissions.
+The communication between the client application and the server is carried out through HTTP and HTTPS protocols to Chirp.Web. These protocols are safely handled by the Azure Web App using their TCP/IP service, giving high certainty of reliable data transmissions.
 
-When a user interacts with the Chirp website, an HTTP request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
+When a user interacts with the Chirp website, an HTTPS request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
 
 ![Illustration of the _Chirp!_ deployed architecture as UML class diagram.](images/DeployedDiagram1.svg)
 
