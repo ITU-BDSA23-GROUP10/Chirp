@@ -1,0 +1,25 @@
+@startuml
+
+participant "Dev computer" as Dev
+participant "Git" as Git
+participant "Build & unit tests" as But
+participant "Automated acceptance tests" as Auto
+participant "Release" as Rel
+
+Dev -> Git: Commit & push
+Git -> But: Trigger
+alt If tests fail
+    But --> Git: Notify failure
+    Git --> Dev: Feedback on failure
+else If tests succeed
+But -> Auto: Trigger
+    alt If tests fail
+    Auto -> Git: Notify failure
+    Git --> Dev: Feedback on failure
+    else if tests succeed
+        Auto --> Git: Notify success
+        Git --> Dev: Feedback on success
+        Auto -> Rel: Deployment
+    end
+end
+@enduml
