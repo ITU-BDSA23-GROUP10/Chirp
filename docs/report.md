@@ -17,7 +17,7 @@ Chirp! is a mini social media platform based around user generated "cheeps", 160
 
 The Chirp! domain model represents the fundamental structure and behavior of the application. It describes how users, who can be authors once they write one or many cheeps, also can react to cheeps and follow other users. The Follows, Reaction, Author, Cheep, and User classes manage these relationships and interactions on the platform.
 
-![Illustration of the _Chirp!_ data model as UML class diagram.](images/domain_model_UML.png)
+![Illustration of the _Chirp!_ data model as UML class diagram.](images/domain_model_UML.svg)
 
 ## Architecture — In the small
 ![Illustration of the Onion architecture.](images/Onion.png)
@@ -86,7 +86,7 @@ The communication between the client application and the server is carried out t
 
 When a user interacts with the Chirp website, an HTTP request is sent to the Azure server, and any following interactions made are as shown on the diagram below.
 
-![Illustration of the _Chirp!_ deployed architecture as UML class diagram.](images/DeployedDiagram.svg)
+![Illustration of the _Chirp!_ deployed architecture as UML class diagram.](images/DeployedDiagram1.svg)
 
 ### User Authentication
 User authentication in Chirp is managed through Azure's B2C and GitHub's OAuth authentication service.
