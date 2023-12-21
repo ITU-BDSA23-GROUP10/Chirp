@@ -7,10 +7,7 @@ author:
 - "Jonas Skjødt <skjo@itu.dk>"
 - "Alexander Lolk <lolk@itu.dk" 
 # Add your names here guys
-numbersections: true
 ---
-
-sdsdyfg
 
 # Design and Architecture of _Chirp!_
 
@@ -136,12 +133,6 @@ Above is an image of the project board for our chirp project. While the vast maj
 | [#263](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/263) (Bugs) | When running integration tests on a unix<br> based system, the tests would give a<br> `System.InvalidOperationException`. | Since the exception didn’t stop the tests from running and passing, the issue was not prioritized. |
 | [#225](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/225) (Not started) | Be able to run `playwright` tests on a dockerized container of the project. | The scope of this issue was too big for the deadline of the project, and not a necessary addition. |
 | [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program uses general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program, and due to the deadline approaching, it was decide that other issues would be prioritized.  |
-
-
-|  Test  | tabel     |  here  |
-|--------+-----------+--------|
-| value1 |  test2    |  her   |
-| what   |  is      |  up?   |
 
 ### Group's work activities
 
