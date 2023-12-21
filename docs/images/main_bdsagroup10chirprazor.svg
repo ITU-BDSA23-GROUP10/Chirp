@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1086px" preserveAspectRatio="none" style="width:376px;height:1086px;background:#FFFFFF;" version="1.1" viewBox="0 0 376 1086" width="376px" zoomAndPan="magnify"><defs/><g><rect fill="none" height="12.5781" style="stroke:none;stroke-width:1.0;" width="191" x="172" y="10"/><text fill="#888888" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="191" x="172" y="20.3809">UML Activity Diagram for Github Actions</text><rect fill="none" height="27.6094" id="_title" style="stroke:none;stroke-width:1.0;" width="203" x="85" y="28.5781"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="193" x="90" y="48.1113">Azure deployment workflow</text><rect fill="#DDDDDD" height="100.0469" id="_legend" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="337" x="18" y="70.1875"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="52" x="24" y="90.7207">Legend:</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168" x="24" y="108.3301">⨂ : termination of workflow</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125" x="24" y="125.9395">⚫ : start of workflow</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="224" x="24" y="143.5488">◉ : stop and completion of workflow</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="325" x="24" y="161.1582">Yellow box with ... : repeation of succes if-else block</text><ellipse cx="188" cy="189.2344" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1.0;"/><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="129" x="123.5" y="219.2344"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="109" x="133.5" y="241.6914">Setup Dotnet 7 SDK</text><rect fill="#FFC0CB" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="47" x="164.5" y="323.2461"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="27" x="174.5" y="345.7031">Error</text><ellipse cx="188" cy="395.293" fill="none" rx="10" ry="10" style="stroke:#222222;stroke-width:1.5;"/><line style="stroke:#222222;stroke-width:2.5;" x1="181.8128" x2="194.1872" y1="389.1058" y2="401.4802"/><line style="stroke:#222222;stroke-width:2.5;" x1="194.1872" x2="181.8128" y1="389.1058" y2="401.4802"/><polygon fill="#F1F1F1" points="169.5,274.3281,206.5,274.3281,218.5,286.3281,206.5,298.3281,169.5,298.3281,157.5,286.3281,169.5,274.3281" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="13" x="192" y="309.7471">No</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="37" x="169.5" y="290.8291">Succes</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="20" x="218.5" y="283.9111">Yes</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="88" x="144" y="447.293"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="68" x="154" y="469.75">Build project</text><rect fill="#FFFF00" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="29" x="173.5" y="502.3867"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="9" x="183.5" y="524.8438">...</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="192" x="92" y="557.4805"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="172" x="102" y="579.9375">Publish Project (dotnet publish)</text><rect fill="#FFFF00" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="29" x="173.5" y="612.5742"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="9" x="183.5" y="635.0313">...</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="196" x="90" y="667.668"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="176" x="100" y="690.125">Upload artifact to for deployment</text><rect fill="#FFFF00" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="29" x="173.5" y="722.7617"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="9" x="183.5" y="745.2188">...</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="212" x="82" y="777.8555"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="192" x="92" y="800.3125">Download artifact onto Azure server</text><rect fill="#FFFF00" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="29" x="173.5" y="832.9492"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="9" x="183.5" y="855.4063">...</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="97" x="139.5" y="888.043"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="77" x="149.5" y="910.5">Deploy artifact</text><rect fill="#FFFF00" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="29" x="173.5" y="943.1367"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="9" x="183.5" y="965.5938">...</text><rect fill="#008000" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="111" x="132.5" y="998.2305"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="91" x="142.5" y="1020.6875">Project deployed</text><ellipse cx="188" cy="1064.3242" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1.0;"/><ellipse cx="188" cy="1064.3242" fill="#222222" rx="6" ry="6" style="stroke:#111111;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="199.2344" y2="219.2344"/><polygon fill="#181818" points="184,209.2344,188,219.2344,192,209.2344,188,213.2344" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="358.3398" y2="385.293"/><polygon fill="#181818" points="184,375.293,188,385.293,192,375.293,188,379.293" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="298.3281" y2="323.2461"/><polygon fill="#181818" points="184,313.2461,188,323.2461,192,313.2461,188,317.2461" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="218.5" x2="230.5" y1="286.3281" y2="286.3281"/><polygon fill="#181818" points="226.5,355.293,230.5,365.293,234.5,355.293,230.5,359.293" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="230.5" x2="230.5" y1="286.3281" y2="427.293"/><line style="stroke:#181818;stroke-width:1.0;" x1="230.5" x2="188" y1="427.293" y2="427.293"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="427.293" y2="447.293"/><polygon fill="#181818" points="184,437.293,188,447.293,192,437.293,188,441.293" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="254.3281" y2="274.3281"/><polygon fill="#181818" points="184,264.3281,188,274.3281,192,264.3281,188,268.3281" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="482.3867" y2="502.3867"/><polygon fill="#181818" points="184,492.3867,188,502.3867,192,492.3867,188,496.3867" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="537.4805" y2="557.4805"/><polygon fill="#181818" points="184,547.4805,188,557.4805,192,547.4805,188,551.4805" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="592.5742" y2="612.5742"/><polygon fill="#181818" points="184,602.5742,188,612.5742,192,602.5742,188,606.5742" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="647.668" y2="667.668"/><polygon fill="#181818" points="184,657.668,188,667.668,192,657.668,188,661.668" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="702.7617" y2="722.7617"/><polygon fill="#181818" points="184,712.7617,188,722.7617,192,712.7617,188,716.7617" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="757.8555" y2="777.8555"/><polygon fill="#181818" points="184,767.8555,188,777.8555,192,767.8555,188,771.8555" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="812.9492" y2="832.9492"/><polygon fill="#181818" points="184,822.9492,188,832.9492,192,822.9492,188,826.9492" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="868.043" y2="888.043"/><polygon fill="#181818" points="184,878.043,188,888.043,192,878.043,188,882.043" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="923.1367" y2="943.1367"/><polygon fill="#181818" points="184,933.1367,188,943.1367,192,933.1367,188,937.1367" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="978.2305" y2="998.2305"/><polygon fill="#181818" points="184,988.2305,188,998.2305,192,988.2305,188,992.2305" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="188" x2="188" y1="1033.3242" y2="1053.3242"/><polygon fill="#181818" points="184,1043.3242,188,1053.3242,192,1043.3242,188,1047.3242" style="stroke:#181818;stroke-width:1.0;"/><!--MD5=[5370785c37addc50daaa6c23d20379bc]
+@startuml
+header UML Activity Diagram for Github Actions
+title Azure deployment workflow
+
+start
+legend top left
+Legend:
+⨂ : termination of workflow
+⚫ : start of workflow
+◉ : stop and completion of workflow
+Yellow box with ... : repeation of succes if-else block
+endlegend
+
+:Setup Dotnet 7 SDK;
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Build project;
+
+#yellow:...;
+
+:Publish Project (dotnet publish);
+
+#yellow:...;
+
+:Upload artifact to for deployment;
+
+#yellow:...;
+
+
+:Download artifact onto Azure server;
+
+#yellow:...;
+
+
+:Deploy artifact;
+
+#yellow:...;
+
+#green:Project deployed;
+
+stop
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: da
+Country: DK
+--></g></svg>
