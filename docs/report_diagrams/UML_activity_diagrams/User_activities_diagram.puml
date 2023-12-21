@@ -96,6 +96,8 @@ else (Yes)
         else (No)
         endif
         #4fa7c9:Post cheep;
+        ->Redirect;
+        #23d96c:Personal timeline;
         kill
     split again
         ->Press;
@@ -154,7 +156,7 @@ else (Yes)
         ->Go to;
         #23d96c:{Author name}'s timeline;
         split
-            ->read;
+            ->Read;
             #955acc:Cheeps and
             reactions;
             kill
@@ -162,7 +164,7 @@ else (Yes)
             ->Go to;
             #23d96c:Other page on
             {Author name}'s timeline;
-            ->read;
+            ->Read;
             #955acc:Cheeps and
             reactions;
             kill
@@ -185,6 +187,8 @@ else (Yes)
             else (No)
             endif
             #4fa7c9:Post cheep;
+            ->Redirect;
+            #23d96c:Personal timeline;
             kill
         split again
             ->Press;
