@@ -5,8 +5,8 @@ author:
 - "Theis Per Holm <thph@itu.dk>"
 - "August Kofoed Brandt <aubr@itu.dk>"
 - "Jonas Skjødt <skjo@itu.dk>"
-- "Alexander Lolk <lolk@itu.dk" 
-# Add your names here guys
+- "Alexander Lolk <lolk@itu.dk"
+- Nayla Angelina Hauerberg <nayh@itu.dk>
 ---
 
 # Design and Architecture of _Chirp!_
