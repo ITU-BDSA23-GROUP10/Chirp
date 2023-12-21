@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 
 namespace ChirpDatabase.Tests;
-
+// DatabaseFixture is a setup class for testing purposes.
+// It uses a Docker-based SQL Server container to provide a database with a predictable state before each test.
+// It also implements the IAsyncLifetime interface to manage the lifecycle of the SQL Server container.
 public class DatabaseFixture : IAsyncLifetime
 {
     private ChirpDBContext? Context;

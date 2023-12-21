@@ -9,10 +9,14 @@ using Chirp.Infrastructure.ChirpRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the builder. This is used login and authentication (using Azure AD B2C)
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
+
+// Adds all the repositories to the builder using scopes
+// It also adds the database context (SQL server) to the builder (using the connection string from dotnet user-secrets)
 
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
@@ -25,11 +29,13 @@ builder.Services.AddDbContext<ChirpDBContext>(
     options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
+// Creates database html exception pages if there is an error 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// This is split into development and production
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -42,6 +48,7 @@ else
     app.UseMigrationsEndPoint();
 }
 
+// This is used to migrate the database and seed it with data if it is empty
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -61,13 +68,16 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// This is used to get https redirects (You can see the http and https ports in the launchSettings.json file)
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
+app.UseStaticFiles();
 app.UseRouting();
 
+// Works in tandem with Azure AD B2C
 app.UseAuthorization();
 
+// This is used to map the razor pages and controllers to the app (this is how the pages are displayed)
 app.MapRazorPages();
 app.MapControllers();
 

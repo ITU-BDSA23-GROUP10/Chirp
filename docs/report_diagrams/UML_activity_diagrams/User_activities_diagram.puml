@@ -1,0 +1,235 @@
+@startuml user_activities_diagram
+skinparam TitleFontSize 80
+header User activities activity diagram
+title User activities
+start
+if (Authorized?) then (No)
+    #23d96c:Public timeline
+    (not signed in);
+    split
+        ->Press;
+        #4fa7c9:log in;
+        #bf4a3d:log in with GitHub;
+        stop
+    split again
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Other page on
+        public timeline;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Hashtag page;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:{Author name}'s timeline;
+        split
+            ->read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Other page on
+            {Author name}'s timeline;
+            ->read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Hashtag page;
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        endsplit
+    endsplit
+else (Yes)
+    #23d96c:Public timeline
+    (signed in);
+    split
+        ->Press;
+        #4fa7c9:sign out;
+        #bf4a3d:User is signed out;
+        stop
+    split again
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Other page on
+        public timeline;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Hashtag page;
+        ->Read;
+        #955acc:Cheeps and
+        reactions;
+        kill
+    split again
+        ->Write;
+        #4fa7c9:Write new cheep;
+        if (YouTube link?) then (Yes)
+            #4fa7c9:Add link to YouTube video;
+        else (No)
+        endif
+        if (Hashtags?) then (Yes)
+            #4fa7c9:Add hashtag to cheep;
+        else (No)
+        endif
+        #4fa7c9:Post cheep;
+        ->Redirect;
+        #23d96c:Personal timeline;
+        kill
+    split again
+        ->Press;
+        #4fa7c9:Follow or unfollow author;
+        kill
+    split again
+        ->Press;
+        #4fa7c9:React to cheep;
+        kill
+    split again
+        ->Go to;
+        #23d96c:Personal timeline;
+        split
+            ->Read;
+            #955acc:Cheeps and reactions from 
+            self and followed authors;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Other page on
+            personal timeline;
+            ->read;
+            #955acc:Cheeps and reactions from 
+            self and followed authors;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Hashtag page;
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again 
+            ->Write;
+            #4fa7c9:Write new cheep;
+            if (YouTube link?) then (Yes)
+                #4fa7c9:Add link to YouTube video;
+            else (No)
+            endif
+            if (Hashtags?) then (Yes)
+                #4fa7c9:Add hashtag to cheep;
+            else (No)
+            endif
+            #4fa7c9:Post cheep;
+            kill
+        split again
+            ->Press;
+            #4fa7c9:Follow and unfollow author;
+            kill
+        split again
+            ->Press;
+            #4fa7c9:React to cheep;
+            kill
+        endsplit
+    split again
+        ->Go to;
+        #23d96c:{Author name}'s timeline;
+        split
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Other page on
+            {Author name}'s timeline;
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Go to;
+            #23d96c:Hashtag page;
+            ->Read;
+            #955acc:Cheeps and
+            reactions;
+            kill
+        split again
+            ->Write;
+            #4fa7c9:Write new cheep;
+            if (YouTube link?) then (Yes)
+                #4fa7c9:Add link to YouTube video;
+            else (No)
+            endif
+            if (Hashtags?) then (Yes)
+                #4fa7c9:Add hashtag to cheep;
+            else (No)
+            endif
+            #4fa7c9:Post cheep;
+            ->Redirect;
+            #23d96c:Personal timeline;
+            kill
+        split again
+            ->Press;
+            #4fa7c9:Follow or unfollow author;
+            kill
+        split again
+            ->Press;
+            #4fa7c9:React to cheep;
+            kill
+        endsplit
+    split again
+        ->Go to;
+        #23d96c:Profile;
+        split
+            if (Has email?) then (No)
+                #4fa7c9:Add email;
+            else (Yes)
+                #4fa7c9:Update email;
+            endif
+            kill
+        split again
+            ->Press;
+            #4fa7c9:Download data;
+            #bf4a3d:Download file with 
+            all user data;
+            kill
+        split again
+            ->See;
+            #955acc:Followed authors;
+            kill
+        split again
+            ->Press;
+            #4fa7c9:Forget me;
+            #bf4a3d:User is removed
+            from Chirp's database;
+            stop
+        split again
+            ->See;
+            #955acc:Written cheeps;
+            kill
+        endsplit
+    endsplit
+endif
+@enduml

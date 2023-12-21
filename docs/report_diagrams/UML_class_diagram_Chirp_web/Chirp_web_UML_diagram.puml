@@ -1,0 +1,424 @@
+@startuml
+
+package "Chirp.Web.BindableClasses" {
+    class NewFollow {
+        +Author : string
+    }
+
+    class NewCheep {
+        +Message : string
+    }
+
+    class NewReaction {
+        +Reaction : string
+    }
+
+    class NewcheepId {
+        +id : int
+    }
+
+    class NewEmail {
+        +Email : string
+    }
+
+    class DeleteCheep {
+        +CheepID : int
+    }
+    class EmailValidator {
+        +EmailValidator()
+    }
+}
+
+class AbstractValidator<NewEmail>{}
+AbstractValidator <|-- EmailValidator
+
+package "Chirp.Web.Pages" {
+    BasePageModel --> NewFollow
+    BasePageModel --> NewCheep
+    BasePageModel --> NewReaction
+    BasePageModel --> NewcheepId
+    BasePageModel --> NewEmail
+    BasePageModel --> DeleteCheep
+    BasePageModel --> EmailValidator
+
+    class BasePageModel {
+        # _cheepService: ICheepRepository<Cheep,Author>
+        # _authorService: IAuthorRepository<Author,Cheep,User>
+        # _userService: IUserRepository<User>
+        # _reactionService: IReactionRepository<Reaction>
+        # _followsService: IFollowsRepository<Follows>
+        # excessiveCheepsCount: int
+        + NewCheep: NewCheep
+        + NewFollow: NewFollow
+        + NewcheepId: NewcheepId
+        + NewReaction: NewReaction
+        + UserCheeps: List<CheepDTO>
+        + DisplayedCheeps: List<CheepDTO>
+        + Cheeps: List<CheepDTO>
+    }
+
+    class UserTimelineModel {
+        + UserTimelineModel( \n IUserRepository<User> userService,  \n IAuthorRepository<Author, Cheep, User> authorService,  \n IReactionRepository<Reaction> reactionService,  \n IFollowsRepository<Follows> followsService,  \n ICheepRepository<Cheep, Author> cheepService \n)
+        + OnGetAsync(author: string, [FromQuery(Name = "page")] int page = 1): async Task<ActionResult>
+    }
+
+    class PublicModel {
+        + PublicModel( \n IUserRepository<User> userService,  \n IAuthorRepository<Author, Cheep, User> authorService,  \n IReactionRepository<Reaction> reactionService,  \n IFollowsRepository<Follows> followsService,  \n ICheepRepository<Cheep, Author> cheepService \n)
+        + OnGetAsync([FromQuery(Name = "page")] int page = 1): async Task<ActionResult>
+    }
+
+    class HashtagModel {
+        + HashtagModel( \n IUserRepository<User> userService,  \n IAuthorRepository<Author, Cheep, User> authorService,  \n IReactionRepository<Reaction> reactionService,  \n IFollowsRepository<Follows> followsService,  \n ICheepRepository<Cheep, Author> cheepService \n)
+        + TagName : string
+        + OnGetAsync(tagName: string): async Task<ActionResult>
+    }
+
+    class UserProfileModel {
+        + UserProfileModel( \n IUserRepository<User> userService,  \n IAuthorRepository<Author, Cheep, User> authorService,  \n IReactionRepository<Reaction> reactionService,  \n IFollowsRepository<Follows> followsService,  \n ICheepRepository<Cheep, Author> cheepService \n)
+        + NewEmail NewEmail
+        + DeleteCheep DeleteThisCheep
+        + List<User> following
+        + List<CheepDTO> cheeps
+        + OnGetAsync(): Task<ActionResult>
+        + OnPostForgetMeAsync(): Task<IActionResult>
+        + Logout(): Task<IActionResult>
+        + findUserFollowingByUserID(int userId): Task
+        + OnPostDownloadData(): Task<IActionResult>
+        + OnPostAddUpdateEmail(): Task<IActionResult>
+        + OnPostDeleteCheep(): Task<IActionResult>
+    }
+
+    UserTimelineModel --|> BasePageModel
+    UserProfileModel --|> BasePageModel
+    PublicModel --|> BasePageModel
+    HashtagModel --|> BasePageModel
+
+}
+
+class PageModel {}
+PageModel --|> BasePageModel
+
+package "HTML pages" {
+    class Timeline_cshtml {}
+    class Public_cshtml {}
+    class UserProfile_cshtml {}
+    class Hashtag_cshtml {}
+
+    Public_cshtml --> PublicModel
+    UserProfile_cshtml --> UserProfileModel
+    Timeline_cshtml --> UserTimelineModel
+    Hashtag_cshtml --> HashtagModel
+}
+
+package "Chirp.Web.ViewComponents" {
+    class WriteCheepFormViewComponent {}
+
+    Timeline_cshtml --> WriteCheepFormViewComponent
+    Public_cshtml --> WriteCheepFormViewComponent
+    Hashtag_cshtml --> WriteCheepFormViewComponent
+
+    class PaginationViewComponent {}
+
+    Timeline_cshtml --> PaginationViewComponent
+    Public_cshtml --> PaginationViewComponent
+
+    class CheepListViewComponent {}
+
+    Timeline_cshtml --> CheepListViewComponent
+    Public_cshtml --> CheepListViewComponent
+    Hashtag_cshtml --> CheepListViewComponent
+
+    class FollowNotifactionViewComponent {}
+
+    Timeline_cshtml --> FollowNotifactionViewComponent
+    Public_cshtml --> FollowNotifactionViewComponent
+}
+
+package "Chirp.Web" {
+    class PagesData {
+        + CheepsPerPage : int
+        + CurrentPage : int
+        + TotalPages : int
+        + LastPage : bool
+        + HasAuthor : bool
+    }
+
+    PaginationViewComponent --> PagesData
+
+    class AsyncPadlock{
+        - SemaphoreSlim _semaphore
+        + Lock() : Task<AsyncPadlock>
+        + Dispose() : void
+    }
+}
+
+class Program {
+    +CreateBuilder(args) : WebApplicationBuilder
+    +Build() : WebApplication
+    +UseHttpsRedirection() : void
+    +UseStaticFiles() : void
+    +UseRouting() : void
+    +UseAuthorization() : void
+    +MapRazorPages() : void
+    +MapControllers() : void
+    +Run() : void
+}
+
+
+package "Chirp.Infrastructure" {
+    class DbInitializer {
+        +static void SeedDatabase(ChirpDBContext)
+    }
+    class ChirpDBContext {
+        +DbSet<Cheep> Cheeps
+        +DbSet<Author> Authors
+        +DbSet<User> Users
+        +DbSet<Follows> Follows
+        +DbSet<Reaction> Reactions
+    }
+
+    class DBContext {}
+    
+    ChirpDBContext --|> DBContext
+}
+
+package "Chirp.Infrastructure.Models;" {
+    class Cheep {
+        +int CheepId
+        +string Text
+        +Author Author
+        +int AuthorId
+    }
+    class Author {
+        +int AuthorId
+        +List<Cheep> Cheeps
+    }
+    class User {
+        +int UserId
+        +string Name
+        +string Email
+    }
+    class Follows {
+        +int FollowerId
+        +int FollowingId
+    }
+    class Reaction {
+        +int cheepId
+        +int userId
+    }
+    DbInitializer --> ChirpDBContext
+    Cheep "0..*" --> "1" Author
+    Author "1" --> "0..*" Cheep
+    Follows "0..*" --> "1" User
+    Reaction "0..*" --> "1" User
+    Reaction "0..*" --> "1" Cheep
+    ChirpDBContext "1" --> "0...N" Cheep
+    ChirpDBContext "1" --> "0...N" Author
+    ChirpDBContext "1" --> "0...N" User
+    ChirpDBContext "1" --> "0...N" Follows
+    ChirpDBContext "1" --> "0...N" Reaction
+}
+
+
+package "Chirp.Infrastructure.ChirpRepository" {
+    class AuthorRepository {
+        #DbSet<Author> DbSetAuthor
+        #ChirpDBContext context
+        +AuthorRepository(ChirpDBContext dbContext)
+        -Insert(Author entity) : async Task
+        +Delete(Author entity) : async Task
+        -SearchFor(Expression<Func<Author, bool>> predicate) : IQueryable<Author>
+        +GetAuthorWithCheeps(string authorName) : async Task<Author>
+        +GetCheepsCountsFromAuthorId(int id) : async Task<int>
+        +GetAuthorByName(string name) : async Task<Author?>
+        +GetCheepsByAuthor(string author, int offset, int limit) : async Task<Tuple<List<CheepDTO>, int>>
+        +GetCheepsByAuthorId(List<int> ids, int offset, int limit) : async Task<List<CheepDTO>>
+        +GetAllCheepsByAuthorName(string authorName) : async Task<List<CheepDTO>>
+        +GetAuthorById(int id) : async Task<Author?>
+        +CreateAuthor(User user) : async Task
+    }
+
+    class CheepRepository {
+        #DbSet<Cheep> DbSet
+        #ChirpDBContext context
+        #CheepCreateValidator validator
+        +CheepRepository(ChirpDBContext dbContext)
+        +Insert(Cheep entity)
+        +Delete(Cheep entity)
+        +Delete(int cheepId)
+        +SearchFor(Expression<Func<Cheep, bool>> predicate)
+        +GetAll()
+        +GetById(int id)
+        +GetSome(int offset, int limit)
+        +CreateCheep(CheepCreateDTO newCheep, Author author)
+        +GetCheepsByHashtag(string hashtag)
+    }
+
+    class CheepCreateValidator {
+        +CheepCreateValidator()
+    }
+
+    CheepRepository *-down- ChirpDBContext
+    CheepRepository *-down- CheepCreateValidator
+    CheepRepository *-down- Cheep
+    CheepRepository *-down- Author
+
+    class FollowsRepository {
+        #DbSet<Follows> DbSetFollows
+        #ChirpDBContext context
+        +FollowsRepository(ChirpDBContext dbContext)
+        +InsertFollow(Follows entity)
+        +DeleteFollow(Follows entity)
+        +FollowUser(FollowDTO followDTO)
+        +getUserFollowingCountById(int userId)
+        +IsFollowing(int followerId, int followingId)
+        +UnfollowUser(FollowDTO unfollowDTO)
+        +GetFollowedUsersId(int userId)
+        +GetIdsFollowingUser(int userId)
+        +LoopDeleteFollowers(List<int> followedUsers, int userId)
+        +DeleteAllFollowers(int userId)
+    }
+
+    FollowsRepository *-down- ChirpDBContext
+    FollowsRepository *-down- Follows
+    
+
+    class ReactionRepository {
+        # DbSet<Reaction> DbSetReaction
+        # ChirpDBContext context
+        + ReactionRepository(dbContext: ChirpDBContext)
+        + InsertReaction(entity: Reaction)
+        + DeleteReaction(entity: Reaction)
+        + UpdateReaction(entity: Reaction)
+        + SearchFor(predicate: Expression<Func<Reaction, bool>>)
+        + GetCheepsUpvoteCountsFromCheepID(id: int)
+        + GetCheepsDownvoteCountsFromCheepID(id: int)
+        + ReactToCheep(reactionDTO: ReactionDTO)
+        + checkUserReacted(userid: int, cheepid: int)
+        + checkUserReactionType(userid: int, cheepid: int)
+        + deleteAllUserReactions(userid: int)
+        + GetReactionByUserAndCheep(userid: int, cheepid: int)
+        + GetReactionByUsersId(userid: int)
+    }
+
+    ChirpDBContext --> ReactionRepository
+
+    class UserRepository {
+        # DbSet<User> DbSetUser
+        # ChirpDBContext context
+        + UserRepository(ChirpDBContext dbContext)
+        - InsertUser(User entity) : async Task
+        + DeleteUser(User entity) : async Task
+        - SearchFor(Expression<Func<User, bool>> predicate) : IQueryable<User>
+        + GetUserById(int id) : async Task<User?>
+        + GetUserByName(string name) : async Task<User?>
+        + GetUserByEmail(string email) : async Task<User?>
+        + GetUserIDByName(string name) : async Task<int>
+        + CreateUser(string name, string? email = null) : async Task
+        + UpdateUserEmail(string name, string email) : async Task
+    }
+}
+
+
+package "Chirp.Infrastructure.Migrations" {
+
+}
+
+
+package "Chirp.Core" {
+    package "interfaces" {
+        interface IAuthorRepository<Author, Cheep, User> {
+            + Delete(Author entity) : Task
+            + GetAuthorWithCheeps(string authorName) : Task<Author>
+            + GetCheepsCountsFromAuthorId(int id) : Task<int>
+            + GetAuthorByName(string name) : Task<Author?>
+            + GetCheepsByAuthor(string author, int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
+            + GetCheepsByAuthorId(List<int> id, int offset, int limit) : Task<List<CheepDTO>>
+            + GetAllCheepsByAuthorName(string authorName) : Task<List<CheepDTO>>
+            + CreateAuthor(User user) : Task
+        }
+
+        interface ICheepRepository<Cheep, Author> {
+            + Delete(int cheepId) : Task
+            + GetAll() : (IQueryable<Cheep>, int)
+            + GetById(int id) : Task<Cheep?>
+            + GetSome(int offset, int limit) : Task<Tuple<List<CheepDTO>, int>>
+            + CreateCheep(CheepCreateDTO cheepCreateDTO, Author author) : Task
+            + GetCheepsByHashtag(string hashtag) : Task<List<CheepDTO>>
+        }
+
+        interface IFollowsRepository<Follows> {
+            + FollowUser(FollowDTO followDTO) : Task
+            + IsFollowing(int followerId, int followingId) : Task<bool>
+            + UnfollowUser(FollowDTO unfollowDTO) : Task
+            + GetFollowedUsersId(int userId) : Task<List<int>>
+            + GetIdsFollowingUser(int userId) : Task<List<int>>
+            + LoopDeleteFollowers(List<int> followedUsers, int userId) : Task
+            + DeleteAllFollowers(int userId) : Task
+        }
+        
+        interface IReactionRepository<Reaction> {
+            + UpdateReaction(Reaction entity) : Task
+            + GetCheepsUpvoteCountsFromCheepID(int id) : Task<int>
+            + GetCheepsDownvoteCountsFromCheepID(int id) : Task<int>
+            + ReactToCheep(ReactionDTO reactionDTO) : Task
+            + checkUserReacted(int userid, int cheepid) : Task<bool>
+            + checkUserReactionType(int userid, int cheepid) : Task<string>
+            + deleteAllUserReactions(int userid) : Task
+            + GetReactionByUsersId(int userid) : Task<List<Reaction>>
+        }
+
+        interface IUserRepository<User> {
+            + DeleteUser(User entity) : Task
+            + GetUserById(int id) : Task<User?>
+            + GetUserByName(string name) : Task<User?>
+            + GetUserByEmail(string email) : Task<User?>
+            + GetUserIDByName(string name) : Task<int>
+            + CreateUser(string name, string? email = null) : Task
+        }
+
+        AuthorRepository ..|> IAuthorRepository
+        CheepRepository ..|> ICheepRepository
+        FollowsRepository ..|> IFollowsRepository
+        ReactionRepository ..|> IReactionRepository
+        UserRepository ..|> IUserRepository
+    }
+
+    package "DTOs" {
+        class ReactionDTO {
+            + cheepId : int
+            + userId : int
+            + reactionType : string
+        }
+        
+        class FollowDTO {
+            + int followerId
+            + int followingId
+        }
+
+        class CheepDTO {
+            + int id
+            + string Author
+            + string Message
+            + DateTime Timestamp
+        }
+
+        class CheepCreateDTO {
+            + string text
+            + string author
+        }
+
+        FollowDTO <-- FollowsRepository
+        ReactionDTO <-- ReactionRepository
+        CheepDTO <-- CheepRepository
+        CheepCreateDTO <-- CheepRepository
+        CheepCreateDTO <-- CheepCreateValidator
+
+        CheepDTO --> UserTimelineModel
+        CheepDTO --> UserProfileModel
+        CheepDTO --> BasePageModel
+    }
+    
+}
+
+@enduml

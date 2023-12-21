@@ -9,7 +9,7 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 # How to run
 ## Using docker
 The project is fully dockerized as can be seen by the Dockerfile and docker-compose.yml file in the main Chirp directory
-To run the project with docker you must first download docker and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)  
+To run the project with Docker you must first download Docker ([Docker installation guide](https://docs.docker.com/get-docker/)) and if your installation doesnt come with docker compose you must also install that (Most desktop GUI versions come with it by default)  
 
 After installing docker you can run the bash script (and an equivalent powershell script with the .ps1 extension) found in Chirp called create_cert.sh or run the dotnet dev-cert commands found in there making sure to put the cert inside a folder called .local in Chirp  
 
@@ -50,8 +50,15 @@ You can check if the docker container is running by using this in a terminal. Lo
 ```
 $ docker ps
 ```
-
-TODO: Write a blurb about starting docker container
+If the docker container does not show up in the list then you can try to start it using the following commands
+```
+$ docker ps -a
+```
+Look for the container using the image **mcr.microsoft.com/mssql/server** and remember the first couple of letters of the ID. Then run this where **id** is the ID from the docker ps -a command
+```
+docker start id
+```
+You can now check if it's running again using the first docker ps command from before
 
 If the container is not running it may because the password is too weak so try to run the above command again with a different password
 
