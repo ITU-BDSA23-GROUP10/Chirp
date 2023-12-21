@@ -7,10 +7,6 @@ author:
 numbersections: true
 ---
 
-# Table Of Content
-
-//TODO: Create a ToC
-
 # Design and Architecture of _Chirp!_
 
 ## Domain model
@@ -32,32 +28,29 @@ Here comes a description of our domain model.
 ## Build, test, release, and deployment  
 The group employed the use of Github Workflows/Actions to build, test, release and deploy the application to Azure. The UML activity diagrams below show how each of the workflows work using UML activity and UML sequence diagrams. 
 
-Via the use of two workflows (see figure ?? and ??) the group ensured that the program would always pass the tests when anything got pushed to the main branch. More importantly, it provided some security to the main branch when trying to merge branches into main via Github Pull Requests. These workflows also ensured that the release-build of the program was able to build and passed most tests (all tests excluding the UI tests) before getting put into a release, minimizing the chances that a release would be broken. 
+Via the use of two workflows (see UML Activity Diagram for Github Actions: Test and Release and UML Activity Diagram for Github Actions: Build and Release) the group ensured that the program would always pass the tests when anything got pushed to the main branch. More importantly, it provided some security to the main branch when trying to merge branches into main via Github Pull Requests. These workflows also ensured that the release-build of the program was able to build and passed all tests (all tests excluding the UI tests) before getting put into a release, minimizing the chances that a release would be broken. 
 
 #### Test and Release UML Activity diagrams
 [![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/build_test_release_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/build_test_release_UML_act.svg)
-*- Figure ??*
 
 [![Build & Test Workflow](report_diagrams/UML_activity_diagrams/build_test_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/UML_activity_diagrams/build_test_UML_act.svg)
-*- Figure ??*
 
-Deployment was done on Microsoft Azure using their webapp and database features. The Azure webapp automatically updates when changes are pushed to main using the <code>main_bdsagroup10chirprazor.yml</code> file which on Github is the "Build and deploy ASP.Net Core app to Azure Web App - bdsagroup10chirprazor" action. This will build, publish and send the application to our Azure webapp, which then runs the released build. The database is a MySQL server database hosted on Azure. We also deploy the database schema to the database using workflows. This is done using the <code>azure_pipeline.yml</code> file which on Github is the "Azure Pipeline" action. This gets the current database migration from the main branch on Github and applies them to the Azure database. 
+Deployment was done on Microsoft Azure using their web app and database features. The Azure web app automatically updates when changes are pushed to main using the <code>main_bdsagroup10chirprazor.yml</code> file which on Github is the "Build and deploy ASP.Net Core app to Azure Web App - bdsagroup10chirprazor" action. This will build, publish and send the application to our Azure webapp, which then runs the released build. The database is a MySQL server database hosted on Azure. We also deploy the database schema to the database using workflows. This is done using the <code>azure_pipeline.yml</code> file which on Github is the "Azure Pipeline" action. This gets the current database migration from the main branch on Github and applies them to the Azure database. 
 
 #### Azure Deployment Workflow Activity Diagrams
 [![Build & Test Workflow](report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/azure_pipeline_UML_act.svg)
-*- Figure ??*
 
 ## Team work
 
 ## How to make _Chirp!_ work locally
 For a full guide on how to run the project locally see the ReadMe.md on the public repository (This includes many other ways of running the program and more explanations): [Chirp ReadMe.md](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/README.md) 
 
-This part will include the ways to run it locally fully using docker, or running it locally with dotnet run / the release executables.
+This part will include the ways to run it locally fully using Docker, or running it locally with dotnet run / the release executables.
 
-### How to Run the project using dotnet run and a MySQL docker image:
-If Docker is not installed on your computer, please follow the installation guide on this website: [Install guide for Docker](https://docs.docker.com/get-docker/) //TODO: visited 19/12
+### How to Run the project using dotnet run and a MySQL Docker image:
+If Docker is not installed on your computer, please follow the installation guide on this website: [Install guide for Docker](https://docs.docker.com/get-docker/)
 
-First you will have to install a docker image of MySQL server. To do so, run the code below in a terminal (Remember to set the password by replacing "yourStrong(!)Password", and the password has to be a strong password, otherwise the server wont run):
+First you will have to install a Docker image of MySQL server. To do so, run the code below in a terminal (Remember to set the password by replacing "yourStrong(!)Password", and the password has to be a strong password, otherwise the server wont run):
 
 ```
 $ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
@@ -85,26 +78,26 @@ $ dotnet run
 ```
 
 ### Running the program only using docker
-The program has a <code>Dockerfile</code> as a well as a <code>docker-compose</code> file which will run the program and database fully within docker containers. To do so just run the following docker compose command in your terminal while within the Chirp directory:
+The program has a <code>Dockerfile</code> as a well as a <code>docker-compose</code> file which will run the program and database fully within docker containers. To do so just run the following Docker compose command in your terminal while within the Chirp directory:
 ```
 $ docker compose up
 ```
 
 ## How to run test suite locally
-For the playwright tests to work, an installation of Docker is required. Please refer to the [run section](#how-to-run-the-project-using-dotnet-run-and-a-mysql-docker-image) for instructions on this. 
+For the Playwright tests to work, an installation of Docker is required. Please refer to the [run section](#how-to-run-the-project-using-dotnet-run-and-a-mysql-docker-image) for instructions on this. 
 
-### Running all tests (Except playwright)
-To run all tests except the playwright tests, run the command below in your terminal while within the Chirp directory:
+### Running all tests (Except Playwright)
+To run all tests except the Playwright tests, run the command below in your terminal while within the Chirp directory:
 ```
 $ dotnet test
 ```
 
-### To run the playwright tests
-The program must be running the background for the playwright tests to function, as it tries to access the application. Running the program through the docker setup will not work for this, as it seems to have some problems with the certificates as well as the browsers. So please refer to how to run the program locally using either the release build or dotnet run. You can then run the playwright tests by running the following command in your terminal while within the <code>Chirp/test/PlaywrightTests</code> directory
+### To run the Playwright tests
+The program must be running the background for the Playwright tests to function, as it tries to access the application. Running the program through the docker setup will not work for this, as it seems to have some problems with the certificates as well as the browsers. So please refer to how to run the program locally using either the release build or dotnet run. You can then run the Playwright tests by running the following command in your terminal while within the <code>Chirp/test/PlaywrightTests</code> directory.
 ```
 $ dotnet test
 ```
-
+Note: due to high amount of requests to Github, authorization could be required to make sure the logged in user is not a bot (which it unfortunately is). To make sure the Playwright tests can be run, try not to overdo these tests and minimize the times its used.
 # Ethics
 
 ## License  
@@ -122,10 +115,9 @@ The group has chosen the MIT open source software license. You can read a small 
 >
 >THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
 
-//TODO: figure out how we want to source from things
 Source: [Github choose a license site](https://choosealicense.com/licenses/mit/)
 
-The group chose this license as it was a good fit for the groups' requirements of an open source license, in that it basically has no restrictions for any end-user, or anyone who wants to work with the codebase. We also sign off any warranty or liability, which is great for a small group project that we more than likely will not work on further in the future.
+The group chose this license as it was a good fit for the group's requirements of an open source license, in that it basically has no restrictions for any end-user, or anyone who wants to work with the codebase. We also sign off any warranty or liability, which is great for a small group project that we more than likely will not work on further in the future.
 
 ## LLMs, ChatGPT, Copilot, and others
 The use of LLMs like ChatGPT and Copilot has been documented on github commits as a co-author when used. The use of Copilot was almost entirely used for writing comments in the code as documentation, as well as translating a bash script into a powershell script for the docker setup. 
@@ -152,14 +144,6 @@ https://bdsagroup10chirprazor.azurewebsites.net/
 These are diagrams that show off the workflows that weren't mentioned in the report but are present on the Github Repository
 
 ### 2.1 Playwright Test Workflow
-***Sadly due to the limitations of our docker compose setup in regards to getting the browser certificates working, the playwright tests will more than likely fail (in this workflow) but here is the current logic for the playwright test workflow.***
+***Sadly due to the limitations of our docker compose setup in regards to getting the browser certificates working, the Playwright tests will more than likely fail (in this workflow) but here is the current logic for the Playwright test workflow.***
 
 [![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/playwright_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/playwright_UML_act.svg)
-*- Figure ??*
-
-
-### 2.2 Pandoc PDF Convert Workflow
-This is the pandoc CLI tool workflow that converts the report.md file into a .pdf any time there was a change within the docs folder on the Github Repository
-
-[![Build, Test & Release Workflow](report_diagrams/UML_activity_diagrams/pandoc_pdf_UML_act.svg)](https://github.com/ITU-BDSA23-GROUP10/Chirp/blob/main/docs/report_diagrams/UML_activity_diagrams/pandoc_pdf_UML_act.svg)
-*- Figure ??*
