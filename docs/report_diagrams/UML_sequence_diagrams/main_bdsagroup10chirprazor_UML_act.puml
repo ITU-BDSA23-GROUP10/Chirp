@@ -1,0 +1,45 @@
+@startuml
+
+title "Azure deployment workflow"
+header "UML Sequence Diagram for GitHub Actions"
+
+skinparam legend {
+  backgroundColor #E6E6E6
+  entrySeparator #E6E6E6
+  borderColor #FFFFFF
+}
+
+legend top
+
+  <b>Legend</b>
+
+  Arrow-heads
+  |    <size:24><&arrow-right></size>|  Synchronous method |
+
+  Other
+  | <b>alt</b>-box | Occurs if [condition] is true |
+endlegend
+
+participant "Dev computer" as Dev
+participant "Git" as Git
+participant "Build & unit tests" as But
+participant "Automated acceptance tests" as Auto
+participant "Release" as Rel
+
+Dev -> Git: Commit & push
+Git -> But: Trigger
+alt If tests fail
+    But --> Git: Notify failure
+    Git --> Dev: Feedback on failure
+else If tests succeed
+But -> Auto: Trigger
+    alt If tests fail
+    Auto -> Git: Notify failure
+    Git --> Dev: Feedback on failure
+    else if tests succeed
+        Auto --> Git: Notify success
+        Git --> Dev: Feedback on success
+        Auto -> Rel: Deployment
+    end
+end
+@enduml
