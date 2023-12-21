@@ -111,7 +111,7 @@ The User activities diagram shows what is possible for a user to do on our Chirp
 
 ![User activities activity diagram legend](images/user_activities_legend.svg)
 
-![User activities activity diagram](images/user_activities_diagram.svg)
+![User activities activity diagram](images/user_activities_diagram.svg){width=100px height=100px}
 
 [Web version of *User activities* diagram](https://www.plantuml.com/plantuml/svg/xLXBJzj04BxdLupK0-5GgIhG5f1Q41LmQYCUgZYXINOSZrZlMhjhebBrlrTU9nqCAyl2LQ5LSdBMtyvZvlEtZmCVq8Mgq51vSjSu2tpBWSbVAyQvmsBaRzYKwB202mwQZgq9vtn7yE7DA2TKvE3IamEPkNhy3YiJePxu43QAdaUSmVYm2hbrV4VgqoQ4d0oClzZD4G30gxTRQlVTR6zIJJNF8711cWt5TsDZ0tYU6rB0PdC_3lfISnZ1ylVwuyIHzyshQ6yxm_UptJrjvy3ctlWqsyOjjHo71OSSJZYSLbF1-61ByG4uHpRtF9qHgdi6TtTsS3RREyg9IWzerEzNZkegMEC5VSDQTvW-iH3i2Yr5-HfoSb3YdC0Al6oNQlzPGpn5dmUSno2VDv8V3Sl0O44_DtoYFa8TCUOapkvOE-9jnPoEEnrxPxFbrv7P2yqbpGfXnX-FaengkjlwGzeJZA_8zz2Q9-fCFGri5HuhJPH3zj0O5inQQVuPfVdcED3ZdiTXCBI0MUr50FLQTsMhYsfAeDdSh5OxeU13KuTAHIG42wkPjwp8Yj58ucQz5B9prdAwh8tlvp1lq12i9D37brYPM1zaRdSjkx-VOwkrNO1rK9ciUSQeTaCDdzNTbXG7acz2pbk3kkUgqaVZX8-GELj02-v9Pn7Kr8JKiYf_STKfqocBLVVoatoMvQWTfQISr9HUkj9FMvweBydlFl7jzzUQ_dhJstTQU_hJ92qNQIr2ez9YDDnJMfpwxclMs-7rTdXOb2zVVjRoOzr_e3uJPpFMQR5fDnEeGDQjUw6kPaPqgeETDBWi5GQIoLsD7bxVptPXj4K52WCA1EHmA92wIirjL0k7khcmIvZe6TyvKLfMZeTjjdhGsCqfG27kayTYHuMzfRQqnItYKSwktF0nyobwCICdvm7Pro8No3JKVyADGgJB0HbL5VeN)
 
@@ -130,13 +130,18 @@ The group employed the use of Github Workflows/Actions to build, test, release a
 Above is an image of the project board for our chirp project. While the vast majority of issues are done and closed, some issues are still open.
 
 **Overview of uncompleted issues:**
-| Issue | Description | Not completed because: |
-| ----------- | ----------- | ----------- |
+| Issue | Description    | Not completed because: |
+|:------|:---------------|:-----------------------|
 | [#175](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/175) (Bugs) | Make playwright UI tests able to run<br> with a workflow through GitHub actions. | Problems with getting playwright test to run in “Headless” mode.<br>Because running UI tests on GitHub actions was not an important requirement for the project, the issue was not prioritized. |
 | [#263](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/263) (Bugs) | When running integration tests on a unix<br> based system, the tests would give a<br> `System.InvalidOperationException`. | Since the exception didn’t stop the tests from running and passing, the issue was not prioritized. |
 | [#225](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/225) (Not started) | Be able to run `playwright` tests on a dockerized container of the project. | The scope of this issue was too big for the deadline of the project, and not a necessary addition. |
 | [#279](https://github.com/ITU-BDSA23-GROUP10/Chirp/issues/279) (Not started) | Change general exception throws to be more specific to the reason it was thrown. | Since most of the program uses general exceptions, solving this issue would take some time. Because this issue didn’t impact the performance or the functionality of the program, and due to the deadline approaching, it was decide that other issues would be prioritized.  |
 
+
+|  Test  | tabel     |  here  |
+|--------+-----------+--------|
+| value1 |  test2    |  her   |
+| what   |  is      |  up?   |
 
 ### Group's work activities
 
