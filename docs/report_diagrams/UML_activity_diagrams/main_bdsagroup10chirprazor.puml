@@ -1,0 +1,47 @@
+@startuml
+header UML Activity Diagram for Github Actions
+title Azure deployment workflow
+
+start
+legend top left
+Legend:
+⨂ : termination of workflow
+⚫ : start of workflow
+◉ : stop and completion of workflow
+Yellow box with ... : repeation of succes if-else block
+endlegend
+
+:Setup Dotnet 7 SDK;
+
+if(Succes) then (No)
+    #pink:Error;
+    end
+else (Yes)
+endif
+
+:Build project;
+
+#yellow:...;
+
+:Publish Project (dotnet publish);
+
+#yellow:...;
+
+:Upload artifact to for deployment;
+
+#yellow:...;
+
+
+:Download artifact onto Azure server;
+
+#yellow:...;
+
+
+:Deploy artifact;
+
+#yellow:...;
+
+#green:Project deployed;
+
+stop
+@enduml
